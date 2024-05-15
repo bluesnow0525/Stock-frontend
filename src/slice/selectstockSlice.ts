@@ -1,5 +1,5 @@
 
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { fetchStocksData } from "../service/selectstockAPI";
 import { fetchStocksPrice as fetchStocksPriceAPI } from "../service/stockpriceAPI"; // 重命名以避免冲突
 // import { StockData } from "../pages/TradeArea";
@@ -10,23 +10,30 @@ export type Stock = {
   Trading: string;
   ETF: boolean;
 };
+type StocksData = {
+  all_stocks : Stock[];
+  user_favorites : Stock[];
+}
 
 interface StocksState {
-  data: Stock[];
+  data: StocksData;
   prices?: any[];
   status: "idle" | "loading" | "succeeded" | "failed";
   pricesStatus?: "idle" | "loading" | "succeeded" | "failed";
 }
 
 const initialState: StocksState = {
-  data: [],
+  data: {
+    all_stocks: [],  // 初始化为空数组
+    user_favorites: []  // 初始化为空数组
+  },
   prices: [],
   status: "idle",
   pricesStatus: "idle",
 };
 
-export const fetchStocks = createAsyncThunk("stocks/fetchStocks", async () => {
-  return await fetchStocksData();
+export const fetchStocks = createAsyncThunk("stocks/fetchStocks", async (username?: string) => {
+  return await fetchStocksData(username);
 });
 
 export const fetchStocksPrice = createAsyncThunk(
@@ -45,9 +52,9 @@ const stocksSlice = createSlice({
       .addCase(fetchStocks.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(fetchStocks.fulfilled, (state, action) => {
-        state.status = "succeeded";
+      .addCase(fetchStocks.fulfilled, (state, action: PayloadAction<StocksData>) => {
         state.data = action.payload;
+        state.status = "succeeded";
       })
       .addCase(fetchStocks.rejected, (state) => {
         state.status = "failed";

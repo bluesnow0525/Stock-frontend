@@ -21,15 +21,15 @@ const Header: React.FC<HeaderProp> = ({ username }) => {
                         <button onClick={() => navigate('/', { replace: true, state: { username } })} className="px-4 py-4 text-[15px] font-mono text-white bg-[conic-gradient(from_var(--shimmer-angle),theme(colors.red.900)_0%,theme(colors.red.500)_10%,theme(colors.red.900)_20%)] animate-[shimmer_2.5s_linear_infinite] rounded-[24px]
                             relative hover:text-red-300 duration-500 ease-out
                             after:flex after:absolute after:bg-slate-950 after:inset-[2px] after:rounded-[22px] after:content-[attr(aria-label)]
-                            after:items-center after:justify-center "aria-label="HOME">HOME</button>
+                            after:items-center after:justify-center "aria-label="首頁">首頁</button>
                         <button onClick={() => navigate('/trade', { replace: true, state: { username } })} className="px-4 py-4 text-[15px] font-mono text-white bg-[conic-gradient(from_var(--shimmer-angle),theme(colors.red.900)_0%,theme(colors.red.500)_10%,theme(colors.red.900)_20%)] animate-[shimmer_2.5s_linear_infinite] rounded-[24px]
                             relative hover:text-red-300 duration-500 ease-out
                             after:flex after:absolute after:bg-slate-950 after:inset-[2px] after:rounded-[22px] after:content-[attr(aria-label)]
-                            after:items-center after:justify-center "aria-label="TRADE">TRADE</button>
+                            after:items-center after:justify-center "aria-label="選股票">選股票</button>
                         <button onClick={() => navigate('/asset', { replace: true, state: { username } })} className="px-4 py-4 text-[15px] font-mono text-white bg-[conic-gradient(from_var(--shimmer-angle),theme(colors.red.900)_0%,theme(colors.red.500)_10%,theme(colors.red.900)_20%)] animate-[shimmer_2.5s_linear_infinite] rounded-[24px]
                             relative hover:text-red-300 duration-500 ease-out
                             after:flex after:absolute after:bg-slate-950 after:inset-[2px] after:rounded-[22px] after:content-[attr(aria-label)]
-                            after:items-center after:justify-center "aria-label="ASSET">ASSET</button>
+                            after:items-center after:justify-center "aria-label="虛擬金">虛擬金</button>
                         
                     </div>
                     <div className={`items-center text-right flex`}>

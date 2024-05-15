@@ -66,7 +66,7 @@ const TradeArea: React.FC = () => {
     // 清理函数
     return () => clearInterval(intervalId);
   }, []);
-  
+
   useEffect(() => {
     if (username) {
       dispatchasset(fetchAssets(username));
@@ -81,7 +81,7 @@ const TradeArea: React.FC = () => {
         window.location.reload();
       } catch (err) {
         if (err && typeof err === 'object' && 'message' in err) {
-          alert(err.message);  // 显示服务器错误消息
+          alert('餘額不足');  // 显示服务器错误消息
         } else {
           alert('Error executing buy operation');
         }
@@ -97,7 +97,7 @@ const TradeArea: React.FC = () => {
         window.location.reload();
       } catch (err) {
         if (err && typeof err === 'object' && 'message' in err) {
-          alert(err.message);  // 显示服务器错误消息
+          alert('庫存不足');  // 显示服务器错误消息
         } else {
           alert('Error executing sell operation');
         }
@@ -273,13 +273,13 @@ const TradeArea: React.FC = () => {
                   </div>
                 ) : (
                   <>
-                  {username ? <p className='fixed'>未開盤</p>: <p></p>}
-                    <div className=' bg-slate-950 h-[115px] flex justify-center'>                     
-                      <img
-                        src="https://photo.16pic.com/00/88/39/16pic_8839292_b.png"
-                        className="mt-6 w-[50px] h-[50px]"                        
-                      />
-                    </div>
+                    {username ? <p className='text-center mt-4 text-[18px] font-semibold'>未開盤</p> :
+                      <div className=' bg-slate-950 h-[115px] flex justify-center'>
+                        <img
+                          src="https://photo.16pic.com/00/88/39/16pic_8839292_b.png"
+                          className="mt-6 w-[50px] h-[50px]"
+                        />
+                      </div>}
                   </>
                 )}
               </div>
