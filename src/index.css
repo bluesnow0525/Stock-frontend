@@ -10,7 +10,7 @@
 
 body {
   background-color: var(--bg-color, #1e1515); /* 默认白色背景，除非在 HTML 标签中指定其他颜色 */
-  overflow: hidden; /* 总是显示垂直滚动条 */
+  overflow-x: hidden; /* 总是显示垂直滚动条 */
 }
 .bg-container {
   position: relative;

@@ -1,4 +1,3 @@
-
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { fetchStocksData } from "../service/selectstockAPI";
 import { fetchStocksPrice as fetchStocksPriceAPI } from "../service/stockpriceAPI"; // 重命名以避免冲突
@@ -10,10 +9,11 @@ export type Stock = {
   Trading: string;
   ETF: boolean;
 };
+
 type StocksData = {
-  all_stocks : Stock[];
-  user_favorites : Stock[];
-}
+  all_stocks: Stock[];
+  user_favorites: Stock[];
+};
 
 interface StocksState {
   data: StocksData;
@@ -24,8 +24,8 @@ interface StocksState {
 
 const initialState: StocksState = {
   data: {
-    all_stocks: [],  // 初始化为空数组
-    user_favorites: []  // 初始化为空数组
+    all_stocks: [], // 初始化为空数组
+    user_favorites: [] // 初始化为空数组
   },
   prices: [],
   status: "idle",

@@ -3,6 +3,7 @@ import Header from '../components/Header';
 import React, { useState, ChangeEvent, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchStocks } from '../slice/selectstockSlice';
+import { addToFavorites, deleteFavorites } from '../slice/favoritesSlice'
 import { RootState, AppDispatch } from '../store';
 import AnimatedComponent from '../components/AnimatedComponent';
 
@@ -17,22 +18,26 @@ const SelectTarget: React.FC = () => {
   const username = location.state ? (location.state as { username: string }).username : undefined;
 
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const [showFavorites, setShowFavorites] = useState<boolean>(true);
-  const [isFavoriteAdded, setIsFavoriteAdded] = useState<boolean>(false);
+  const [showFavorites, setShowFavorites] = useState<boolean>(false);
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-
+  const isFavoriteAdded = useSelector((state: RootState) => state.favorites.isFavoriteAdded);
   // 获取股票数据
   const allstocksData = useSelector((state: RootState) => state.stocks.data);
   const stocksData = allstocksData.all_stocks;
   const favstocksData = allstocksData.user_favorites;
-  // 搜索和过滤逻辑
-  // const filteredStocks = stocksData.filter((stock: Stock) =>
-  //   stock.Name.toLowerCase().includes(searchTerm.toLowerCase()) || stock.Code.toLowerCase().includes(searchTerm.toLowerCase())
-  // );
-  const filteredStocks = showFavorites ? favstocksData : stocksData.filter((stock: Stock) =>
-    stock.Name.toLowerCase().includes(searchTerm.toLowerCase()) || stock.Code.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // if (favstocksData.length !== 0) {
+  //   setShowFavorites(true);
+  // }  
+  const filteredStocks = showFavorites
+    ? favstocksData.filter((stock: Stock) =>
+      stock.Name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      stock.Code.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    : stocksData.filter((stock: Stock) =>
+      stock.Name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      stock.Code.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
   // 在组件加载时获取数据
   useEffect(() => {
@@ -47,52 +52,12 @@ const SelectTarget: React.FC = () => {
     navigate(`/trade/area/${id}`, { state: { stockName: name, username } }); // Navigate to Trade Area with selected stock ID as URL parameter
   };
 
-  const addToFavorites = async (stockId: string) => {
-    try {
-      const response = await fetch('http://localhost:5000/api/add_favorite_stock', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ username, stock_id: stockId })
-      });
-
-      const data = await response.json();
-
-      if (response.status === 200) {
-        setIsFavoriteAdded(prev => !prev);
-        alert(`Stock added to favorites: ${data.message}`);
-        // Optionally, you can update the state to reflect the changes in the UI
-      } else {
-        // console.error('Failed to add stock to favorites:', data.message);
-        alert(`Failed to add stock to favorites: ${data.message}`);
-      }
-    } catch (error) {
-      console.error('Error adding stock to favorites:', error);
-    }
+  const handleAddToFavorites = (stockId: string) => {
+    dispatch(addToFavorites({ username, stockId }));
   };
 
-  const deleteFavorites = async (stockId: string) => {
-    try {
-      const response = await fetch('http://localhost:5000/api/remove_favorite_stock', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ username, stock_id: stockId })
-      });
-
-      const data = await response.json();
-
-      if (response.status === 200) {
-        setIsFavoriteAdded(prev => !prev);
-        alert(`Stock removed from favorites: ${data.message}`);
-      } else {
-        alert(`Failed to remove stock from favorites: ${data.message}`);
-      }
-    } catch (error) {
-      console.error('Error removing stock from favorites:', error);
-    }
+  const handleDeleteFavorites = (stockId: string) => {
+    dispatch(deleteFavorites({ username, stockId }));
   };
 
   return (
@@ -140,7 +105,7 @@ const SelectTarget: React.FC = () => {
                           <td onClick={() => handleStockSelect(stock.Code, stock.Name)} className="px-8 py-2 text-right text-[22px] font-semibold ">{stock.Trading}<span className='font-mono text-[14px]'>{stock.ETF ? " ETF" : ""}</span></td>
                           {!showFavorites && (
                             <td className="text-right pr-4">
-                              <button onClick={() => addToFavorites(stock.Code)} className=" bg-white text-red-500 hover:text-white hover:bg-red-500 rounded-full p-2 ml-4">
+                              <button onClick={() => handleAddToFavorites(stock.Code)} className=" bg-white text-red-500 hover:text-white hover:bg-red-500 rounded-full p-2 ml-4">
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
                                 </svg>
@@ -149,7 +114,7 @@ const SelectTarget: React.FC = () => {
                           )}
                           {showFavorites && (
                             <td className="text-right pr-4">
-                              <button onClick={() => deleteFavorites(stock.Code)} className=" bg-white text-red-500 hover:text-white hover:bg-red-500 rounded-full p-2 ml-4">
+                              <button onClick={() => handleDeleteFavorites(stock.Code)} className=" bg-white text-red-500 hover:text-white hover:bg-red-500 rounded-full p-2 ml-4">
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 18M6 6L18 6M9 6L9 3L15 3L15 6M10 6L10 18M14 6L14 18" />
                                 </svg>

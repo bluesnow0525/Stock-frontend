@@ -53,7 +53,7 @@ const Asset: React.FC = () => {
             <div className="p-4 text-white ">
                 {userDataStatus === 'succeeded' && userData ? (
                     <>
-                        <div className="grid grid-rows-2 sm:grid-cols-[6fr,4fr]">
+                        <div className="grid grid-cols-[6fr,4fr]">
                             <div className="grid grid-rows-[1fr,3fr]">
                                 <div className="flex items-center space-x-4">
                                     <div className="relative w-20 h-20">
@@ -74,9 +74,9 @@ const Asset: React.FC = () => {
                                     <div className='sticky text-[21px]'>總資產: <br />${totalAssets.toFixed(2)}<span className={`ml-1 text-sm ${transactionClass(totalAssets - 10000000)}`}>{(((totalAssets - 10000000) * 100) / 10000000).toFixed(2)}%</span></div>
                                 </div>
                                 <div className='h-[400px]'>
-                                    <div className=' font-bold ml-1 text-[20px] mb-2 sticky'>歷史交易數據:</div>
+                                    <div className=' font-bold ml-1 text-[16px] sm:text-[20px] mb-2 sticky'>歷史交易數據:</div>
                                     <div className='h-[380px] overflow-y-auto'>
-                                        <table className="table-fixed border-collapse border border-gray-200 bg-slate-950">
+                                        <table className="table-fixed border-collapse border border-gray-200 bg-slate-950 text-[12px] sm:text-[15px]">
                                             <thead className='sticky top-0 bg-slate-950'>
                                                 <tr>
                                                     <th className="border border-r-0 border-gray-300 px-2 py-1 text-center ">股票 ID</th>
@@ -109,13 +109,13 @@ const Asset: React.FC = () => {
                                 </div>
                             </div>
                             <div className="mx-1 mt-1 h-[500px]">
-                                <h1 className='mb-2 mx-7 font-semibold text-[20px] sticky top-0'>持倉中:</h1>
+                                <h1 className='mb-2 mx-7 font-semibold text-[16px] sm:text-[20px] sticky top-0'>持倉中:</h1>
 
                                 <table className='mx-7 text-gray-300 py-1 table-auto w-9/10 border-slate-400 p-1 rounded-md shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-20 relative' style={{ boxShadow: '0 0 10px 5px rgba(255, 0, 0, 0.5)' }}>
                                     <tbody>
                                         {userData.stocks.map(stock => (
                                             <tr key={stock.stock_id} onClick={() => handleStockSelect(stock.stock_id, stock.name)} className="cursor-pointer my-1 py-1 hover:bg-slate-700">
-                                                <td className="px-1 py-1 text-left text-[15px] font-semibold w-full">{stock.name} - {stock.quantity}張 - 現價:{stock.recent_price}  漲跌幅:<span className={transactionClass(stock.recent_price - stock.price_per_unit)}>{(((stock.recent_price - stock.price_per_unit) / stock.price_per_unit) * 100).toFixed(2)}%</span></td>
+                                                <td className="px-1 py-1 text-left text-[12px] sm:text-[15px] font-semibold w-full">{stock.name} - {stock.quantity}張 - 現價:{stock.recent_price}  漲跌幅:<span className={transactionClass(stock.recent_price - stock.price_per_unit)}>{(((stock.recent_price - stock.price_per_unit) / stock.price_per_unit) * 100).toFixed(2)}%</span></td>
                                             </tr>
                                         ))}
                                     </tbody>
