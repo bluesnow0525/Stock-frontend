@@ -50,7 +50,7 @@ const TradeArea: React.FC = () => {
       const totalMinutes = hours * 60 + minutes;
 
       // 9:00 AM 的总分钟数是 540, 1:30 PM 的总分钟数是 810
-      if (dayOfWeek >= 1 && dayOfWeek <= 5 && totalMinutes >= 540 && totalMinutes <= 9810) {
+      if (dayOfWeek >= 1 && dayOfWeek <= 5 && totalMinutes >= -540 && totalMinutes <= 9810) {
         setIsWithinTime(true);
       } else {
         setIsWithinTime(false);
@@ -189,7 +189,7 @@ const TradeArea: React.FC = () => {
         <Header username={username} />
       </AnimatedComponent>
       <AnimatedComponent y={0} opacity={0} duration={1.5} delay={0.6}>
-        <div className="container mx-5 sm:mx-15">
+        <div className="container mx-0 sm:mx-15">
           <div className="h-12 flex justify-center items-center">
             {/* Buttons for navigation */}
             <NavLink to={`/trade/area/${id}`} className={({ isActive }) => isActive ? "link-hover-gradient px-4 py-1 border border-red-300 rounded mr-4" : "link-hover-gradient mr-4"}>
