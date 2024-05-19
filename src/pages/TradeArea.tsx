@@ -50,7 +50,7 @@ const TradeArea: React.FC = () => {
       const totalMinutes = hours * 60 + minutes;
 
       // 9:00 AM 的总分钟数是 540, 1:30 PM 的总分钟数是 810
-      if (dayOfWeek >= 1 && dayOfWeek <= 5 && totalMinutes >= -540 && totalMinutes <= 9810) {
+      if (dayOfWeek >= 0 && dayOfWeek <= 5 && totalMinutes >= -540 && totalMinutes <= 19810) {
         setIsWithinTime(true);
       } else {
         setIsWithinTime(false);
@@ -141,11 +141,21 @@ const TradeArea: React.FC = () => {
           horzLines: { color: '#363C4E' },
         },
       });
-      candleSeries = chart.addCandlestickSeries();
+  
+      candleSeries = chart.addCandlestickSeries({
+        upColor: '#FF0000',      // 上涨颜色（红色）
+        downColor: '#00FF00',    // 下跌颜色（绿色）
+        borderUpColor: '#FF0000', // 上涨边框颜色（红色）
+        borderDownColor: '#00FF00', // 下跌边框颜色（绿色）
+        wickUpColor: '#FF0000',  // 上涨蜡烛芯颜色（红色）
+        wickDownColor: '#00FF00' // 下跌蜡烛芯颜色（绿色）
+      });
+  
       const pricesCopy = [...stockPrices];
       const uniqueSortedPrices = pricesCopy
         .sort((a, b) => a.time.localeCompare(b.time))
         .filter((v, i, a) => !i || v.time !== a[i - 1].time);
+  
       candleSeries.setData(uniqueSortedPrices.map((item: StockData) => ({
         time: item.time,
         open: parseFloat(item.open),
@@ -153,17 +163,17 @@ const TradeArea: React.FC = () => {
         low: parseFloat(item.low),
         close: parseFloat(item.close),
       })));
-
+  
       const resizeChart = () => {
         // 首先检查 chart 和 chartContainerRef.current 是否存在
         if (chartContainerRef.current && chart) {
           // 然后检查 parentNode 是否存在
           const parentNode = chartContainerRef.current.parentNode as HTMLDivElement;
-
+  
           if (parentNode) {
             const gridWidth = parentNode.clientWidth;
             const chartWidth = gridWidth * (149 / 150); // 保持 5fr 和 4fr 的比例
-
+  
             chart.applyOptions({
               width: chartWidth,
               height: chartContainerRef.current.clientHeight,
@@ -171,9 +181,9 @@ const TradeArea: React.FC = () => {
           }
         }
       };
-
+  
       window.addEventListener('resize', resizeChart);
-
+  
       return () => {
         if (chart) {
           chart.remove();
@@ -182,6 +192,7 @@ const TradeArea: React.FC = () => {
       };
     }
   }, [stockPrices, pricesStatus, chartContainerRef]);
+  
 
   return (
     <>

@@ -49,8 +49,8 @@ const SelectTarget: React.FC = () => {
     navigate(`/trade/area/${id}`, { state: { stockName: name, username } }); // Navigate to Trade Area with selected stock ID as URL parameter
   };
 
-  const handleAddToFavorites = (stockId: string) => {
-    dispatch(addToFavorites({ username, stockId }));
+  const handleAddToFavorites = (stockId: string,stock_name:string) => {
+    dispatch(addToFavorites({ username, stockId,stock_name }));
   };
 
   const handleDeleteFavorites = (stockId: string) => {
@@ -102,7 +102,7 @@ const SelectTarget: React.FC = () => {
                           <td onClick={() => handleStockSelect(stock.Code, stock.Name)} className="px-8 py-2 text-right text-[22px] font-semibold ">{stock.Trading}<span className='font-mono text-[14px]'>{stock.ETF ? " ETF" : ""}</span></td>
                           {!showFavorites&& username && (
                             <td className="text-right pr-4">
-                              <button onClick={() => handleAddToFavorites(stock.Code)} className=" bg-white text-red-500 hover:text-white hover:bg-red-500 rounded-full p-2 ml-4">
+                              <button onClick={() => handleAddToFavorites(stock.Code,stock.Name)} className=" bg-white text-red-500 hover:text-white hover:bg-red-500 rounded-full p-2 ml-4">
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
                                 </svg>

@@ -15,13 +15,13 @@ const initialState: FavoritesState = {
 // Add to favorites async thunk
 export const addToFavorites = createAsyncThunk(
   'favorites/addToFavorites',
-  async ({ username, stockId }: { username?: string; stockId: string }) => {
+  async ({ username, stockId,stock_name }: { username?: string; stockId: string; stock_name:string }) => {
     const response = await fetch('http://localhost:5000/api/add_favorite_stock', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ username, stock_id: stockId }),
+      body: JSON.stringify({ username, stock_id: stockId ,stockname: stock_name}),
     });
     const data = await response.json();
     if (!response.ok) {
