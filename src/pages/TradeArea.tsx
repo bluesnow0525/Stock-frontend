@@ -2,6 +2,7 @@
 import AnimatedComponent from '../components/AnimatedComponent';
 import Header from '../components/Header';
 import Loading from '../components/Loading';
+import BuySellGauge from '../components/BuySellGauge';
 import React, { useEffect, useRef, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { createChart, IChartApi, ISeriesApi } from 'lightweight-charts';
@@ -141,7 +142,7 @@ const TradeArea: React.FC = () => {
           horzLines: { color: '#363C4E' },
         },
       });
-  
+
       candleSeries = chart.addCandlestickSeries({
         upColor: '#FF0000',      // 上涨颜色（红色）
         downColor: '#00FF00',    // 下跌颜色（绿色）
@@ -150,12 +151,12 @@ const TradeArea: React.FC = () => {
         wickUpColor: '#FF0000',  // 上涨蜡烛芯颜色（红色）
         wickDownColor: '#00FF00' // 下跌蜡烛芯颜色（绿色）
       });
-  
+
       const pricesCopy = [...stockPrices];
       const uniqueSortedPrices = pricesCopy
         .sort((a, b) => a.time.localeCompare(b.time))
         .filter((v, i, a) => !i || v.time !== a[i - 1].time);
-  
+
       candleSeries.setData(uniqueSortedPrices.map((item: StockData) => ({
         time: item.time,
         open: parseFloat(item.open),
@@ -163,17 +164,17 @@ const TradeArea: React.FC = () => {
         low: parseFloat(item.low),
         close: parseFloat(item.close),
       })));
-  
+
       const resizeChart = () => {
         // 首先检查 chart 和 chartContainerRef.current 是否存在
         if (chartContainerRef.current && chart) {
           // 然后检查 parentNode 是否存在
           const parentNode = chartContainerRef.current.parentNode as HTMLDivElement;
-  
+
           if (parentNode) {
             const gridWidth = parentNode.clientWidth;
             const chartWidth = gridWidth * (149 / 150); // 保持 5fr 和 4fr 的比例
-  
+
             chart.applyOptions({
               width: chartWidth,
               height: chartContainerRef.current.clientHeight,
@@ -181,9 +182,9 @@ const TradeArea: React.FC = () => {
           }
         }
       };
-  
+
       window.addEventListener('resize', resizeChart);
-  
+
       return () => {
         if (chart) {
           chart.remove();
@@ -192,7 +193,7 @@ const TradeArea: React.FC = () => {
       };
     }
   }, [stockPrices, pricesStatus, chartContainerRef]);
-  
+
 
   return (
     <>
@@ -229,21 +230,20 @@ const TradeArea: React.FC = () => {
                   <>
                     <div className="bg-gray-800 text-white py-2 w-full text-center">AI評分</div>
                     <div className='flex justify-center px-2 my-1 bg-slate-800 border border-slate-400 p-1 rounded-md shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-20 relative' style={{ boxShadow: '0 0 10px 5px rgba(255, 0, 0, 0.4)' }}>
-                      <div className='text-white text-left px-2'>
-                        <p className='text-[17px] font-extrabold text-slate-200'>評價:{info.評價}</p>
-                        <p className='text-[17px] font-extrabold text-slate-200'>評價分數:{info.評價分數}</p>
-                        <p className='text-[13px] text-slate-200'>現價:{info.現價}</p>
-                        <p className='text-[13px] text-slate-200'>準確率:{info.準確率}</p>
-                      </div>
-                      <div className='text-white text-center px-3'>
-                        {info.合理價 !== 0 && <p className='text-[15px] font-extrabold text-slate-200'>合理價:{info.合理價}</p>}
-                        {info.長期評價 !== '' && <p className='text-[14px] font-extrabold text-slate-200'>長期評價:{info.長期評價}</p>}
-                      </div>
-                      <div className='text-white text-left px-2'>
-                        <p className='text-[14px] text-slate-200'>本益比:{info.本益比}</p>
-                        <p className='text-[14px] text-slate-200'>本淨比:{info.本淨比}</p>
-                        <p className='text-[14px] text-slate-200'>殖利率:{info.殖利率}</p>
-                        <p className='text-[14px] text-slate-200'>成長率:{info.成長率}</p>
+                      <div className='flex w-full'>
+                        <div className='text-white flex flex-col justify-center items-center w-1/2'>
+                            <BuySellGauge score={info.評價分數} />
+                            <p className='text-[17px] text-center font-bold'>{info.評價} <br /><span className='text-[13px]'>分數:{info.評價分數}</span></p>
+                        </div>
+          
+                        <div className='text-white text-center px-2 w-1/2'>
+                          {info.合理價 !== 0 && <p className='text-[18px] font-extrabold text-slate-200'>合理價: {info.合理價}</p>}
+                          {info.長期評價 !== '' && <p className='text-[16px] font-extrabold text-slate-200'>長期評價: {info.長期評價}</p>}
+                          <p className='text-[13px] text-slate-200'>本益比: {info.本益比}</p>
+                          <p className='text-[13px] text-slate-200'>本淨比: {info.本淨比}</p>
+                          <p className='text-[13px] text-slate-200'>殖利率: {info.殖利率}</p>
+                          <p className='text-[13px] text-slate-200'>成長率: {info.成長率}</p>
+                        </div>
                       </div>
                     </div>
                     <img src={`data:image/jpeg;base64,${imageUrl}`} alt="Description" className='w-full h-[260px]' />
@@ -289,6 +289,7 @@ const TradeArea: React.FC = () => {
                           src="https://photo.16pic.com/00/88/39/16pic_8839292_b.png"
                           className="mt-6 w-[50px] h-[50px]"
                         />
+
                       </div>}
                   </>
                 )}

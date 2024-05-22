@@ -115,7 +115,7 @@ const Asset: React.FC = () => {
                                             </thead>
                                             <tbody>
                                                 {userData.transactions.slice()
-                                                    .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+                                                    .sort((a, b) => new Date(b.sold_timestamp).getTime() - new Date(a.sold_timestamp).getTime())
                                                     .map(tx => (
                                                         <tr key={tx.transaction_id} className={transactionClass(tx.profit_loss)}>
                                                             <td className="border border-r-0 border-gray-300 px-4 py-2 text-center">{tx.stock_id}</td>
