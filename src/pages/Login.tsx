@@ -6,18 +6,22 @@ import AnimatedComponent from '../components/AnimatedComponent';
 const Login: React.FC = () => {
     const [username, setUsername] = useState<string>('');
     const [password, setPassword] = useState<string>('');
+    const [officialCode, setOfficialCode] = useState<string>('');
     const [mode, setMode] = useState<'login' | 'register'>('login'); // 登入或註冊模式
     const navigate = useNavigate();
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const endpoint = mode === 'login' ? 'login' : 'register';
+        const body = mode === 'login'
+            ? { username, password }
+            : { username, password, officialCode };
         const response = await fetch(`http://localhost:5000/${endpoint}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ username, password }),
+            body: JSON.stringify(body),
         });
         const data = await response.json();
         // alert(data.message);
@@ -49,6 +53,11 @@ const Login: React.FC = () => {
                             <div className='relative my-4'>
                                 <input type="password" placeholder='Password' required value={password} onChange={(e) => setPassword(e.target.value)} className="input block w-72 py-2 pw-0 test-white bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-red-600 peer" />
                             </div>
+                            {mode === 'register' && (
+                                <div className='relative my-4'>
+                                    <input type="text" placeholder='Official Code' required value={officialCode} onChange={(e) => setOfficialCode(e.target.value)} className="input block w-72 py-2 pw-0 test-white bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-red-600 peer" />
+                                </div>
+                            )}
                             <button type="submit" className="btn w-full mb-4 text-[18px] mt-6 rounded-full bg-white text-emerald-800 hover:bg-emerald-600 hover:text-white py-2 transition-colors duration-300">{mode === 'login' ? 'Login' : 'Register'}</button>
                         </form>
                         <button className="btn btn-secondary m-2 hover:text-blue-400 duration-300" onClick={() => setMode(mode === 'login' ? 'register' : 'login')}>

@@ -4,9 +4,9 @@ import Header from '../components/Header';
 import Loading from '../components/Loading';
 import BuySellGauge from '../components/BuySellGauge';
 import React, { useEffect, useRef, useState } from 'react';
-import { NavLink } from 'react-router-dom';
+// import { NavLink } from 'react-router-dom';
 import { createChart, IChartApi, ISeriesApi } from 'lightweight-charts';
-import { useParams, useLocation, useNavigate } from 'react-router-dom';
+import { useParams, useLocation, useNavigate, useMatch } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchStocksPrice } from '../slice/selectstockSlice';
 import { RootState, AppDispatch } from '../store';
@@ -27,6 +27,10 @@ const TradeArea: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   // const navigate = useNavigate();
   const location = useLocation();
+  const navigate = useNavigate();
+  const areaMatch = useMatch(`/trade/area/${id}`);
+  const newsMatch = useMatch(`/trade/news/${id}`);
+
   const { stockName, username } = location.state as { stockName: string, username?: string };
   const dispatch = useDispatch<AppDispatch>();
   const dispatchai = useDispatch<AppDispatch>();
@@ -74,6 +78,10 @@ const TradeArea: React.FC = () => {
     }
   }, [dispatchasset, username]);
 
+  const handleNavigate = (path: string) => {
+    navigate(path, { state: { stockName: stockName, username } });
+  };
+
   const handleBuy = async () => {
     if (username && id) {
       try {
@@ -107,18 +115,20 @@ const TradeArea: React.FC = () => {
   };
 
   useEffect(() => {
-    dispatchai(fetchStart());
-    const params = { query: { id } }; // 设置你想发送给后端的参数
-    fetchAiData(params)
-      .then(data => {
-        dispatchai(fetchSuccess({
-          imageUrl: data.imageBase64,
-          info: data.info
-        }));
-      })
-      .catch(error => {
-        dispatchai(fetchFailure(error.message));
-      });
+    if (username) {
+      dispatchai(fetchStart());
+      const params = { query: { id } }; // 设置你想发送给后端的参数
+      fetchAiData(params)
+        .then(data => {
+          dispatchai(fetchSuccess({
+            imageUrl: data.imageBase64,
+            info: data.info
+          }));
+        })
+        .catch(error => {
+          dispatchai(fetchFailure(error.message));
+        });
+    }
   }, [dispatchai, id]);
 
   useEffect(() => {
@@ -204,16 +214,22 @@ const TradeArea: React.FC = () => {
         <div className="container mx-0 sm:mx-15">
           <div className="h-12 flex justify-center items-center">
             {/* Buttons for navigation */}
-            <NavLink to={`/trade/area/${id}`} className={({ isActive }) => isActive ? "link-hover-gradient px-4 py-1 border border-red-300 rounded mr-4" : "link-hover-gradient mr-4"}>
+            <button
+              className={`link-hover-gradient px-4 py-1 border rounded mr-4 ${areaMatch ? 'border-red-300' : ''}`}
+              onClick={() => handleNavigate(`/trade/area/${id}`)}
+            >
               價格區
-            </NavLink>
-            <NavLink to={`/trade/news/${id}`} className={({ isActive }) => isActive ? "link-hover-gradient px-4 py-1 border border-red-300 rounded mr-4" : "link-hover-gradient"}>
+            </button>
+            <button
+              className={`link-hover-gradient rounded mr-4 ${newsMatch ? 'border-red-300' : ''}`}
+              onClick={() => handleNavigate(`/trade/news/${id}`)}
+            >
               資訊區
-            </NavLink>
+            </button>
           </div>
           <div className="breathing-divider"></div>
           <div className="grid grid-rows-2 sm:grid-cols-[5fr,4fr]">
-            <div className="h-180">
+            <div className="h-180 w-full">
               {/* 左侧区块 */}
               <div className="bg-gray-800 text-white py-2 w-full">
                 <span className='text-left ml-1'>{id}</span>
@@ -226,21 +242,22 @@ const TradeArea: React.FC = () => {
             <div className="grid grid-rows-[2.5fr,1fr]">
               <div className="">
                 {/* 右上区块 */}
-                {status === 'succeeded' && imageUrl && (
+                {status === 'succeeded' && imageUrl && username && (
                   <>
                     <div className="bg-gray-800 text-white py-2 w-full text-center">AI評分</div>
                     <div className='flex justify-center px-2 my-1 bg-slate-800 border border-slate-400 p-1 rounded-md shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-20 relative' style={{ boxShadow: '0 0 10px 5px rgba(255, 0, 0, 0.4)' }}>
                       <div className='flex w-full'>
-                        <div className='text-white flex flex-col justify-center items-center w-1/2'>
-                            <BuySellGauge score={info.評價分數} />
-                            <p className='text-[17px] text-center font-bold'>{info.評價} <br /><span className='text-[13px]'>分數:{info.評價分數}</span></p>
+                        <div className='text-white flex flex-col justify-center items-center w-1/3 sm:w-1/2'>
+                          <BuySellGauge score={info.評價分數} />
+                          <p className='text-[18px] text-center font-bold'>{info.評價} <br /><span className='text-[15px]'>AI信心分數:{info.評價分數}</span></p>
                         </div>
-          
+
                         <div className='text-white text-center px-2 w-1/2'>
                           {info.合理價 !== 0 && <p className='text-[18px] font-extrabold text-slate-200'>合理價: {info.合理價}</p>}
                           {info.長期評價 !== '' && <p className='text-[16px] font-extrabold text-slate-200'>長期評價: {info.長期評價}</p>}
+                          <p className='text-[16px] font-extrabold text-slate-200'>準確率: {info.準確率}</p>
+                          <br />
                           <p className='text-[13px] text-slate-200'>本益比: {info.本益比}</p>
-                          <p className='text-[13px] text-slate-200'>本淨比: {info.本淨比}</p>
                           <p className='text-[13px] text-slate-200'>殖利率: {info.殖利率}</p>
                           <p className='text-[13px] text-slate-200'>成長率: {info.成長率}</p>
                         </div>
@@ -250,7 +267,8 @@ const TradeArea: React.FC = () => {
                   </>
                 )}
                 {status === 'loading' && <div className='flex justify-center mt-10'><Loading></Loading></div>}
-                {status === 'failed' && <p>Error: {error}</p>}
+                {status === 'failed' && <p className='text-white'>Error: {error}</p>}
+                {!username && <p className='text-white text-center text-[30px] mt-20'>付費解鎖AI診斷+虛擬金功能</p>}
               </div>
               <div className="text-white">
                 {/* 右下区块 */}

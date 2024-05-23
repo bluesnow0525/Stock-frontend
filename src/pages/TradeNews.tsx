@@ -1,17 +1,26 @@
 
 import Header from '../components/Header';
 import AnimatedComponent from '../components/AnimatedComponent';
-import { NavLink } from 'react-router-dom';
+import { useParams, useLocation, useNavigate, useMatch } from 'react-router-dom';
 import { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
 
 declare global {
     interface Window {
-      TradingView: any;
+        TradingView: any;
     }
-  }
+}
 const TradeNews: React.FC = () => {
     const { id } = useParams<{ id: string }>();
+    const location = useLocation();
+    const navigate = useNavigate();
+    const areaMatch = useMatch(`/trade/area/${id}`);
+    const newsMatch = useMatch(`/trade/news/${id}`);
+    const { stockName, username } = location.state as { stockName: string, username?: string };
+
+    const handleNavigate = (path: string) => {
+        navigate(path, { state: { stockName: stockName, username } });
+    };
+
     useEffect(() => {
         const script = document.createElement('script');
         script.src = 'https://s3.tradingview.com/tv.js';
@@ -61,31 +70,27 @@ const TradeNews: React.FC = () => {
                 <div className="container mx-auto">
                     <div className="h-12 flex justify-center items-center">
                         {/* Buttons for navigation */}
-                        <NavLink to={`/trade/area/${id}`} className={({ isActive }) => isActive ? "link-hover-gradient px-4 py-1 border border-red-300 rounded mr-4" : "link-hover-gradient mr-4"}>
+                        <button
+                            className={`link-hover-gradient px-4 py-1 rounded mr-4 ${areaMatch ? 'border-red-300 border' : ''}`}
+                            onClick={() => handleNavigate(`/trade/area/${id}`)}
+                        >
                             價格區
-                        </NavLink>
-                        <NavLink to={`/trade/news/${id}`} className={({ isActive }) => isActive ? "link-hover-gradient px-4 py-1 border border-red-300 rounded mr-4" : "link-hover-gradient"}>
-                            新聞區
-                        </NavLink>
+                        </button>
+                        <button
+                            className={`link-hover-gradient px-4 py-1 rounded mr-4 ${newsMatch ? 'border-red-300 border' : ''}`}
+                            onClick={() => handleNavigate(`/trade/news/${id}`)}
+                        >
+                            資訊區
+                        </button>
                     </div>
                     <div className="breathing-divider"></div>
-                    <div className="grid grid-cols-[5fr,3fr]">
-                        <div className="h-120">
-                            {/* 左侧区块 */}
-                            <div id="chart" className="w-full h-full"></div>
-                            <div className="text-right mt-2">
-                                <a href="https://www.tradingview.com/" className="text-blue-600 hover:text-blue-800" rel="noopener noreferrer" target="_blank">
-                                    Track all markets on Tradingview
-                                </a>
-                            </div>
-                        </div>
-                        <div className="grid grid-rows-2">
-                            <div className="bg-green-500 h-60">
-                                {/* 右上区块 */}
-                            </div>
-                            <div className="bg-yellow-500 h-60">
-                                {/* 右下区块 */}
-                            </div>
+                    <div className="h-[500px]">
+                        {/* 左侧区块 */}
+                        <div id="chart" className="w-full h-full"></div>
+                        <div className="text-right mt-2">
+                            <a href="https://www.tradingview.com/" className="text-blue-600 hover:text-blue-800" rel="noopener noreferrer" target="_blank">
+                                Track all markets on Tradingview
+                            </a>
                         </div>
                     </div>
                 </div>
