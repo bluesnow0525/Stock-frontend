@@ -142,7 +142,7 @@ const TradeArea: React.FC = () => {
     if (pricesStatus === 'succeeded' && stockPrices && chartContainerRef.current) {
       chart = createChart(chartContainerRef.current, {
         width: chartContainerRef.current.clientWidth,
-        height: 500,
+        height: 650,
         layout: {
           background: { color: 'rgba(0, 0, 0, 0.3)' },
           textColor: '#d1d4dc',
@@ -239,31 +239,28 @@ const TradeArea: React.FC = () => {
               <div ref={chartContainerRef} className="" />
               {pricesStatus === 'loading' && <div className='flex justify-center mt-20'><Loading></Loading></div>}
             </div>
-            <div className="grid grid-rows-[2.5fr,1fr]">
+            <div className="grid grid-rows-[3fr,1fr]">
               <div className="">
                 {/* 右上区块 */}
                 {status === 'succeeded' && imageUrl && username && (
                   <>
                     <div className="bg-gray-800 text-white py-2 w-full text-center">AI評分</div>
+                    
                     <div className='flex justify-center px-2 my-1 bg-slate-800 border border-slate-400 p-1 rounded-md shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-20 relative' style={{ boxShadow: '0 0 10px 5px rgba(255, 0, 0, 0.4)' }}>
                       <div className='flex w-full'>
                         <div className='text-white flex flex-col justify-center items-center w-1/3 sm:w-1/2'>
                           <BuySellGauge score={info.評價分數} />
-                          <p className='text-[18px] text-center font-bold'>{info.評價} <br /><span className='text-[15px]'>AI信心分數:{info.評價分數}</span></p>
+                          <p className='text-[18px] text-center font-extrabold'>{info.評價分數}</p>
+                          <p className='text-[14px] font-bold text-slate-200'>AI信心分數:{info.評價分數}</p>
+                          <p className='text-[14px] font-bold text-slate-200'>準確率: {info.準確率}</p>
                         </div>
-
                         <div className='text-white text-center px-2 w-1/2'>
                           {info.合理價 !== 0 && <p className='text-[18px] font-extrabold text-slate-200'>合理價: {info.合理價}</p>}
-                          {info.長期評價 !== '' && <p className='text-[16px] font-extrabold text-slate-200'>長期評價: {info.長期評價}</p>}
-                          <p className='text-[16px] font-extrabold text-slate-200'>準確率: {info.準確率}</p>
-                          <br />
-                          <p className='text-[13px] text-slate-200'>本益比: {info.本益比}</p>
-                          <p className='text-[13px] text-slate-200'>殖利率: {info.殖利率}</p>
-                          <p className='text-[13px] text-slate-200'>成長率: {info.成長率}</p>
+                          {info.長期評價 !== '' && <p className='text-[16px] font-extrabold text-slate-200'>長期評價: {info.長期評價}</p>}                          
                         </div>
                       </div>
                     </div>
-                    <img src={`data:image/jpeg;base64,${imageUrl}`} alt="Description" className='w-full h-[260px]' />
+                    <img src={`data:image/jpeg;base64,${imageUrl}`} alt="Description" className='w-full h-[350px]' />
                   </>
                 )}
                 {status === 'loading' && <div className='flex justify-center mt-10'><Loading></Loading></div>}
