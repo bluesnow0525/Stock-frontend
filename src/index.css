@@ -1,0 +1,102 @@
+:root {
+  --font-sora: 'Sora', sans-serif;
+  --font-code: 'Source Code Pro', monospace;
+  --font-grotesk: 'Space Grotesk', sans-serif;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background-color: var(--bg-color, #1e1515); /* 默认白色背景，除非在 HTML 标签中指定其他颜色 */
+  overflow-x: hidden; /* 总是显示垂直滚动条 */
+}
+.bg-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.bg-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('/bgjpg.jpg'); /* 使用公開目錄中的圖片 */
+  background-size: cover;
+  background-position: center;
+  opacity: 0.25; /* 設置透明度為 30% */
+  pointer-events: none;
+}
+
+
+/* 自定义滚动条样式 */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1e1515;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #878686;
+  border-radius: 6px; /* 滑块圆角，设置一半的宽度实现椭圆效果 */
+  min-height: 30px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #cdcccc;
+}
+
+
+/* 如果使用 Tailwind CSS 的 @layer 指令定义 */
+@layer components {
+  .link-hover-gradient {
+      /* @apply relative; */
+      @apply text-white;
+      @apply transition-colors duration-500 ease-out; /* 这里的过渡包含背景色和文本色 */
+  }
+  .link-hover-gradient:hover {
+      @apply text-transparent bg-clip-text;
+      @apply bg-gradient-to-r from-red-300 via-red-400 to-red-500;
+      @apply duration-500 ease-out;
+  }
+}
+
+@keyframes breathing-light {
+  0%, 100% {
+      opacity: 0.5;
+      box-shadow: 0 0 10px red, 0 0 20px red, 0 0 40px red;
+  }
+  50% {
+      opacity: 1;
+      box-shadow: 0 0 20px red, 0 0 30px red, 0 0 60px red;
+  }
+}
+
+.breathing-divider {
+  height: 2px;
+  background-color: rgb(206, 0, 0);
+  animation: breathing-light 4s ease-in-out infinite;
+}
+
+@property --shimmer-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes shimmer {
+  0% {
+    --shimmer-angle: 0deg;
+  }
+
+  100% {
+    --shimmer-angle: 360deg;
+  }
+}
