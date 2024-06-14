@@ -79,8 +79,8 @@ const SelectTarget: React.FC = () => {
         </AnimatedComponent>
         <AnimatedComponent y={0} opacity={0} duration={1.3} delay={0.8}>
           <div className="p-4 flex justify-center">
-            <div className=" w-[500px]">
-              <div className="h-[500px]">
+            <div className=" w-[700px]">
+              <div className="h-[1500px]">
                 <div className="sticky top-0 text-white flex justify-between">
                   <div>
                     <button
@@ -117,7 +117,7 @@ const SelectTarget: React.FC = () => {
                   />
                 </div>
                 <div className="breathing-divider"></div>
-                <div className="mt-1 h-[600px] overflow-y-auto">
+                <div className="mt-1 h-[800px] overflow-y-auto">
                   <table className=' text-gray-300 py-1 table-fixed w-full sticky'>
                     <tbody>
                       {filteredStocks.map((stock: Stock) => (
