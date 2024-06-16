@@ -67,7 +67,7 @@ const BalancesheetBar: React.FC<BalanceProps> = ({ labels, equityData, liability
         maintainAspectRatio: false,
     };
 
-    return <Bar data={data} options={options} className='my-10 w-full h-full' />;
+    return <Bar data={data} options={options} className='sm:my-10 w-full h-full' />;
 };
 
 export default BalancesheetBar;

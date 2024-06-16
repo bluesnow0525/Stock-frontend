@@ -3,12 +3,14 @@ import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 // import { RootState } from '../store';
 
 export type FinancialData = {
-    [key: string]: [number | string | null, number | string | null];
+    [key: string]: [number | string | null, number | string | null] | [number | string | null];
 };
 
 interface SheetData {
     balance_sheet: FinancialData[];
     income_statement: FinancialData[];
+    cash_flow: FinancialData[];
+    // dividend: FinancialData[];
 }
 
 interface SheetDataState {

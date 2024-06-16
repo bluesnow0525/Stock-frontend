@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../components/Header';
 import BalancesheetBar from '../components/BalancesheetBar';
+import Incomesheet from '../components/Incomesheet';
+import CashFlowSheet from '../components/Cashflowsheet';
 import AnimatedComponent from '../components/AnimatedComponent';
 import Loading from '../components/Loading';
 import { useParams, useLocation, useNavigate, useMatch } from 'react-router-dom';
@@ -16,10 +18,6 @@ const TradeNews: React.FC = () => {
     const areaMatch = useMatch(`/trade/area/${id}`);
     const newsMatch = useMatch(`/trade/news/${id}`);
     const { stockName, username } = location.state as { stockName: string, username?: string };
-
-    const [viewMode, setViewMode] = useState<string>('balance-sheet');
-    const [currentData, setCurrentData] = useState<FinancialData[] | undefined>(undefined);
-    const [timePeriods, settimePeriods] = useState<string[]>([]);
 
     const dispatch = useDispatch<AppDispatch>();
     const sheetData = useSelector((state: RootState) => state.sheetData.data);
@@ -42,6 +40,9 @@ const TradeNews: React.FC = () => {
         });
     };
 
+    const [viewMode, setViewMode] = useState<string>('balance-sheet');
+    const [currentData, setCurrentData] = useState<FinancialData[] | undefined>(undefined);
+    const [timePeriods, settimePeriods] = useState<string[]>([]);
     const [labels, setLabels] = useState<string[]>([]);
     const [equityData, setEquityData] = useState<number[]>([]);
     const [liabilityData, setLiabilityData] = useState<number[]>([]);
@@ -50,16 +51,17 @@ const TradeNews: React.FC = () => {
         if (sheetData) {
             if (viewMode === 'balance-sheet') {
                 setCurrentData(sheetData.balance_sheet);
-                settimePeriods(sortTimePeriods(sheetData.balance_sheet.map(data => data["年度-季度"][0] as string)))
-                setLabels(sortTimePeriods(sheetData.balance_sheet.map(data => data["年度-季度"][0] as string)));
+                settimePeriods(sortTimePeriods(sheetData.balance_sheet.map(data => data["年度-季度"]?.[0] as string).filter(Boolean)))
+                setLabels(sortTimePeriods(sheetData.balance_sheet.map(data => data["年度-季度"]?.[0] as string).filter(Boolean)));
                 setEquityData(sheetData.balance_sheet.map(data => (data["歸屬於母公司業主之權益合計"][0] as number) / 1000));
                 setLiabilityData(sheetData.balance_sheet.map(data => (data["負債總額"][0] as number) / 1000));
-                console.log(equityData)
             } else if (viewMode === 'income-statement') {
                 setCurrentData(sheetData?.income_statement);
+                settimePeriods(sortTimePeriods(sheetData.income_statement.map(data => data["年度-季度"]?.[0] as string).filter(Boolean)))
             } else if (viewMode === 'cash-flow') {
-                // setCurrentData(sheetData?.cash_flow);
-            } else if (viewMode === 'dividends') {
+                setCurrentData(sheetData?.cash_flow);
+                settimePeriods(sortTimePeriods(sheetData.cash_flow.map(data => data["年度-季度"]?.[0] as string).filter(Boolean)))
+            } else if (viewMode === 'dividend') {
                 // setCurrentData(sheetData?.dividend);
             }
         }
@@ -72,7 +74,7 @@ const TradeNews: React.FC = () => {
     return (
         <>
             <AnimatedComponent y={-100} opacity={0} duration={0.8}>
-                <Header />
+                <Header username={username} />
             </AnimatedComponent>
             <AnimatedComponent y={0} opacity={0} duration={1.5} delay={0.6}>
                 <div className=" mx-auto">
@@ -94,7 +96,7 @@ const TradeNews: React.FC = () => {
                     <div className="breathing-divider"></div>
                     <div className='flex flex-col sm:flex-row'>
                         <div className="w-full sm:w-1/6 sm:h-[500px] text-white mt-8">
-                            <div className="flex flex-col p-3 space-y-3">
+                            <div className="flex sm:flex-col sm:p-3 sm:space-y-3">
                                 <button
                                     onClick={() => setViewMode('balance-sheet')}
                                     className={`px-4 py-1 rounded ${viewMode === 'balance-sheet' ? 'bg-red-500' : 'bg-gray-700 hover:bg-gray-600'}`}
@@ -114,50 +116,53 @@ const TradeNews: React.FC = () => {
                                     現金流量表
                                 </button>
                                 <button
-                                    onClick={() => setViewMode('dividends')}
-                                    className={`px-4 py-1 rounded ${viewMode === 'dividends' ? 'bg-red-500' : 'bg-gray-700 hover:bg-gray-600'}`}
+                                    onClick={() => setViewMode('dividend')}
+                                    className={`px-4 py-1 rounded ${viewMode === 'dividend' ? 'bg-red-500' : 'bg-gray-700 hover:bg-gray-600'}`}
                                 >
                                     股利
                                 </button>
                             </div>
                         </div>
+
                         {
                             sheetDataStatus === 'succeeded' && currentData && (
-                                <div className="w-full sm:w-[95%] sm:h-[600px] flex flex-col sm:flex-row">
-                                    <div className="flex justify-center items-center h-[600px] w-full sm:w-1/2">
+                                <div className="w-full sm:w-[95%] h-[800px] sm:h-[580px] flex flex-col sm:flex-row">
+                                    <div className="flex justify-center items-center h-[800px] sm:h-[580px] w-full sm:w-1/2">
                                         {/* 柱狀圖 */}
-                                        <BalancesheetBar labels={labels} equityData={equityData} liabilityData={liabilityData} />
+                                        {viewMode === 'balance-sheet' && (<BalancesheetBar labels={labels} equityData={equityData} liabilityData={liabilityData} />)}
+                                        {viewMode === 'income-statement' && (<Incomesheet data={currentData} />)}
+                                        {viewMode === 'cash-flow' && (<CashFlowSheet data={currentData} />)}
                                     </div>
-                                    <div className="mt-2 mx-7 text-gray-300 bg-slate-800 py-1 h-[600px] sm:w-1/2 border-slate-400 p-1 rounded-md shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-20 relative" style={{ boxShadow: '0 0 10px 5px rgba(255, 0, 0, 0.5)', overflowY: 'auto', overflowX: 'auto' }}>
+                                    <div className="mt-2 mx-7 text-gray-300 bg-slate-800 py-1 h-[800px] sm:h-[580px] sm:w-1/2 border-slate-400 p-1 rounded-md shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-20 relative" style={{ boxShadow: '0 0 10px 5px rgba(255, 0, 0, 0.5)', overflowY: 'auto', overflowX: 'auto' }}>
                                         <table className="w-full">
                                             <thead>
-                                                <tr className='sticky top-0 bg-slate-950 bg-opacity-80 text-[18px] font-bold'>
-                                                    <th className="text-left px-1 py-1" style={{ width: '500px', whiteSpace: 'nowrap' }}>{viewMode}</th>
+                                                <tr className='sticky top-0 bg-slate-950 bg-opacity-90 sm:text-[18px] font-bold'>
+                                                    <th className="text-left px-1 py-1" style={{ width: '300px', whiteSpace: 'nowrap' }}>{viewMode}</th>
                                                     {timePeriods?.map(period => (
-                                                        <th key={period} colSpan={2} className="text-center px-1 py-1">{period}</th>
+                                                        <th key={period} colSpan={viewMode === 'cash-flow' ? 1 : 2} className="text-center px-1 py-1">{period}</th>
                                                     ))}
                                                 </tr>
-                                                <tr className='sticky top-10 bg-slate-950 bg-opacity-80 text-[14px] font-bold'>
-                                                    <th style={{ width: '500px' }}></th>
+                                                <tr className='sticky top-10 bg-slate-950 bg-opacity-90 text-[11px] sm:text-[14px] font-bold'>
+                                                    <th style={{ width: '300px' }}></th>
                                                     {timePeriods?.map(period => (
                                                         <React.Fragment key={period}>
                                                             <th className="text-left px-1 py-1">千元</th>
-                                                            <th className="text-left px-1 py-1 border-r">百分比</th>
+                                                            {viewMode !== 'cash-flow' && <th className="text-left px-1 py-1 border-r">百分比</th>}
                                                         </React.Fragment>
                                                     ))}
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {Object.keys(currentData[0] || {}).filter(key => key !== "年度-季度").map((key) => (
+                                                {currentData && Object.keys(currentData[0] || {}).filter(key => key !== "年度-季度").map((key) => (
                                                     <tr key={key} className="my-1 py-1">
-                                                        <td className="px-1 py-1 text-left text-[12px] sm:text-[15px] font-semibold w-full" style={{ width: '300px', whiteSpace: 'nowrap' }}>{key}</td>
+                                                        <td className="px-1 py-1 text-left text-[12px] sm:text-[15px] font-semibold w-full sticky left-0 bg-slate-950 bg-opacity-80 top-20" style={{ width: '300px', whiteSpace: 'nowrap' }}>{key}</td>
                                                         {timePeriods?.map(period => {
-                                                            const data = currentData.find(d => d["年度-季度"][0] === period);
+                                                            const data = currentData.find(d => d["年度-季度"]?.[0] === period);
                                                             const value = data ? data[key] : null;
                                                             return (
                                                                 <React.Fragment key={period}>
-                                                                    <td className="px-1 py-1 text-left text-[12px] sm:text-[15px]">{value && value[0] !== null ? (value[0] as number / 1000).toFixed(2) : 'N/A'}</td>
-                                                                    <td className="px-1 py-1 text-left text-[12px] sm:text-[15px] border-r">{value && value[1] !== null ? `${value[1]}%` : 'N/A'}</td>
+                                                                    <td className="px-1 py-1 text-left text-[12px] sm:text-[15px]">{value && Array.isArray(value) && value[0] !== null ? (Number(value[0])).toFixed(2) : 'N/A'}</td>
+                                                                    {viewMode !== 'cash-flow' && <td className="px-1 py-1 text-left text-[12px] sm:text-[15px] border-r">{value && Array.isArray(value) && value[1] !== null ? `${value[1]}%` : 'N/A'}</td>}
                                                                 </React.Fragment>
                                                             );
                                                         })}
@@ -165,6 +170,7 @@ const TradeNews: React.FC = () => {
                                                 ))}
                                             </tbody>
                                         </table>
+
                                     </div>
                                 </div>
                             )
