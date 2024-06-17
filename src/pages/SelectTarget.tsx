@@ -78,8 +78,8 @@ const SelectTarget: React.FC = () => {
           <Header username={username} />
         </AnimatedComponent>
         <AnimatedComponent y={0} opacity={0} duration={1.3} delay={0.8}>
-          <div className="p-4 flex justify-center">
-            <div className=" w-[500px]">
+          <div className="p-4 flex justify-center mt-16 2xl:mt-24">
+            <div className="w-[500px] xl:w-[750px] 2xl:w-[750px] 2xl:scale-[1.3]">
               <div className="h-[500px]">
                 <div className="sticky top-0 text-white flex justify-between">
                   <div>
@@ -118,16 +118,37 @@ const SelectTarget: React.FC = () => {
                 </div>
                 <div className="breathing-divider"></div>
                 <div className="mt-1 h-[600px] overflow-y-auto">
-                  <table className=' text-gray-300 py-1 table-fixed w-full sticky'>
+                  <table className="text-gray-300 py-1 table-fixed w-full sticky">
                     <tbody>
                       {filteredStocks.map((stock: Stock) => (
                         <tr key={stock.Code} className="cursor-pointer my-1 py-1 hover:bg-slate-800">
-                          <td onClick={() => handleStockSelect(stock.Code, stock.Name)} className="px-1 py-2 text-left text-[20px] font-semibold w-2/3">{stock.Name} <br /> <span className='font-mono text-[14px]'>{stock.Code}</span></td>
-                          <td onClick={() => handleStockSelect(stock.Code, stock.Name)} className="px-8 py-2 text-right text-[22px] font-semibold ">{stock.Trading}<span className='font-mono text-[14px]'>{stock.ETF ? " ETF" : ""}</span></td>
+                          <td
+                            onClick={() => handleStockSelect(stock.Code, stock.Name)}
+                            className="px-1 py-2 text-left text-[20px] font-semibold w-2/3"
+                          >
+                            {stock.Name} <br />
+                            <span className="font-mono text-[14px]">{stock.Code}</span>
+                          </td>
+                          <td
+                            onClick={() => handleStockSelect(stock.Code, stock.Name)}
+                            className="px-8 py-2 text-right text-[22px] font-semibold"
+                          >
+                            {stock.Trading}
+                            <span className="font-mono text-[14px]">{stock.ETF ? ' ETF' : ''}</span>
+                          </td>
                           {viewMode === 'all' && username && (
                             <td className="text-right pr-4">
-                              <button onClick={() => handleAddToFavorites(stock.Code, stock.Name)} className="bg-white text-red-500 hover:text-white hover:bg-red-500 rounded-full p-2 ml-4">
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <button
+                                onClick={() => handleAddToFavorites(stock.Code, stock.Name)}
+                                className="bg-white text-red-500 hover:text-white hover:bg-red-500 rounded-full p-2 ml-4"
+                              >
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  className="h-5 w-5"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke="currentColor"
+                                >
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
                                 </svg>
                               </button>
@@ -135,9 +156,23 @@ const SelectTarget: React.FC = () => {
                           )}
                           {viewMode === 'fav' && (
                             <td className="text-right pr-4">
-                              <button onClick={() => handleDeleteFavorites(stock.Code)} className="bg-white text-red-500 hover:text-white hover:bg-red-500 rounded-full p-2 ml-4">
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 18M6 6L18 6M9 6L9 3L15 3L15 6M10 6L10 18M14 6L14 18" />
+                              <button
+                                onClick={() => handleDeleteFavorites(stock.Code)}
+                                className="bg-white text-red-500 hover:text-white hover:bg-red-500 rounded-full p-2 ml-4"
+                              >
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  className="h-5 w-5"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke="currentColor"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="M6 18L18 18M6 6L18 6M9 6L9 3L15 3L15 6M10 6L10 18M14 6L14 18"
+                                  />
                                 </svg>
                               </button>
                             </td>

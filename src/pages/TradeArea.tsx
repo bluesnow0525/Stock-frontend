@@ -138,11 +138,17 @@ const TradeArea: React.FC = () => {
   }, [dispatch, id]);
 
   useEffect(() => {
+    const getChartHeight = () => {
+      if (window.innerWidth > 1536) { // Tailwind's 2XL breakpoint is 1536px
+        return 800;
+      }
+      return 580;
+    };
     // console.log("useEffect triggered");
     if (pricesStatus === 'succeeded' && stockPrices && chartContainerRef.current) {
       chart = createChart(chartContainerRef.current, {
         width: chartContainerRef.current.clientWidth,
-        height: 650,
+        height: getChartHeight(),
         layout: {
           background: { color: 'rgba(0, 0, 0, 0.3)' },
           textColor: '#d1d4dc',
@@ -211,25 +217,25 @@ const TradeArea: React.FC = () => {
         <Header username={username} />
       </AnimatedComponent>
       <AnimatedComponent y={0} opacity={0} duration={1.5} delay={0.6}>
-        <div className="container mx-0 sm:mx-15">
-          <div className="h-12 flex justify-center items-center">
+        <div className=" mx-0 sm:mx-15">
+          <div className="h-12 2xl:h-20 flex justify-center items-center">
             {/* Buttons for navigation */}
             <button
-              className={`link-hover-gradient px-4 py-1 border rounded mr-4 ${areaMatch ? 'border-red-300' : ''}`}
+              className={`2xl:text-[20px] link-hover-gradient px-4 py-1 border rounded mr-4 ${areaMatch ? 'border-red-300' : ''}`}
               onClick={() => handleNavigate(`/trade/area/${id}`)}
             >
               價格區
             </button>
             <button
-              className={`link-hover-gradient rounded mr-4 ${newsMatch ? 'border-red-300' : ''}`}
+              className={`2xl:text-[20px] link-hover-gradient rounded mr-4 ${newsMatch ? 'border-red-300' : ''}`}
               onClick={() => handleNavigate(`/trade/news/${id}`)}
             >
               資訊區
             </button>
           </div>
           <div className="breathing-divider"></div>
-          <div className="grid grid-rows-2 sm:grid-cols-[5fr,4fr]">
-            <div className="h-180 w-full">
+          <div className="grid grid-rows-2 sm:grid-cols-[5fr,4fr] 2xl:h-[2000px]">
+            <div className=" w-full">
               {/* 左侧区块 */}
               <div className="bg-gray-800 text-white py-2 w-full">
                 <span className='text-left ml-1'>{id}</span>

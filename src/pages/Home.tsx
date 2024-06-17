@@ -14,9 +14,9 @@ const Home: React.FC = () => {
       <AnimatedComponent y={-100} opacity={0} duration={0.8}>
         <Header username={username}></Header>
       </AnimatedComponent>
-      <div className=" text-white container">
+      <div className=" text-white container  2xl:scale-[1.5]">
         <AnimatedComponent x={-100} opacity={0} duration={0.8} delay={0.8}>
-          <div className='relative w-[20rem] md:w-[27rem] mx-auto text-left mt-[70px] sm:mt-[120px] ml-10 transition-transform duration-[1200ms] ease-in-out hover:-translate-y-1'>
+          <div className='relative w-[20rem] md:w-[27rem] mx-auto text-left mt-[70px] sm:mt-[120px] ml-10 transition-transform duration-[1200ms] ease-in-out hover:-translate-y-1 2xl:ml-96 2xl:mt-72'>
             <h1 className='text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-red-400 to-red-200 cursor-default mb-1 font-semibold text-[2.5rem] leading-[3.25rem] md:text-[2.75rem] md:leading-[3.75rem] lg:text-[3.25rem] lg:leading-[4.0625rem] xl:text-[3.2rem] xl:leading-[4rem]'>
               Dennis 人工智能
             </h1>
@@ -36,7 +36,7 @@ const Home: React.FC = () => {
             </p>
           </div>
         </AnimatedComponent>
-        <div className="mt-8 ml-10">
+        <div className="mt-8 ml-10 2xl:ml-96">
           <AnimatedComponent x={0} opacity={0} duration={1.3} delay={1.5}>
             <Button px="px-3">
               <button onClick={() => navigate('/trade', { replace: true, state: { username } })} className='text-[11px] font-mono lg:text-[14px]'>start trade</button>
@@ -47,7 +47,7 @@ const Home: React.FC = () => {
       <AnimatedComponent y={0} opacity={0} duration={3} delay={1.5}>
         <img
           src="botimg2.png"
-          className="sm:fixed bottom-0 right-0 opacity-80 mb-4 mr-5 lg:mr-10 hover:opacity-90 hover:transform hover:scale-110 transition-transform duration-500 rounded-t-full"
+          className="2xl:scale-[1.8] 2xl:mb-48 2xl:mr-56 sm:fixed bottom-0 right-0 opacity-80 mb-4 mr-5 lg:mr-10 hover:opacity-90 hover:transform hover:scale-[2] transition-transform duration-500 rounded-t-full"
           height={1200}
         />
       </AnimatedComponent>

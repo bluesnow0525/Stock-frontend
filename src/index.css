@@ -100,3 +100,13 @@ body {
     --shimmer-angle: 360deg;
   }
 }
+
+@media (min-width: 640px) {
+  .sm\:writing-mode-vertical {
+    writing-mode: vertical-rl;
+  }
+
+  .sm\:text-orientation-upright {
+    text-orientation: upright;
+  }
+}

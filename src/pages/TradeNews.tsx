@@ -53,7 +53,7 @@ const TradeNews: React.FC = () => {
                 setCurrentData(sheetData.balance_sheet);
                 settimePeriods(sortTimePeriods(sheetData.balance_sheet.map(data => data["年度-季度"]?.[0] as string).filter(Boolean)))
                 setLabels(sortTimePeriods(sheetData.balance_sheet.map(data => data["年度-季度"]?.[0] as string).filter(Boolean)));
-                setEquityData(sheetData.balance_sheet.map(data => (data["歸屬於母公司業主之權益合計"][0] as number) / 1000));
+                setEquityData(sheetData.balance_sheet.map(data => (data["權益總額"][0] as number) / 1000));
                 setLiabilityData(sheetData.balance_sheet.map(data => (data["負債總額"][0] as number) / 1000));
             } else if (viewMode === 'income-statement') {
                 setCurrentData(sheetData?.income_statement);
@@ -78,16 +78,16 @@ const TradeNews: React.FC = () => {
             </AnimatedComponent>
             <AnimatedComponent y={0} opacity={0} duration={1.5} delay={0.6}>
                 <div className=" mx-auto">
-                    <div className="h-12 flex justify-center items-center">
+                    <div className="h-12 2xl:h-20 flex justify-center items-center">
                         {/* Buttons for navigation */}
                         <button
-                            className={`link-hover-gradient px-4 py-1 rounded mr-4 ${areaMatch ? 'border-red-300 border' : ''}`}
+                            className={`2xl:text-[20px] link-hover-gradient px-4 py-1 rounded mr-4 ${areaMatch ? 'border-red-300 border' : ''}`}
                             onClick={() => handleNavigate(`/trade/area/${id}`)}
                         >
                             價格區
                         </button>
                         <button
-                            className={`link-hover-gradient px-4 py-1 rounded mr-4 ${newsMatch ? 'border-red-300 border' : ''}`}
+                            className={`2xl:text-[20px] link-hover-gradient px-4 py-1 rounded mr-4 ${newsMatch ? 'border-red-300 border' : ''}`}
                             onClick={() => handleNavigate(`/trade/news/${id}`)}
                         >
                             資訊區
@@ -95,45 +95,44 @@ const TradeNews: React.FC = () => {
                     </div>
                     <div className="breathing-divider"></div>
                     <div className='flex flex-col sm:flex-row'>
-                        <div className="w-full sm:w-1/6 sm:h-[500px] text-white mt-8">
+                        <div className="w-full sm:w-1/6 sm:h-[500px] text-white mt-8 2xl:h-[800px]">
                             <div className="flex sm:flex-col sm:p-3 sm:space-y-3">
                                 <button
                                     onClick={() => setViewMode('balance-sheet')}
-                                    className={`px-4 py-1 rounded ${viewMode === 'balance-sheet' ? 'bg-red-500' : 'bg-gray-700 hover:bg-gray-600'}`}
+                                    className={`px-4 py-3 rounded ${viewMode === 'balance-sheet' ? 'bg-red-500' : 'bg-gray-700 hover:bg-gray-600'} sm:writing-mode-vertical sm:text-orientation-upright 2xl:text-[20px]`}
                                 >
                                     資產負債表
                                 </button>
                                 <button
                                     onClick={() => setViewMode('income-statement')}
-                                    className={`px-4 py-1 rounded ${viewMode === 'income-statement' ? 'bg-red-500' : 'bg-gray-700 hover:bg-gray-600'}`}
+                                    className={`px-4 py-3 rounded ${viewMode === 'income-statement' ? 'bg-red-500' : 'bg-gray-700 hover:bg-gray-600'} sm:writing-mode-vertical sm:text-orientation-upright 2xl:text-[20px]`}
                                 >
                                     綜合損益表
                                 </button>
                                 <button
                                     onClick={() => setViewMode('cash-flow')}
-                                    className={`px-4 py-1 rounded ${viewMode === 'cash-flow' ? 'bg-red-500' : 'bg-gray-700 hover:bg-gray-600'}`}
+                                    className={`px-4 py-3 rounded ${viewMode === 'cash-flow' ? 'bg-red-500' : 'bg-gray-700 hover:bg-gray-600'} sm:writing-mode-vertical sm:text-orientation-upright 2xl:text-[20px]`}
                                 >
                                     現金流量表
                                 </button>
                                 <button
                                     onClick={() => setViewMode('dividend')}
-                                    className={`px-4 py-1 rounded ${viewMode === 'dividend' ? 'bg-red-500' : 'bg-gray-700 hover:bg-gray-600'}`}
+                                    className={`px-4 py-3 rounded ${viewMode === 'dividend' ? 'bg-red-500' : 'bg-gray-700 hover:bg-gray-600'} sm:writing-mode-vertical sm:text-orientation-upright 2xl:text-[20px]`}
                                 >
                                     股利
                                 </button>
                             </div>
                         </div>
-
                         {
                             sheetDataStatus === 'succeeded' && currentData && (
-                                <div className="w-full sm:w-[95%] h-[800px] sm:h-[580px] flex flex-col sm:flex-row">
-                                    <div className="flex justify-center items-center h-[800px] sm:h-[580px] w-full sm:w-1/2">
+                                <div className="w-full sm:w-[95%] h-[800px] sm:h-[580px] flex flex-col sm:flex-row 2xl:h-[800px]">
+                                    <div className="flex justify-center items-center h-[800px] sm:h-[580px] w-full sm:w-1/2 2xl:h-[800px]">
                                         {/* 柱狀圖 */}
                                         {viewMode === 'balance-sheet' && (<BalancesheetBar labels={labels} equityData={equityData} liabilityData={liabilityData} />)}
                                         {viewMode === 'income-statement' && (<Incomesheet data={currentData} />)}
                                         {viewMode === 'cash-flow' && (<CashFlowSheet data={currentData} />)}
                                     </div>
-                                    <div className="mt-2 mx-7 text-gray-300 bg-slate-800 py-1 h-[800px] sm:h-[580px] sm:w-1/2 border-slate-400 p-1 rounded-md shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-20 relative" style={{ boxShadow: '0 0 10px 5px rgba(255, 0, 0, 0.5)', overflowY: 'auto', overflowX: 'auto' }}>
+                                    <div className="mt-2 mx-7 text-gray-300 bg-slate-800 py-1 h-[800px] sm:h-[580px] 2xl:h-[800px] sm:w-1/2 border-slate-400 p-1 rounded-md shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-20 relative" style={{ boxShadow: '0 0 10px 5px rgba(255, 0, 0, 0.5)', overflowY: 'auto', overflowX: 'auto' }}>
                                         <table className="w-full">
                                             <thead>
                                                 <tr className='sticky top-0 bg-slate-950 bg-opacity-90 sm:text-[18px] font-bold'>
