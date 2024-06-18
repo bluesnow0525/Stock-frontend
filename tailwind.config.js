@@ -7,6 +7,11 @@ export default {
   ],
   theme: {
     extend: {
+      screens: {
+        '3xl': '1920px', // 添加一个新的断点 '3xl'
+        '4xl': '2560px', // 添加一个新的断点 '4xl'
+        // 您可以根据需要添加更多的断点
+      },
       colors: {
         color: {
           1: "#AC6AFF",

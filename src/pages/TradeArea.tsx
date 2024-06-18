@@ -139,10 +139,10 @@ const TradeArea: React.FC = () => {
 
   useEffect(() => {
     const getChartHeight = () => {
-      if (window.innerWidth > 1536) { // Tailwind's 2XL breakpoint is 1536px
+      if (window.innerWidth > 1536) { // Tailwind's 3xl breakpoint is 1536px
         return 800;
       }
-      return 580;
+      return 550;
     };
     // console.log("useEffect triggered");
     if (pricesStatus === 'succeeded' && stockPrices && chartContainerRef.current) {
@@ -218,23 +218,23 @@ const TradeArea: React.FC = () => {
       </AnimatedComponent>
       <AnimatedComponent y={0} opacity={0} duration={1.5} delay={0.6}>
         <div className=" mx-0 sm:mx-15">
-          <div className="h-12 2xl:h-20 flex justify-center items-center">
+          <div className="h-12 3xl:h-20 flex justify-center items-center">
             {/* Buttons for navigation */}
             <button
-              className={`2xl:text-[20px] link-hover-gradient px-4 py-1 border rounded mr-4 ${areaMatch ? 'border-red-300' : ''}`}
+              className={`3xl:text-[20px] link-hover-gradient px-4 py-1 border rounded mr-4 ${areaMatch ? 'border-red-300' : ''}`}
               onClick={() => handleNavigate(`/trade/area/${id}`)}
             >
               價格區
             </button>
             <button
-              className={`2xl:text-[20px] link-hover-gradient rounded mr-4 ${newsMatch ? 'border-red-300' : ''}`}
+              className={`3xl:text-[20px] link-hover-gradient rounded mr-4 ${newsMatch ? 'border-red-300' : ''}`}
               onClick={() => handleNavigate(`/trade/news/${id}`)}
             >
               資訊區
             </button>
           </div>
           <div className="breathing-divider"></div>
-          <div className="grid grid-rows-2 sm:grid-cols-[5fr,4fr] 2xl:h-[2000px]">
+          <div className="grid grid-rows-2 sm:grid-cols-[5fr,4fr] 3xl:h-[2000px]">
             <div className=" w-full">
               {/* 左侧区块 */}
               <div className="bg-gray-800 text-white py-2 w-full">
@@ -266,7 +266,7 @@ const TradeArea: React.FC = () => {
                         </div>
                       </div>
                     </div>
-                    <img src={`data:image/jpeg;base64,${imageUrl}`} alt="Description" className='w-full h-[350px]' />
+                    <img src={`data:image/jpeg;base64,${imageUrl}`} alt="Description" className='w-full h-[300px]' />
                   </>
                 )}
                 {status === 'loading' && <div className='flex justify-center mt-10'><Loading></Loading></div>}

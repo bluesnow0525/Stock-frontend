@@ -78,8 +78,8 @@ const SelectTarget: React.FC = () => {
           <Header username={username} />
         </AnimatedComponent>
         <AnimatedComponent y={0} opacity={0} duration={1.3} delay={0.8}>
-          <div className="p-4 flex justify-center mt-16 2xl:mt-24">
-            <div className="w-[500px] xl:w-[750px] 2xl:w-[750px] 2xl:scale-[1.3]">
+          <div className="p-4 flex justify-center mt-2 3xl:mt-24">
+            <div className="w-[500px] xl:w-[750px] 3xl:w-[750px] 3xl:scale-[1.3]">
               <div className="h-[500px]">
                 <div className="sticky top-0 text-white flex justify-between">
                   <div>

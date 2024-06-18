@@ -11,10 +11,10 @@ const Header: React.FC<HeaderProp> = ({ username }) => {
     const navigate = useNavigate();
     return (
         <>
-            <div className="top-0 left-0 w-full z-50 bg-n-8/70 backdrop-blur-sm h-18 py-4 2xl:scale-[1.2] sticky">
+            <div className="top-0 left-0 w-full z-50 bg-n-8/70 backdrop-blur-sm h-18 py-4 3xl:scale-[1.2] sticky">
                 <div className="container mx-auto flex items-center justify-between px-1">
                     <div className={`text-transparent bg-clip-text bg-gradient-to-r from-red-300 via-red-500 to-red-600 sm:text-[22px] font-semibold font-mono text-left cursor-default `}>
-                        Dennis Ai
+                        DR.Stock
                     </div>
                     <div className={`items-center justify-center space-x-4 md:space-x-20 sm:space-x-10`}>
                         

@@ -45,7 +45,7 @@ const Login: React.FC = () => {
             </AnimatedComponent>
             <AnimatedComponent y={0} opacity={0} duration={1.5} delay={0.8}>
                 <div className="text-white sm:h-[85vh] flex justify-center items-center">
-                    <div className='bg-slate-800 border border-slate-400 rounded-md p-8 shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-20 relative 2xl:scale-150' style={{ boxShadow: '0 0 10px 5px rgba(255, 0, 0, 0.6)' }}>
+                    <div className='bg-slate-800 border border-slate-400 rounded-md p-8 shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-20 relative 3xl:scale-150' style={{ boxShadow: '0 0 10px 5px rgba(255, 0, 0, 0.6)' }}>
                         <h2 className="text-xl font-bold text-center mb-6">{mode === 'login' ? 'Login' : 'Register'}</h2>
                         <form onSubmit={handleSubmit}>
                             <div className='relative my-5'>

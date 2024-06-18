@@ -67,13 +67,12 @@ const DividendBar: React.FC<DividendBarProps> = ({ data }) => {
                 },
             },
         },
+        responsive: true,
         maintainAspectRatio: false,
     };
 
     return (
-        <div className="w-full">
-            <Bar data={chartData} options={options} />
-        </div>
+        <Bar data={chartData} options={options} />
     );
 };
 

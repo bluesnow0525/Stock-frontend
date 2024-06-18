@@ -55,10 +55,10 @@ const Asset: React.FC = () => {
                 <Header username={username}></Header>
             </AnimatedComponent>
             <AnimatedComponent y={0} opacity={0} duration={0.8} delay={0.8}>
-                <div className="p-4 text-white 2xl:scale-[1.5]">
+                <div className="p-4 text-white 3xl:scale-[1.5]">
                     {userDataStatus === 'succeeded' && userData ? (
                         <>
-                            <div className="grid grid-rows-3 sm:grid-cols-[6fr,4fr] sm:grid-rows-none gap-4 2xl:ml-96 2xl:mt-36">
+                            <div className="grid grid-rows-3 sm:grid-cols-[6fr,4fr] sm:grid-rows-none gap-4 3xl:ml-96 3xl:mt-36">
                                 <motion.div
                                     className="sticky"
                                     initial={{ y: -70 }}

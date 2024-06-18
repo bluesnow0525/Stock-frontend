@@ -23,14 +23,14 @@ ChartJS.register(
 interface CashFlowChartProps {
   data: FinancialData[];
 }
-
+ 
 const CashFlowSheet: React.FC<CashFlowChartProps> = ({ data }) => {
-  const labels = data.map(item => item['年度-季度']?.[0] || 'N/A');
+  const labels = data.map(item => item['年度-季度']?.[0] || 'N/A').reverse();
 
-  const operatingCashFlow = data.map(item => item['營業活動淨現金流量']?.[0] || 0);
-  const investingCashFlow = data.map(item => item['投資活動淨現金流量']?.[0] || 0);
-  const financingCashFlow = data.map(item => item['籌資活動淨現金流量']?.[0] || 0);
-  const netChangeCash = data.map(item => item['現金及約當現金增加減少']?.[0] || 0);
+  const operatingCashFlow = data.map(item => item['營業活動淨現金流量']?.[0] || 0).reverse();
+  const investingCashFlow = data.map(item => item['投資活動淨現金流量']?.[0] || 0).reverse();
+  const financingCashFlow = data.map(item => item['籌資活動淨現金流量']?.[0] || 0).reverse();
+  const netChangeCash = data.map(item => item['現金及約當現金增加減少']?.[0] || 0).reverse();
 
   const chartData = {
     labels,
