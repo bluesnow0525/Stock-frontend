@@ -5,6 +5,7 @@ import {
   PayloadAction,
   ActionReducerMapBuilder,
 } from "@reduxjs/toolkit";
+import { API_BASE_URL } from "../assets/apiurl";
 
 export const buyStock = createAsyncThunk(
   "stock/buyStock",
@@ -23,7 +24,7 @@ export const buyStock = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/buy_stock`, {
+      const response = await fetch(`${API_BASE_URL}/api/buy_stock`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, stockId, stockname, quantity }),
@@ -55,7 +56,7 @@ export const sellStock = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/sell_stock`, {
+      const response = await fetch(`${API_BASE_URL}/api/sell_stock`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, stockId, quantity }),

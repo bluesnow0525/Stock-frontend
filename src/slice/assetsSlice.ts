@@ -1,10 +1,12 @@
 // features/assets/assetsSlice.ts
+import { API_BASE_URL } from '../assets/apiurl';
+
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 export const fetchAssets = createAsyncThunk(
   'assets/fetchAssets',
   async (username: string) => {
-    const response = await fetch(`http://localhost:5000/api/assets`, {
+    const response = await fetch(`${API_BASE_URL}/api/assets`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username })

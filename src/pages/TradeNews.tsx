@@ -3,6 +3,7 @@ import Header from '../components/Header';
 import BalancesheetBar from '../components/BalancesheetBar';
 import Incomesheet from '../components/Incomesheet';
 import CashFlowSheet from '../components/Cashflowsheet';
+import DividendBar from '../components/Dividendsheet';
 import AnimatedComponent from '../components/AnimatedComponent';
 import Loading from '../components/Loading';
 import { useParams, useLocation, useNavigate, useMatch } from 'react-router-dom';
@@ -39,6 +40,9 @@ const TradeNews: React.FC = () => {
             return quarterB - quarterA;
         });
     };
+    const sortYears = (years: string[]) => {
+        return years.sort((a, b) => Number(b) - Number(a));
+    };
 
     const [viewMode, setViewMode] = useState<string>('balance-sheet');
     const [currentData, setCurrentData] = useState<FinancialData[] | undefined>(undefined);
@@ -62,7 +66,8 @@ const TradeNews: React.FC = () => {
                 setCurrentData(sheetData?.cash_flow);
                 settimePeriods(sortTimePeriods(sheetData.cash_flow.map(data => data["年度-季度"]?.[0] as string).filter(Boolean)))
             } else if (viewMode === 'dividend') {
-                // setCurrentData(sheetData?.dividend);
+                setCurrentData(sheetData?.dividend);
+                settimePeriods(sortYears(sheetData.dividend.map(data => data["年度"]?.[0] as string).filter(Boolean)));
             }
         }
     }, [viewMode, sheetData]);
@@ -131,6 +136,7 @@ const TradeNews: React.FC = () => {
                                         {viewMode === 'balance-sheet' && (<BalancesheetBar labels={labels} equityData={equityData} liabilityData={liabilityData} />)}
                                         {viewMode === 'income-statement' && (<Incomesheet data={currentData} />)}
                                         {viewMode === 'cash-flow' && (<CashFlowSheet data={currentData} />)}
+                                        {viewMode === 'dividend' && (<DividendBar data={currentData} />)}
                                     </div>
                                     <div className="mt-2 mx-7 text-gray-300 bg-slate-800 py-1 h-[800px] sm:h-[580px] 2xl:h-[800px] sm:w-1/2 border-slate-400 p-1 rounded-md shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-20 relative" style={{ boxShadow: '0 0 10px 5px rgba(255, 0, 0, 0.5)', overflowY: 'auto', overflowX: 'auto' }}>
                                         <table className="w-full">
@@ -138,30 +144,30 @@ const TradeNews: React.FC = () => {
                                                 <tr className='sticky top-0 bg-slate-950 bg-opacity-90 sm:text-[18px] font-bold'>
                                                     <th className="text-left px-1 py-1" style={{ width: '300px', whiteSpace: 'nowrap' }}>{viewMode}</th>
                                                     {timePeriods?.map(period => (
-                                                        <th key={period} colSpan={viewMode === 'cash-flow' ? 1 : 2} className="text-center px-1 py-1">{period}</th>
+                                                        <th key={period} colSpan={viewMode === 'cash-flow' || viewMode === 'dividend' ? 1 : 2} className="text-center px-1 py-1">{period}</th>
                                                     ))}
                                                 </tr>
                                                 <tr className='sticky top-10 bg-slate-950 bg-opacity-90 text-[11px] sm:text-[14px] font-bold'>
                                                     <th style={{ width: '300px' }}></th>
                                                     {timePeriods?.map(period => (
                                                         <React.Fragment key={period}>
-                                                            <th className="text-left px-1 py-1">千元</th>
-                                                            {viewMode !== 'cash-flow' && <th className="text-left px-1 py-1 border-r">百分比</th>}
+                                                            <th className="text-left px-1 py-1">{viewMode === 'dividend' ? '元' : '千元'}</th>
+                                                            {viewMode !== 'cash-flow' && viewMode !== 'dividend' && <th className="text-left px-1 py-1 border-r">百分比</th>}
                                                         </React.Fragment>
                                                     ))}
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {currentData && Object.keys(currentData[0] || {}).filter(key => key !== "年度-季度").map((key) => (
+                                                {currentData && Object.keys(currentData[0] || {}).filter(key => key !== "年度-季度" && key !== "年度").map((key) => (
                                                     <tr key={key} className="my-1 py-1">
                                                         <td className="px-1 py-1 text-left text-[12px] sm:text-[15px] font-semibold w-full sticky left-0 bg-slate-950 bg-opacity-80 top-20" style={{ width: '300px', whiteSpace: 'nowrap' }}>{key}</td>
                                                         {timePeriods?.map(period => {
-                                                            const data = currentData.find(d => d["年度-季度"]?.[0] === period);
+                                                            const data = currentData.find(d => (viewMode === 'dividend' ? d["年度"]?.[0] : d["年度-季度"]?.[0]) === period);
                                                             const value = data ? data[key] : null;
                                                             return (
                                                                 <React.Fragment key={period}>
                                                                     <td className="px-1 py-1 text-left text-[12px] sm:text-[15px]">{value && Array.isArray(value) && value[0] !== null ? (Number(value[0])).toFixed(2) : 'N/A'}</td>
-                                                                    {viewMode !== 'cash-flow' && <td className="px-1 py-1 text-left text-[12px] sm:text-[15px] border-r">{value && Array.isArray(value) && value[1] !== null ? `${value[1]}%` : 'N/A'}</td>}
+                                                                    {viewMode !== 'cash-flow' && viewMode !== 'dividend' && <td className="px-1 py-1 text-left text-[12px] sm:text-[15px] border-r">{value && Array.isArray(value) && value[1] !== null ? `${value[1]}%` : 'N/A'}</td>}
                                                                 </React.Fragment>
                                                             );
                                                         })}
@@ -169,12 +175,11 @@ const TradeNews: React.FC = () => {
                                                 ))}
                                             </tbody>
                                         </table>
-
                                     </div>
                                 </div>
                             )
                         }
-                        {sheetDataStatus === 'loading' && <div className='flex justify-center mt-10'><Loading></Loading></div>}
+                        {sheetDataStatus === 'loading' && <div className='flex justify-center mt-52 ml-60'><Loading></Loading></div>}
                     </div>
                 </div>
             </AnimatedComponent>

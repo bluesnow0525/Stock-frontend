@@ -1,5 +1,6 @@
 // src/features/userData/userDataSlice.ts
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { API_BASE_URL } from '../assets/apiurl';
 // import { RootState } from '../store';
 
 export type FinancialData = {
@@ -10,7 +11,7 @@ interface SheetData {
     balance_sheet: FinancialData[];
     income_statement: FinancialData[];
     cash_flow: FinancialData[];
-    // dividend: FinancialData[];
+    dividend: FinancialData[];
 }
 
 interface SheetDataState {
@@ -29,7 +30,7 @@ export const fetchSheetData = createAsyncThunk(
     'sheetData/fetchSheetData',
     async (stockId: string, { rejectWithValue }) => {
         try {
-            const response = await fetch(`http://localhost:5000/api/sheet`, {
+            const response = await fetch(`${API_BASE_URL}/api/sheet`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ stockId }),

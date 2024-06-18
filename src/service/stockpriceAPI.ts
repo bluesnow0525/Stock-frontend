@@ -1,6 +1,7 @@
+import { API_BASE_URL } from "../assets/apiurl";
 
 export const fetchStocksPrice = async (id:string) => {
-  const url = 'http://localhost:5000/api/stockprice';
+  const url = `${API_BASE_URL}/api/stockprice`;
   const options = {
     method: 'POST',
     headers: {

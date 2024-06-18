@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { API_BASE_URL } from '../assets/apiurl';
 
 interface FavoritesState {
   isFavoriteAdded: boolean;
@@ -16,7 +17,7 @@ const initialState: FavoritesState = {
 export const addToFavorites = createAsyncThunk(
   'favorites/addToFavorites',
   async ({ username, stockId,stock_name }: { username?: string; stockId: string; stock_name:string }) => {
-    const response = await fetch('http://localhost:5000/api/add_favorite_stock', {
+    const response = await fetch(`${API_BASE_URL}/api/add_favorite_stock`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -35,7 +36,7 @@ export const addToFavorites = createAsyncThunk(
 export const deleteFavorites = createAsyncThunk(
   'favorites/deleteFavorites',
   async ({ username, stockId }: { username?: string; stockId: string }) => {
-    const response = await fetch('http://localhost:5000/api/remove_favorite_stock', {
+    const response = await fetch(`${API_BASE_URL}/api/remove_favorite_stock`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

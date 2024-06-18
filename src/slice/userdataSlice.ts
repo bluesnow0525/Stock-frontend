@@ -1,5 +1,6 @@
 // src/features/userData/userDataSlice.ts
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { API_BASE_URL } from '../assets/apiurl';
 // import { RootState } from '../store';
 
 type Stock = {
@@ -31,7 +32,7 @@ export const fetchUserData = createAsyncThunk(
   'userData/fetchUserData',
   async (username: string, { rejectWithValue }) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/userdata?username=${username}`);
+      const response = await fetch(`${API_BASE_URL}/api/userdata?username=${username}`);
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
