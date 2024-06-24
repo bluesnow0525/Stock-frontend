@@ -32,6 +32,7 @@ const TradeArea: React.FC = () => {
   const newsMatch = useMatch(`/trade/news/${id}`);
 
   const { stockName, username } = location.state as { stockName: string, username?: string };
+  const isvip = location.state ? (location.state as { isvip: Boolean }).isvip : undefined;
   const dispatch = useDispatch<AppDispatch>();
   const dispatchai = useDispatch<AppDispatch>();
   const dispatchasset = useDispatch<AppDispatch>();
@@ -79,7 +80,7 @@ const TradeArea: React.FC = () => {
   }, [dispatchasset, username]);
 
   const handleNavigate = (path: string) => {
-    navigate(path, { state: { stockName: stockName, username } });
+    navigate(path, { state: { stockName: stockName, username, isvip } });
   };
 
   const handleBuy = async () => {
@@ -214,7 +215,7 @@ const TradeArea: React.FC = () => {
   return (
     <>
       <AnimatedComponent y={-100} opacity={0} duration={0.8}>
-        <Header username={username} />
+        <Header username={username} isvip={isvip}></Header>
       </AnimatedComponent>
       <AnimatedComponent y={0} opacity={0} duration={1.5} delay={0.6}>
         <div className=" mx-0 sm:mx-15">

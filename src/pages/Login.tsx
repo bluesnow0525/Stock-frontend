@@ -59,7 +59,8 @@ const Login: React.FC = () => {
                 alert(data.message);
                 setMode('login'); // 忘記密碼成功後切換到登入模式
             } else {
-                navigate('/', { replace: true, state: { username } }); // 登入成功後跳轉到首頁
+                const isvip = false;
+                navigate('/', { replace: true, state: { username, isvip} }); // 登入成功後跳轉到首頁
             }
         } else {
             alert(data.message);

@@ -1,4 +1,4 @@
-import { useNavigate,useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 // import React from 'react';
 import Button from '../components/Button';
 import ButtonGradient from '../assets/svg/ButtonGradient';
@@ -9,10 +9,11 @@ const Home: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const username = location.state ? (location.state as { username: string }).username : undefined;
+  const isvip = location.state ? (location.state as { isvip: Boolean }).isvip : undefined;
   return (
     <><div className='bg-container'>
       <AnimatedComponent y={-100} opacity={0} duration={0.8}>
-        <Header username={username}></Header>
+        <Header username={username} isvip={isvip}></Header>
       </AnimatedComponent>
       <div className=" text-white container  3xl:scale-[1.5]">
         <AnimatedComponent x={-100} opacity={0} duration={0.8} delay={0.8}>
@@ -39,20 +40,23 @@ const Home: React.FC = () => {
         <div className="mt-8 ml-10 3xl:ml-96">
           <AnimatedComponent x={0} opacity={0} duration={1.3} delay={1.5}>
             <Button px="px-3">
-              <button onClick={() => navigate('/trade', { replace: true, state: { username } })} className='text-[11px] font-mono lg:text-[14px]'>start trade</button>
+              <button onClick={() => navigate('/trade', { replace: true, state: { username, isvip } })} className='text-[11px] font-mono lg:text-[14px]'>start trade</button>
             </Button>
           </AnimatedComponent>
         </div>
       </div>
       <AnimatedComponent y={0} opacity={0} duration={3} delay={1.5}>
-        <img
-          src="botimg2.png"
-          className="3xl:scale-[1.8] 3xl:mb-48 3xl:mr-56 sm:fixed bottom-0 right-0 opacity-80 mb-4 mr-5 lg:mr-10 hover:opacity-90 hover:transform hover:scale-[1.2] 3xl:hover:scale-[2] transition-transform duration-500 rounded-t-full"
-          height={1200}
-        />
+        <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank">
+          <img
+            src="botimg2.png"
+            className="3xl:scale-[1.8] 3xl:mb-48 3xl:mr-56 sm:fixed bottom-0 right-0 opacity-80 mb-4 mr-5 lg:mr-10 hover:opacity-90 hover:transform hover:scale-[1.1] 3xl:hover:scale-[2] transition-transform duration-500 rounded-t-full"
+            height="1200"
+            alt="Bot Image"
+          />
+        </a>
       </AnimatedComponent>
-      
-      </div>
+
+    </div>
       <ButtonGradient />
     </>
   );

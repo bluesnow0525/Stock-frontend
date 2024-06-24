@@ -11,6 +11,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { fetchSheetData } from '../slice/sheetSlice';
 import { RootState, AppDispatch } from '../store';
 import { FinancialData } from '../slice/sheetSlice';
+import { API_BASE_URL } from '../assets/apiurl';
 
 const TradeNews: React.FC = () => {
     const { id } = useParams<{ id: string }>();
@@ -19,6 +20,7 @@ const TradeNews: React.FC = () => {
     const areaMatch = useMatch(`/trade/area/${id}`);
     const newsMatch = useMatch(`/trade/news/${id}`);
     const { stockName, username } = location.state as { stockName: string, username?: string };
+    const isvip = location.state ? (location.state as { isvip: Boolean }).isvip : undefined;
 
     const dispatch = useDispatch<AppDispatch>();
     const sheetData = useSelector((state: RootState) => state.sheetData.data);
@@ -73,13 +75,34 @@ const TradeNews: React.FC = () => {
     }, [viewMode, sheetData]);
 
     const handleNavigate = (path: string) => {
-        navigate(path, { state: { stockName: stockName, username } });
+        navigate(path, { state: { stockName: stockName, username, isvip } });
+    };
+
+    const handleRepair = async () => {
+        try {
+            const stockId = id; 
+            const response = await fetch(`${API_BASE_URL}/api/sheetrepaire`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ stockId }),
+            });
+            if (response.ok) {
+                const data = await response.json();
+                alert(data.message);
+            } else {
+                throw new Error('修复失败');
+            }
+        } catch (error) {
+            alert('修复失败，请稍后再试。');
+        }
     };
 
     return (
         <>
             <AnimatedComponent y={-100} opacity={0} duration={0.8}>
-                <Header username={username} />
+                <Header username={username} isvip={isvip}></Header>
             </AnimatedComponent>
             <AnimatedComponent y={0} opacity={0} duration={1.5} delay={0.6}>
                 <div className="h-screen mx-auto">
@@ -176,11 +199,19 @@ const TradeNews: React.FC = () => {
                                             </tbody>
                                         </table>
                                     </div>
+                                    <button
+                                        className="fixed top-[10%] right-[10%] w-16 h-16 bg-red-500 text-white rounded-full flex justify-center items-center shadow-lg"
+                                        onClick={handleRepair}
+                                        style={{ boxShadow: '0 0 10px 5px rgba(255, 0, 0, 0.5)' }}
+                                    >
+                                        修復財報
+                                    </button>
                                 </div>
                             )
                         }
-                        {sheetDataStatus === 'loading' && <div className='flex justify-center mt-52 ml-60'><Loading></Loading></div>}
                     </div>
+
+                    {sheetDataStatus === 'loading' && <div className='flex justify-center mt-52 ml-60'><Loading></Loading></div>}
                 </div>
             </AnimatedComponent>
         </>

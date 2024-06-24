@@ -16,6 +16,7 @@ type Stock = {
 const SelectTarget: React.FC = () => {
   const location = useLocation();
   const username = location.state ? (location.state as { username: string }).username : undefined;
+  const isvip = location.state ? (location.state as { isvip: Boolean }).isvip : undefined;
 
   const [searchTerm, setSearchTerm] = useState<string>('');
   // const [showFavorites, setShowFavorites] = useState<boolean>(false);
@@ -60,7 +61,7 @@ const SelectTarget: React.FC = () => {
   };
 
   const handleStockSelect = (id: string, name: string): void => {
-    navigate(`/trade/area/${id}`, { state: { stockName: name, username } }); // Navigate to Trade Area with selected stock ID as URL parameter
+    navigate(`/trade/area/${id}`, { state: { stockName: name, username, isvip } }); // Navigate to Trade Area with selected stock ID as URL parameter
   };
 
   const handleAddToFavorites = (stockId: string, stock_name: string) => {
@@ -75,7 +76,7 @@ const SelectTarget: React.FC = () => {
     <>
       <div className='bg-container'>
         <AnimatedComponent y={-100} opacity={0} duration={0.8}>
-          <Header username={username} />
+        <Header username={username} isvip={isvip}></Header>
         </AnimatedComponent>
         <AnimatedComponent y={0} opacity={0} duration={1.3} delay={0.8}>
           <div className="p-4 flex justify-center mt-2 3xl:mt-24">

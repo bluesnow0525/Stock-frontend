@@ -11,6 +11,8 @@ import { motion } from 'framer-motion';
 const Asset: React.FC = () => {
     const location = useLocation();
     const username = location.state ? (location.state as { username: string }).username : undefined;
+    const isvip = location.state ? (location.state as { isvip: Boolean }).isvip : undefined;
+
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
     const userData = useSelector((state: RootState) => state.userData.data);
@@ -37,7 +39,7 @@ const Asset: React.FC = () => {
     };
 
     const handleStockSelect = (id: string, name: string): void => {
-        navigate(`/trade/area/${id}`, { state: { stockName: name, username } });
+        navigate(`/trade/area/${id}`, { state: { stockName: name, username, isvip } });
     };
 
     let totalAssets = 0;
@@ -52,7 +54,7 @@ const Asset: React.FC = () => {
     return (
         <><div className='bg-container'>
             <AnimatedComponent y={-100} opacity={0} duration={0.8}>
-                <Header username={username}></Header>
+                <Header username={username} isvip={isvip}></Header>
             </AnimatedComponent>
             <AnimatedComponent y={0} opacity={0} duration={0.8} delay={0.8}>
                 <div className="p-4 text-white 3xl:scale-[1.5]">
