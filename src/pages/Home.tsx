@@ -17,8 +17,8 @@ const Home: React.FC = () => {
       <div className=" text-white container  3xl:scale-[1.5]">
         <AnimatedComponent x={-100} opacity={0} duration={0.8} delay={0.8}>
           <div className='relative w-[20rem] md:w-[27rem] mx-auto text-left mt-[70px] sm:mt-[120px] ml-10 transition-transform duration-[1200ms] ease-in-out hover:-translate-y-1 3xl:ml-96 3xl:mt-72'>
-            <h1 className='text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-red-400 to-red-200 cursor-default mb-1 font-semibold text-[2.5rem] leading-[3.25rem] md:text-[2.75rem] md:leading-[3.75rem] lg:text-[3.25rem] lg:leading-[4.0625rem] xl:text-[3.2rem] xl:leading-[4rem]'>
-              DR.Stock AI財富引擎
+            <h1 className='text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-red-400 to-red-200 cursor-default mb-1 font-semibold text-[2.5rem] leading-[3.25rem] md:text-[2.65rem] md:leading-[3.65rem] lg:text-[3.25rem] lg:leading-[4.0625rem] xl:text-[3rem] xl:leading-[4rem]'>
+              DR.Stock財富引擎
             </h1>
             <img
               src="curve.png"
