@@ -1,21 +1,46 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Button from './Button';
 import ButtonGradient from '../assets/svg/ButtonGradient';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState, AppDispatch } from '../store';
+import { toggleVIPStatus } from '../slice/vipSlice';
 
 interface HeaderProp {
     username?: string;
     isvip?: Boolean
 }
+
 const Header: React.FC<HeaderProp> = ({ username, isvip }) => {
     // const [isOpen, setIsOpen] = useState<boolean>(false);
+    const dispatch: AppDispatch = useDispatch();
+    const vip = useSelector((state: RootState) => state.vip);
+
     const navigate = useNavigate();
 
     const [showMenu, setShowMenu] = useState(false);
+    const [vipCode, setVipCode] = useState<string>('');
 
     const toggleMenu = () => {
         setShowMenu(!showMenu);
     };
+
+    const canceltag = () => {
+        alert('請洽管理員bluesnow0525')
+    }
+    const handleToggleVIP = () => {
+        if (username && vipCode) {
+            dispatch(toggleVIPStatus({ username, vip_code: vipCode }));
+        } else {
+            alert('Please enter your username and VIP code');
+        }
+    };
+
+    useEffect(() => {
+        if (vip.status === 'idle' && vip.message) {
+            alert(vip.message);
+        }
+    }, [vip.status, vip.message]);
 
     return (
         <>
@@ -49,18 +74,18 @@ const Header: React.FC<HeaderProp> = ({ username, isvip }) => {
                                         {username}
                                     </p>
                                     <div className={`transition-all duration-300 ${showMenu ? 'max-h-screen' : 'max-h-0'} overflow-hidden`}>
-                                        <div className='bg-white shadow-md rounded p-4 mt-2'>
+                                        <div className='bg-black shadow-md rounded p-4 mt-2'>
                                             <div>
                                                 {isvip ? (
-                                                    <button className='bg-blue-500 text-white py-2 px-4 rounded mb-2'>
+                                                    <button className='bg-blue-500 text-white py-2 px-4 rounded mb-2' onClick={canceltag}>
                                                         取消VIP
                                                     </button>
                                                 ) : (
                                                     <div className='flex flex-col'>
-                                                        <input type='text' placeholder='Input field' className='border py-2 px-4 rounded mb-2' />
-                                                        <button className='bg-green-500 text-white py-2 px-4 rounded mb-2'>
+                                                        <input type='text' placeholder='Input field' className='border py-2 px-4 rounded mb-2' onChange={(e) => setVipCode(e.target.value)} />
+                                                        <button className='bg-green-500 text-white py-2 px-4 rounded mb-2' onClick={handleToggleVIP}>
                                                             升級VIP
-                                                        </button>                                            
+                                                        </button>
                                                     </div>
                                                 )}
                                             </div>

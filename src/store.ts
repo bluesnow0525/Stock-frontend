@@ -6,6 +6,7 @@ import assetsReducer from './slice/assetsSlice'
 import stockOperationsReducer from './slice/stockOperationsSlice'
 import favoritesReducer from './slice/favoritesSlice'
 import sheetDataReducer from './slice/sheetSlice';
+import vipReducer from './slice/vipSlice'
 
 export const store = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ export const store = configureStore({
     stockOperations: stockOperationsReducer,
     favorites: favoritesReducer,
     sheetData: sheetDataReducer,
+    vip: vipReducer,
   },
   // 如果需要添加 Redux DevTools 配置或中间件，可以在这里添加
 });
