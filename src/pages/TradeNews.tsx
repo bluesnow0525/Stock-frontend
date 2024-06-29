@@ -19,9 +19,15 @@ const TradeNews: React.FC = () => {
     const navigate = useNavigate();
     const areaMatch = useMatch(`/trade/area/${id}`);
     const newsMatch = useMatch(`/trade/news/${id}`);
-    const { stockName, username } = location.state as { stockName: string, username?: string };
-    const isvip = location.state ? (location.state as { isvip: Boolean }).isvip : undefined;
+    const { stockName } = location.state as { stockName: string };
+    
+    const [username, setusername] = useState(location.state ? (location.state as { username: string }).username : undefined);
+    const [isvip, setisvip] = useState(location.state ? (location.state as { isvip: Boolean }).isvip : undefined);
 
+    const updateUserInfo = (newUsername: string, newIsVip: boolean) => {
+        setusername(newUsername);
+        setisvip(newIsVip);
+    };
     const dispatch = useDispatch<AppDispatch>();
     const sheetData = useSelector((state: RootState) => state.sheetData.data);
     const sheetDataStatus = useSelector((state: RootState) => state.sheetData.status);
@@ -80,7 +86,7 @@ const TradeNews: React.FC = () => {
 
     const handleRepair = async () => {
         try {
-            const stockId = id; 
+            const stockId = id;
             const response = await fetch(`${API_BASE_URL}/api/sheetrepaire`, {
                 method: 'POST',
                 headers: {
@@ -102,7 +108,7 @@ const TradeNews: React.FC = () => {
     return (
         <>
             <AnimatedComponent y={-100} opacity={0} duration={0.8}>
-                <Header username={username} isvip={isvip}></Header>
+                <Header username={username} isvip={isvip} onUpdateUserInfo={updateUserInfo}></Header>
             </AnimatedComponent>
             <AnimatedComponent y={0} opacity={0} duration={1.5} delay={0.6}>
                 <div className="h-screen mx-auto">

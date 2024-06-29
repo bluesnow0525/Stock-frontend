@@ -2,7 +2,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import AnimatedComponent from '../components/AnimatedComponent';
 import Header from '../components/Header';
 import Loading from '../components/Loading';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchUserData } from '../slice/userdataSlice';
 import { RootState, AppDispatch } from '../store';
@@ -10,8 +10,13 @@ import { motion } from 'framer-motion';
 
 const Asset: React.FC = () => {
     const location = useLocation();
-    const username = location.state ? (location.state as { username: string }).username : undefined;
-    const isvip = location.state ? (location.state as { isvip: Boolean }).isvip : undefined;
+    const [username, setusername] = useState(location.state ? (location.state as { username: string }).username : undefined);
+    const [isvip, setisvip] = useState(location.state ? (location.state as { isvip: Boolean }).isvip : undefined);
+
+    const updateUserInfo = (newUsername: string, newIsVip: boolean) => {
+        setusername(newUsername);
+        setisvip(newIsVip);
+    };
 
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
@@ -54,7 +59,7 @@ const Asset: React.FC = () => {
     return (
         <><div className='bg-container'>
             <AnimatedComponent y={-100} opacity={0} duration={0.8}>
-                <Header username={username} isvip={isvip}></Header>
+                <Header username={username} isvip={isvip} onUpdateUserInfo={updateUserInfo}></Header>
             </AnimatedComponent>
             <AnimatedComponent y={0} opacity={0} duration={0.8} delay={0.8}>
                 <div className="p-4 text-white 3xl:scale-[1.5]">
@@ -65,7 +70,7 @@ const Asset: React.FC = () => {
                                     className="sticky"
                                     initial={{ y: -70 }}
                                     animate={{ y: 0 }}
-                                    transition={{ type: "spring", stiffness: 200 ,delay: 0.8}}
+                                    transition={{ type: "spring", stiffness: 200, delay: 0.8 }}
                                 >
                                     <div className="flex flex-col items-center sm:items-start sm:flex-row sm:mx-5 space-y-4">
                                         <div className="relative w-20 h-20">

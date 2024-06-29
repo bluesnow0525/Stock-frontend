@@ -31,8 +31,16 @@ const TradeArea: React.FC = () => {
   const areaMatch = useMatch(`/trade/area/${id}`);
   const newsMatch = useMatch(`/trade/news/${id}`);
 
-  const { stockName, username } = location.state as { stockName: string, username?: string };
-  const isvip = location.state ? (location.state as { isvip: Boolean }).isvip : undefined;
+  const { stockName } = location.state as { stockName: string };
+
+  const [username, setusername] = useState(location.state ? (location.state as { username: string }).username : undefined);
+  const [isvip, setisvip] = useState(location.state ? (location.state as { isvip: Boolean }).isvip : undefined);
+
+  const updateUserInfo = (newUsername: string, newIsVip: boolean) => {
+    setusername(newUsername);
+    setisvip(newIsVip);
+  };
+
   const dispatch = useDispatch<AppDispatch>();
   const dispatchai = useDispatch<AppDispatch>();
   const dispatchasset = useDispatch<AppDispatch>();
@@ -47,6 +55,12 @@ const TradeArea: React.FC = () => {
   const [quantity, setQuantity] = useState<number>(0);
   const [isWithinTime, setIsWithinTime] = useState(false);
 
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const toggleImage = () => {
+    setIsExpanded(!isExpanded);
+  };
+
   useEffect(() => {
     const checkTime = () => {
       const now = new Date();
@@ -56,7 +70,7 @@ const TradeArea: React.FC = () => {
       const totalMinutes = hours * 60 + minutes;
 
       // 9:00 AM 的总分钟数是 540, 1:30 PM 的总分钟数是 810
-      if (dayOfWeek >= 0 && dayOfWeek <= 5 && totalMinutes >= -540 && totalMinutes <= 19810) {
+      if (dayOfWeek >= 0 && dayOfWeek <= 6 && totalMinutes >= 540 && totalMinutes <= 810) {
         setIsWithinTime(true);
       } else {
         setIsWithinTime(false);
@@ -215,7 +229,7 @@ const TradeArea: React.FC = () => {
   return (
     <>
       <AnimatedComponent y={-100} opacity={0} duration={0.8}>
-        <Header username={username} isvip={isvip}></Header>
+        <Header username={username} isvip={isvip} onUpdateUserInfo={updateUserInfo}></Header>
       </AnimatedComponent>
       <AnimatedComponent y={0} opacity={0} duration={1.5} delay={0.6}>
         <div className=" mx-0 sm:mx-15">
@@ -252,22 +266,32 @@ const TradeArea: React.FC = () => {
                 {status === 'succeeded' && imageUrl && username && (
                   <>
                     <div className="bg-gray-800 text-white py-2 w-full text-center">AI評分</div>
-                    
+
                     <div className='flex justify-center px-2 my-1 bg-slate-800 border border-slate-400 p-1 rounded-md shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-20 relative' style={{ boxShadow: '0 0 10px 5px rgba(255, 0, 0, 0.4)' }}>
                       <div className='flex w-full'>
-                        <div className='text-white flex flex-col justify-center items-center w-1/3 sm:w-1/2'>
+                        <div className='text-white flex flex-col justify-center items-center w-1/3 sm:w-1/3'>
                           <BuySellGauge score={info.評價分數} />
                           <p className='text-[18px] text-center font-extrabold'>{info.評價分數}</p>
                           <p className='text-[14px] font-bold text-slate-200'>AI信心分數:{info.評價分數}</p>
                           <p className='text-[14px] font-bold text-slate-200'>準確率: {info.準確率}</p>
                         </div>
-                        <div className='text-white text-center px-2 w-1/2'>
+                        <div className='text-white text-center px-2 w-1/3'>
+                          <p>hi</p>
+                        </div>
+                        <div className='text-white text-center px-2 w-1/3'>
                           {info.合理價 !== 0 && <p className='text-[18px] font-extrabold text-slate-200'>合理價: {info.合理價}</p>}
-                          {info.長期評價 !== '' && <p className='text-[16px] font-extrabold text-slate-200'>長期評價: {info.長期評價}</p>}                          
+                          {info.長期評價 !== '' && <p className='text-[16px] font-extrabold text-slate-200'>長期評價: {info.長期評價}</p>}
                         </div>
                       </div>
                     </div>
-                    <img src={`data:image/jpeg;base64,${imageUrl}`} alt="Description" className='w-full h-[300px]' />
+                    <div>
+                      <button onClick={toggleImage} className="text-white rounded w-full border border-slate-500 h-[30px] link-hover-gradient">
+                        {isExpanded ? '收起' : '顯示AI結果圖'}
+                      </button>
+                      <div className={`transition-all duration-500 ${isExpanded ? 'max-h-[300px] h-[300px]' : 'max-h-0 h-0'} overflow-hidden`}>
+                        <img src={`data:image/jpeg;base64,${imageUrl}`} alt="Description" className='w-full h-[300px]' />
+                      </div>
+                    </div>
                   </>
                 )}
                 {status === 'loading' && <div className='flex justify-center mt-10'><Loading></Loading></div>}

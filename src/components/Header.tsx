@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Button from './Button';
 import ButtonGradient from '../assets/svg/ButtonGradient';
@@ -8,11 +8,11 @@ import { toggleVIPStatus } from '../slice/vipSlice';
 
 interface HeaderProp {
     username?: string;
-    isvip?: Boolean
+    isvip?: Boolean;
+    onUpdateUserInfo?: (username: string, isvip: boolean) => void;
 }
 
-const Header: React.FC<HeaderProp> = ({ username, isvip }) => {
-    // const [isOpen, setIsOpen] = useState<boolean>(false);
+const Header: React.FC<HeaderProp> = ({ username, isvip, onUpdateUserInfo }) => {
     const dispatch: AppDispatch = useDispatch();
     const vip = useSelector((state: RootState) => state.vip);
 
@@ -31,16 +31,14 @@ const Header: React.FC<HeaderProp> = ({ username, isvip }) => {
     const handleToggleVIP = () => {
         if (username && vipCode) {
             dispatch(toggleVIPStatus({ username, vip_code: vipCode }));
+            if(onUpdateUserInfo){
+                onUpdateUserInfo(username,vip.vip);
+            }
+            alert(vip.message);
         } else {
             alert('Please enter your username and VIP code');
         }
     };
-
-    useEffect(() => {
-        if (vip.status === 'idle' && vip.message) {
-            alert(vip.message);
-        }
-    }, [vip.status, vip.message]);
 
     return (
         <>
@@ -70,20 +68,20 @@ const Header: React.FC<HeaderProp> = ({ username, isvip }) => {
                         {
                             username ? (
                                 <div className='relative mr-2'>
-                                    <p className='text-[14px] sm:text-[16px] font-mono mr-3 text-red-600 cursor-pointer' onClick={toggleMenu}>
+                                    <p className='text-[14px] sm:text-[18px] font-mono mr-3 text-red-600 cursor-pointer' onClick={toggleMenu}>
                                         {username}
                                     </p>
-                                    <div className={`transition-all duration-300 ${showMenu ? 'max-h-screen' : 'max-h-0'} overflow-hidden`}>
-                                        <div className='bg-black shadow-md rounded p-4 mt-2'>
+                                    <div className={`transition-all ${showMenu ? 'max-h-[50%]' : 'max-h-0'} overflow-hidden`}>
+                                        <div className='shadow-md rounded p-1'>
                                             <div>
                                                 {isvip ? (
-                                                    <button className='bg-blue-500 text-white py-2 px-4 rounded mb-2' onClick={canceltag}>
+                                                    <button className='border border-red-600 text-white sm:text-[13px] text-[11px] py-1 px-1 rounded' onClick={canceltag}>
                                                         取消VIP
                                                     </button>
                                                 ) : (
                                                     <div className='flex flex-col'>
-                                                        <input type='text' placeholder='Input field' className='border py-2 px-4 rounded mb-2' onChange={(e) => setVipCode(e.target.value)} />
-                                                        <button className='bg-green-500 text-white py-2 px-4 rounded mb-2' onClick={handleToggleVIP}>
+                                                        <input type='text' placeholder='Input field' className='border py-1 px-1 rounded mb-1 sm:text-[13px] text-[11px]' onChange={(e) => setVipCode(e.target.value)} />
+                                                        <button className='border border-red-600 text-white sm:text-[13px] text-[11px] py-1 px-1 rounded' onClick={handleToggleVIP}>
                                                             升級VIP
                                                         </button>
                                                     </div>

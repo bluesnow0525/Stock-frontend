@@ -15,9 +15,14 @@ type Stock = {
 };
 const SelectTarget: React.FC = () => {
   const location = useLocation();
-  const username = location.state ? (location.state as { username: string }).username : undefined;
-  const isvip = location.state ? (location.state as { isvip: Boolean }).isvip : undefined;
+  const [username, setusername] = useState(location.state ? (location.state as { username: string }).username : undefined);
+  const [isvip, setisvip] = useState(location.state ? (location.state as { isvip: Boolean }).isvip : undefined);
 
+  const updateUserInfo = (newUsername: string, newIsVip: boolean) => {
+    setusername(newUsername);
+    setisvip(newIsVip);
+  };
+  
   const [searchTerm, setSearchTerm] = useState<string>('');
   // const [showFavorites, setShowFavorites] = useState<boolean>(false);
   const [viewMode, setViewMode] = useState<string>('all');
@@ -76,7 +81,7 @@ const SelectTarget: React.FC = () => {
     <>
       <div className='bg-container'>
         <AnimatedComponent y={-100} opacity={0} duration={0.8}>
-        <Header username={username} isvip={isvip}></Header>
+          <Header username={username} isvip={isvip} onUpdateUserInfo={updateUserInfo}></Header>
         </AnimatedComponent>
         <AnimatedComponent y={0} opacity={0} duration={1.3} delay={0.8}>
           <div className="p-4 flex justify-center mt-2 3xl:mt-24">

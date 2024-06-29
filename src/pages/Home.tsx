@@ -1,5 +1,5 @@
 import { useNavigate, useLocation } from 'react-router-dom';
-// import React from 'react';
+import {useState} from 'react';
 import Button from '../components/Button';
 import ButtonGradient from '../assets/svg/ButtonGradient';
 import AnimatedComponent from '../components/AnimatedComponent';
@@ -8,12 +8,18 @@ import Header from '../components/Header';
 const Home: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const username = location.state ? (location.state as { username: string }).username : undefined;
-  const isvip = location.state ? (location.state as { isvip: Boolean }).isvip : undefined;
+  const [username, setusername] = useState(location.state ? (location.state as { username: string }).username : undefined);
+  const [isvip, setisvip] = useState(location.state ? (location.state as { isvip: Boolean }).isvip : undefined);
+
+  const updateUserInfo = (newUsername: string, newIsVip: boolean) => {
+    setusername(newUsername);
+    setisvip(newIsVip);
+  };
+
   return (
     <><div className='bg-container'>
       <AnimatedComponent y={-100} opacity={0} duration={0.8}>
-        <Header username={username} isvip={isvip}></Header>
+        <Header username={username} isvip={isvip} onUpdateUserInfo={updateUserInfo}></Header>
       </AnimatedComponent>
       <div className=" text-white container  3xl:scale-[1.5]">
         <AnimatedComponent x={-100} opacity={0} duration={0.8} delay={0.8}>
