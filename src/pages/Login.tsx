@@ -25,7 +25,7 @@ const Login: React.FC = () => {
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        if (!validateUsernamePassword(username) || !validateUsernamePassword(password)) {
+        if ((!validateUsernamePassword(username) || !validateUsernamePassword(password)) && mode !== 'forgot') {
             alert('Username and Password must be alphanumeric.');
             return;
         }
