@@ -22,7 +22,7 @@ const TradeNews: React.FC = () => {
     const { stockName } = location.state as { stockName: string };
     
     const [username, setusername] = useState(location.state ? (location.state as { username: string }).username : undefined);
-    const [isvip, setisvip] = useState(location.state ? (location.state as { isvip: Boolean }).isvip : undefined);
+    const [isvip, setisvip] = useState(location.state ? (location.state as { isvip: boolean }).isvip : undefined);
 
     const updateUserInfo = (newUsername: string, newIsVip: boolean) => {
         setusername(newUsername);
@@ -63,16 +63,16 @@ const TradeNews: React.FC = () => {
         if (sheetData) {
             if (viewMode === 'balance-sheet') {
                 setCurrentData(sheetData.balance_sheet);
-                settimePeriods(sortTimePeriods(sheetData.balance_sheet.map(data => data["年度-季度"]?.[0] as string).filter(Boolean)))
+                settimePeriods(sortTimePeriods(sheetData.balance_sheet.map(data => data["年度-季度"]?.[0] as string).filter(Boolean)));
                 setLabels(sortTimePeriods(sheetData.balance_sheet.map(data => data["年度-季度"]?.[0] as string).filter(Boolean)).reverse());
                 setEquityData(sheetData.balance_sheet.map(data => (data["權益總額"][0] as number) / 1000).reverse());
                 setLiabilityData(sheetData.balance_sheet.map(data => (data["負債總額"][0] as number) / 1000).reverse());
             } else if (viewMode === 'income-statement') {
                 setCurrentData(sheetData?.income_statement);
-                settimePeriods(sortTimePeriods(sheetData.income_statement.map(data => data["年度-季度"]?.[0] as string).filter(Boolean)))
+                settimePeriods(sortTimePeriods(sheetData.income_statement.map(data => data["年度-季度"]?.[0] as string).filter(Boolean)));
             } else if (viewMode === 'cash-flow') {
                 setCurrentData(sheetData?.cash_flow);
-                settimePeriods(sortTimePeriods(sheetData.cash_flow.map(data => data["年度-季度"]?.[0] as string).filter(Boolean)))
+                settimePeriods(sortTimePeriods(sheetData.cash_flow.map(data => data["年度-季度"]?.[0] as string).filter(Boolean)));
             } else if (viewMode === 'dividend') {
                 setCurrentData(sheetData?.dividend);
                 settimePeriods(sortYears(sheetData.dividend.map(data => data["年度"]?.[0] as string).filter(Boolean)));
@@ -173,7 +173,7 @@ const TradeNews: React.FC = () => {
                                                 <tr className='sticky top-0 bg-slate-950 bg-opacity-90 sm:text-[18px] font-bold'>
                                                     <th className="text-left px-1 py-1" style={{ width: '300px', whiteSpace: 'nowrap' }}>{viewMode}</th>
                                                     {timePeriods?.map(period => (
-                                                        <th key={period} colSpan={viewMode === 'cash-flow' || viewMode === 'dividend' ? 1 : 2} className="text-center px-1 py-1">{period}</th>
+                                                        <th key={period} className="text-center px-1 py-1">{period}</th>
                                                     ))}
                                                 </tr>
                                                 <tr className='sticky top-10 bg-slate-950 bg-opacity-90 text-[11px] sm:text-[14px] font-bold'>
@@ -181,7 +181,6 @@ const TradeNews: React.FC = () => {
                                                     {timePeriods?.map(period => (
                                                         <React.Fragment key={period}>
                                                             <th className="text-left px-1 py-1">{viewMode === 'dividend' ? '元' : '千元'}</th>
-                                                            {viewMode !== 'cash-flow' && viewMode !== 'dividend' && <th className="text-left px-1 py-1 border-r">百分比</th>}
                                                         </React.Fragment>
                                                     ))}
                                                 </tr>
@@ -196,7 +195,6 @@ const TradeNews: React.FC = () => {
                                                             return (
                                                                 <React.Fragment key={period}>
                                                                     <td className="px-1 py-1 text-left text-[12px] sm:text-[15px]">{value && Array.isArray(value) && value[0] !== null ? (Number(value[0])).toFixed(2) : 'N/A'}</td>
-                                                                    {viewMode !== 'cash-flow' && viewMode !== 'dividend' && <td className="px-1 py-1 text-left text-[12px] sm:text-[15px] border-r">{value && Array.isArray(value) && value[1] !== null ? `${value[1]}%` : 'N/A'}</td>}
                                                                 </React.Fragment>
                                                             );
                                                         })}
