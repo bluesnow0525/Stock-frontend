@@ -31,7 +31,7 @@ const Incomesheet: React.FC<CombinedChartProps> = ({ data }) => {
 
     const lineData1 = data.map(item => item['營業毛利']?.[0] || 0).reverse();
     const lineData2 = data.map(item => item['營業利益']?.[0] || 0).reverse();
-    const lineData3 = data.map(item => item['本期淨利']?.[0] || 0).reverse();
+    const lineData3 = data.map(item => item['稅後淨利']?.[0] || 0).reverse();
     const barData = data.map(item => item['稀釋每股盈餘']?.[0] || 0).reverse();
 
     const chartData = {
@@ -55,7 +55,7 @@ const Incomesheet: React.FC<CombinedChartProps> = ({ data }) => {
             },
             {
                 type: 'line' as const,
-                label: '本期淨利（淨損）',
+                label: '稅後淨利',
                 borderColor: 'rgb(193, 22, 255)',
                 backgroundColor: 'rgba(193, 22, 255)',
                 data: lineData3,

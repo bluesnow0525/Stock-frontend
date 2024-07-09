@@ -27,17 +27,17 @@ interface CashFlowChartProps {
 const CashFlowSheet: React.FC<CashFlowChartProps> = ({ data }) => {
   const labels = data.map(item => item['年度-季度']?.[0] || 'N/A').reverse();
 
-  const operatingCashFlow = data.map(item => item['營業活動淨現金流量']?.[0] || 0).reverse();
-  const investingCashFlow = data.map(item => item['投資活動淨現金流量']?.[0] || 0).reverse();
-  const financingCashFlow = data.map(item => item['籌資活動淨現金流量']?.[0] || 0).reverse();
-  const netChangeCash = data.map(item => item['現金及約當現金增加減少']?.[0] || 0).reverse();
+  const operatingCashFlow = data.map(item => item['營業現金流']?.[0] || 0).reverse();
+  const investingCashFlow = data.map(item => item['投資現金流']?.[0] || 0).reverse();
+  const financingCashFlow = data.map(item => item['融資現金流']?.[0] || 0).reverse();
+  const netChangeCash = data.map(item => item['淨現金流']?.[0] || 0).reverse();
 
   const chartData = {
     labels,
     datasets: [
       {
         type: 'line' as const,
-        label: '營業活動淨現金流量',
+        label: '營業現金流',
         borderColor: 'rgb(75, 192, 192)',
         backgroundColor: 'rgba(75, 192, 192)',
         data: operatingCashFlow,
@@ -45,7 +45,7 @@ const CashFlowSheet: React.FC<CashFlowChartProps> = ({ data }) => {
       },
       {
         type: 'line' as const,
-        label: '投資活動淨現金流量',
+        label: '投資現金流',
         borderColor: 'rgb(54, 162, 235)',
         backgroundColor: 'rgba(54, 162, 235)',
         data: investingCashFlow,
@@ -53,7 +53,7 @@ const CashFlowSheet: React.FC<CashFlowChartProps> = ({ data }) => {
       },
       {
         type: 'line' as const,
-        label: '籌資活動淨現金流量',
+        label: '融資現金流',
         borderColor: 'rgb(153, 102, 255)',
         backgroundColor: 'rgba(153, 102, 255)',
         data: financingCashFlow,
@@ -61,7 +61,7 @@ const CashFlowSheet: React.FC<CashFlowChartProps> = ({ data }) => {
       },
       {
         type: 'line' as const,
-        label: '現金及約當現金增加減少',
+        label: '淨現金流',
         borderColor: 'rgb(255, 159, 64)',
         backgroundColor: 'rgba(255, 159, 64)',
         data: netChangeCash,
