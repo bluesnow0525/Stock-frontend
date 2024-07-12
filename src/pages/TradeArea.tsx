@@ -276,11 +276,15 @@ const TradeArea: React.FC = () => {
                           <p className='text-[14px] font-bold text-slate-200'>準確率: {info.準確率}</p>
                         </div>
                         <div className='text-white text-center px-2 w-1/3'>
-                          <p>hi</p>
+                          {info.合理價 !== '' && <p className='text-[18px] font-extrabold text-slate-200'>合理價: {info.合理價} ({info.低合理價} ~ {info.高合理價})</p>}
+                          {info.長期評價 !== '' && <p className='text-[16px] font-extrabold text-slate-200'>長期評價: {info.長期評價}</p>}
+                          {info.預期年化報酬率 !== '' && <p className='text-[14px] font-extrabold text-slate-200'>預期年化報酬率: {info.預期年化報酬率}</p>}
                         </div>
                         <div className='text-white text-center px-2 w-1/3'>
-                          {info.合理價 !== 0 && <p className='text-[18px] font-extrabold text-slate-200'>合理價: {info.合理價}</p>}
-                          {info.長期評價 !== '' && <p className='text-[16px] font-extrabold text-slate-200'>長期評價: {info.長期評價}</p>}
+                          {info.股息法估價 !== '' && <p className='text-[14px] text-slate-200'>股息法估價: {info.股息法估價}</p>}
+                          {info.pb法估價 !== '' && <p className='text-[14px] text-slate-200'>pb法估價: {info.pb法估價}</p>}
+                          {info.pe法估價 !== '' && <p className='text-[14px] text-slate-200'>pe法估價: {info.pe法估價}</p>}
+                          {info.ddm法估價 !== '' && <p className='text-[14px] text-slate-200'>ddm法估價: {info.ddm法估價}</p>}
                         </div>
                       </div>
                     </div>

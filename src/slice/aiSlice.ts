@@ -1,16 +1,19 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface ImageInfo {
-    評價: string;
-    評價分數:number;
-    現價: number;
-    準確率: string;
-    合理價:number;
-    長期評價:string;
-    本益比:number;
-    本淨比:number;
-    殖利率:number;
-    成長率:number;
+  評價: string;
+  評價分數: number;
+  現價: number;
+  準確率: string;
+  預期年化報酬率: string;
+  高合理價: string;
+  合理價: string;
+  低合理價: string;
+  長期評價: string;
+  股息法估價: string;
+  pb法估價: string;
+  pe法估價: string;
+  ddm法估價: string;
 }
 
 interface ImageState {
@@ -24,15 +27,18 @@ const initialState: ImageState = {
   imageUrl: '',
   info: {
     評價: '',
-    評價分數:0,
+    評價分數: 0,
     現價: 0,
     準確率: '',
-    合理價:0,
-    長期評價:'',
-    本益比:0,
-    本淨比:0,
-    殖利率:0,
-    成長率:0,
+    預期年化報酬率: '',
+    高合理價: '',
+    合理價: '',
+    低合理價: '',
+    長期評價: '',
+    股息法估價: '',
+    pb法估價: '',
+    pe法估價: '',
+    ddm法估價: '',
   },
   status: 'idle',
   error: null,
