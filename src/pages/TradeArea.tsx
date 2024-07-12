@@ -265,7 +265,7 @@ const TradeArea: React.FC = () => {
                 {/* 右上区块 */}
                 {status === 'succeeded' && imageUrl && username && (
                   <>
-                    <div className="bg-gray-800 text-white py-2 w-full text-center">AI評分</div>
+                    <div className="bg-gray-800 text-white py-2 w-full text-center">AI評分與個股估值</div>
 
                     <div className='flex justify-center px-2 my-1 bg-slate-800 border border-slate-400 p-1 rounded-md shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-20 relative' style={{ boxShadow: '0 0 10px 5px rgba(255, 0, 0, 0.4)' }}>
                       <div className='flex w-full'>
@@ -275,12 +275,12 @@ const TradeArea: React.FC = () => {
                           <p className='text-[14px] font-bold text-slate-200'>AI信心分數:{info.評價分數}</p>
                           <p className='text-[14px] font-bold text-slate-200'>準確率: {info.準確率}</p>
                         </div>
-                        <div className='text-white text-center px-2 w-1/3'>
-                          {info.合理價 !== '' && <p className='text-[18px] font-extrabold text-slate-200'>合理價: {info.合理價} ({info.低合理價} ~ {info.高合理價})</p>}
-                          {info.長期評價 !== '' && <p className='text-[16px] font-extrabold text-slate-200'>長期評價: {info.長期評價}</p>}
+                        <div className='text-white text-center px-2 w-1/3 mt-5'>
+                          {info.合理價 !== '' && <p className='text-[18px] font-extrabold text-slate-200'>合理價: {info.合理價}<br /><span className='text-[13px]'>({info.低合理價} ~ {info.高合理價})</span></p>}
+                          {info.長期評價 !== '' && <p className='text-[16px] font-extrabold text-slate-200 my-1'>長期評價: {info.長期評價}</p>}
                           {info.預期年化報酬率 !== '' && <p className='text-[14px] font-extrabold text-slate-200'>預期年化報酬率: {info.預期年化報酬率}</p>}
                         </div>
-                        <div className='text-white text-center px-2 w-1/3'>
+                        <div className='text-white text-center px-2 w-1/3 mt-5'>
                           {info.股息法估價 !== '' && <p className='text-[14px] text-slate-200'>股息法估價: {info.股息法估價}</p>}
                           {info.pb法估價 !== '' && <p className='text-[14px] text-slate-200'>pb法估價: {info.pb法估價}</p>}
                           {info.pe法估價 !== '' && <p className='text-[14px] text-slate-200'>pe法估價: {info.pe法估價}</p>}
