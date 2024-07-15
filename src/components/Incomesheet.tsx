@@ -27,12 +27,12 @@ interface CombinedChartProps {
 }
 
 const Incomesheet: React.FC<CombinedChartProps> = ({ data }) => {
-    const labels = data.map(item => item['年度-季度']?.[0] || 'N/A').reverse();
+    const labels = data.map(item => item['年度-季度']?.[0] || 'N/A');
 
-    const lineData1 = data.map(item => item['營業毛利']?.[0] || 0).reverse();
-    const lineData2 = data.map(item => item['營業利益']?.[0] || 0).reverse();
-    const lineData3 = data.map(item => item['稅後淨利']?.[0] || 0).reverse();
-    const barData = data.map(item => item['稀釋每股盈餘']?.[0] || 0).reverse();
+    const lineData1 = data.map(item => item['營業毛利']?.[0] || 0);
+    const lineData2 = data.map(item => item['營業利益']?.[0] || 0);
+    const lineData3 = data.map(item => item['稅後淨利']?.[0] || 0);
+    const barData = data.map(item => item['每股盈餘']?.[0] || 0);
 
     const chartData = {
         labels,
@@ -63,7 +63,7 @@ const Incomesheet: React.FC<CombinedChartProps> = ({ data }) => {
             },
             {
                 type: 'bar' as const,
-                label: '稀釋每股盈餘',
+                label: '每股盈餘',
                 backgroundColor: 'rgba(135, 206, 250, 0.7)',
                 borderColor: 'rgb(255, 159, 64)',
                 data: barData,

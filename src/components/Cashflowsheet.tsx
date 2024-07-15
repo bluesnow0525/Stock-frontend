@@ -25,12 +25,12 @@ interface CashFlowChartProps {
 }
  
 const CashFlowSheet: React.FC<CashFlowChartProps> = ({ data }) => {
-  const labels = data.map(item => item['年度-季度']?.[0] || 'N/A').reverse();
+  const labels = data.map(item => item['年度-季度']?.[0] || 'N/A');
 
-  const operatingCashFlow = data.map(item => item['營業現金流']?.[0] || 0).reverse();
-  const investingCashFlow = data.map(item => item['投資現金流']?.[0] || 0).reverse();
-  const financingCashFlow = data.map(item => item['融資現金流']?.[0] || 0).reverse();
-  const netChangeCash = data.map(item => item['淨現金流']?.[0] || 0).reverse();
+  const operatingCashFlow = data.map(item => item['營業現金流']?.[0] || 0);
+  const investingCashFlow = data.map(item => item['投資現金流']?.[0] || 0);
+  const financingCashFlow = data.map(item => item['融資現金流']?.[0] || 0);
+  const netChangeCash = data.map(item => item['淨現金流']?.[0] || 0);
 
   const chartData = {
     labels,

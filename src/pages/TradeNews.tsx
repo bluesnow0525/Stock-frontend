@@ -70,11 +70,11 @@ const TradeNews: React.FC = () => {
                 setEquityData(sheetData.balance_sheet.map(data => {
                     const value = data["股東權益（淨值）"]?.[0];
                     return typeof value === 'number' ? value / 1000 : 0;
-                }).reverse());
+                }));
                 setLiabilityData(sheetData.balance_sheet.map(data => {
                     const value = data["總負債"]?.[0];
                     return typeof value === 'number' ? value / 1000 : 0;
-                }).reverse());
+                }));
             } else if (viewMode === 'income-statement') {
                 setCurrentData(sheetData?.income_statement);
                 const periods = sheetData.income_statement.map(data => data["年度-季度"]?.[0] as string).filter(Boolean);
@@ -115,7 +115,7 @@ const TradeNews: React.FC = () => {
                             className={`3xl:text-[20px] link-hover-gradient px-4 py-1 rounded mr-4 ${newsMatch ? 'border-red-300 border' : ''}`}
                             onClick={() => handleNavigate(`/trade/news/${id}`)}
                         >
-                            資訊區
+                            財報區
                         </button>
                     </div>
                     <div className="breathing-divider"></div>

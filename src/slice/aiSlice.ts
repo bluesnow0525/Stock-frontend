@@ -10,10 +10,14 @@ interface ImageInfo {
   合理價: string;
   低合理價: string;
   長期評價: string;
-  股息法估價: string;
+  淨值: string;
+  殖利率: string;
   pb法估價: string;
   pe法估價: string;
   ddm法估價: string;
+  de法估價: string;
+  dcf法估價: string;
+  peg法估價: string;
 }
 
 interface ImageState {
@@ -35,10 +39,14 @@ const initialState: ImageState = {
     合理價: '',
     低合理價: '',
     長期評價: '',
-    股息法估價: '',
+    淨值: '',
+    殖利率: '',
     pb法估價: '',
     pe法估價: '',
     ddm法估價: '',
+    de法估價: '',
+    dcf法估價: '',
+    peg法估價: '',
   },
   status: 'idle',
   error: null,

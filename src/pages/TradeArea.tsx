@@ -245,7 +245,7 @@ const TradeArea: React.FC = () => {
               className={`3xl:text-[20px] link-hover-gradient rounded mr-4 ${newsMatch ? 'border-red-300' : ''}`}
               onClick={() => handleNavigate(`/trade/news/${id}`)}
             >
-              資訊區
+              財報區
             </button>
           </div>
           <div className="breathing-divider"></div>
@@ -281,10 +281,14 @@ const TradeArea: React.FC = () => {
                           {info.預期年化報酬率 !== '' && <p className='text-[14px] font-extrabold text-slate-200'>預期年化報酬率: {info.預期年化報酬率}</p>}
                         </div>
                         <div className='text-white text-center px-2 w-1/3 mt-5'>
-                          {info.股息法估價 !== '' && <p className='text-[14px] text-slate-200'>股息法估價: {info.股息法估價}</p>}
+                          {info.淨值 !== '' && <p className='text-[14px] text-slate-200'>淨值: {info.淨值}</p>}
+                          {info.殖利率 !== '' && <p className='text-[14px] text-slate-200'>殖利率: {info.殖利率}</p>}
                           {info.pb法估價 !== '' && <p className='text-[14px] text-slate-200'>pb法估價: {info.pb法估價}</p>}
                           {info.pe法估價 !== '' && <p className='text-[14px] text-slate-200'>pe法估價: {info.pe法估價}</p>}
                           {info.ddm法估價 !== '' && <p className='text-[14px] text-slate-200'>ddm法估價: {info.ddm法估價}</p>}
+                          {info.de法估價 !== '' && <p className='text-[14px] text-slate-200'>de法估價: {info.de法估價}</p>}
+                          {info.dcf法估價 !== '' && <p className='text-[14px] text-slate-200'>dcf法估價: {info.dcf法估價}</p>}
+                          {info.peg法估價 !== '' && <p className='text-[14px] text-slate-200'>peg法估價: {info.peg法估價}</p>}
                         </div>
                       </div>
                     </div>
