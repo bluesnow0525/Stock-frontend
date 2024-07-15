@@ -115,7 +115,7 @@ const TradeNews: React.FC = () => {
                             className={`3xl:text-[20px] link-hover-gradient px-4 py-1 rounded mr-4 ${newsMatch ? 'border-red-300 border' : ''}`}
                             onClick={() => handleNavigate(`/trade/news/${id}`)}
                         >
-                            資訊區
+                            財報區
                         </button>
                     </div>
                     <div className="breathing-divider"></div>
