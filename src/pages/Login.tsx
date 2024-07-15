@@ -42,7 +42,7 @@ const Login: React.FC = () => {
                 ? { username, password, email, officialCode }
                 : { username };
 
-        const response = await fetch(`${API_BASE_URL}/${endpoint}`, {
+        const response = await fetch(`${API_BASE_URL}/api/${endpoint}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

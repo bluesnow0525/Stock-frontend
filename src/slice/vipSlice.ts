@@ -17,7 +17,7 @@ const initialState: VIPState = {
 export const toggleVIPStatus = createAsyncThunk(
   'vip/toggleVIPStatus',
   async ({ username, vip_code }: { username: string; vip_code: string }) => {
-    const response = await fetch(`${API_BASE_URL}/addvip`, {
+    const response = await fetch(`${API_BASE_URL}/api/addvip`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
