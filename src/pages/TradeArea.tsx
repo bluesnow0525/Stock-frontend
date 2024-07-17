@@ -31,7 +31,7 @@ const TradeArea: React.FC = () => {
   const areaMatch = useMatch(`/trade/area/${id}`);
   const newsMatch = useMatch(`/trade/news/${id}`);
 
-  const { stockName } = location.state as { stockName: string };
+  const { stockName, ETF } = location.state as { stockName: string, ETF: boolean };
 
   const [username, setusername] = useState(location.state ? (location.state as { username: string }).username : undefined);
   const [isvip, setisvip] = useState(location.state ? (location.state as { isvip: Boolean }).isvip : undefined);
@@ -94,7 +94,7 @@ const TradeArea: React.FC = () => {
   }, [dispatchasset, username]);
 
   const handleNavigate = (path: string) => {
-    navigate(path, { state: { stockName: stockName, username, isvip } });
+    navigate(path, { state: { stockName: stockName, username, isvip, ETF } });
   };
 
   const handleBuy = async () => {
@@ -241,12 +241,14 @@ const TradeArea: React.FC = () => {
             >
               價格區
             </button>
-            <button
+            {ETF !== true && (
+              <button
               className={`3xl:text-[20px] link-hover-gradient rounded mr-4 ${newsMatch ? 'border-red-300' : ''}`}
               onClick={() => handleNavigate(`/trade/news/${id}`)}
             >
               財報區
             </button>
+            )}           
           </div>
           <div className="breathing-divider"></div>
           <div className="grid grid-rows-2 sm:grid-cols-[5fr,4fr] 3xl:h-[2000px]">
@@ -276,8 +278,8 @@ const TradeArea: React.FC = () => {
                           <p className='text-[14px] font-bold text-slate-200'>準確率: {info.準確率}</p>
                         </div>
                         <div className='text-white text-center px-2 w-1/3 mt-5'>
-                          {info.合理價 !== '' && <p className='text-[17px] font-extrabold text-slate-200'>合理價: {info.低合理價} ~ {info.高合理價}<br /><span className='text-[15px]'>估算:{info.合理價}</span></p>}
-                          {info.長期評價 !== '' && <p className='text-[16px] font-extrabold text-slate-200 my-1'>長期評價: {info.長期評價}</p>}
+                          {info.合理價 !== '' && <p className='text-[17px] font-extrabold text-slate-200'>合理價: {info.低合理價} ~ {info.高合理價}<br /><span className='text-[15px]'>中間值:{info.合理價}</span></p>}
+                          {info.長期評價 !== '' && <p className='text-[16px] font-extrabold text-slate-200 my-1 whitespace-pre-line'>長期評價: {info.長期評價}</p>}
                           {info.預期年化報酬率 !== '' && <p className='text-[14px] font-extrabold text-slate-200'>預期年化報酬率: {info.預期年化報酬率}</p>}
                         </div>
                         <div className='text-white text-center px-2 w-1/3 mt-5'>

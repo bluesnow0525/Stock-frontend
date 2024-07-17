@@ -7,6 +7,9 @@ export default {
   ],
   theme: {
     extend: {
+      whitespace: {
+        'pre-line': 'pre-line',
+      },
       screens: {
         '3xl': '1920px', // 添加一个新的断点 '3xl'
         '4xl': '2560px', // 添加一个新的断点 '4xl'

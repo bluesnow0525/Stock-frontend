@@ -18,7 +18,7 @@ const TradeNews: React.FC = () => {
     const navigate = useNavigate();
     const areaMatch = useMatch(`/trade/area/${id}`);
     const newsMatch = useMatch(`/trade/news/${id}`);
-    const { stockName } = location.state as { stockName: string };
+    const { stockName, ETF } = location.state as { stockName: string, ETF: boolean };
 
     const [username, setUsername] = useState(location.state ? (location.state as { username: string }).username : undefined);
     const [isVip, setIsVip] = useState(location.state ? (location.state as { isvip: boolean }).isvip : undefined);
@@ -93,7 +93,7 @@ const TradeNews: React.FC = () => {
 
 
     const handleNavigate = (path: string) => {
-        navigate(path, { state: { stockName: stockName, username, isVip } });
+        navigate(path, { state: { stockName: stockName, username, isVip, ETF } });
     };
 
     return (

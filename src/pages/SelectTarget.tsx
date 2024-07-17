@@ -65,8 +65,8 @@ const SelectTarget: React.FC = () => {
     setSearchTerm(event.target.value);
   };
 
-  const handleStockSelect = (id: string, name: string): void => {
-    navigate(`/trade/area/${id}`, { state: { stockName: name, username, isvip } }); // Navigate to Trade Area with selected stock ID as URL parameter
+  const handleStockSelect = (id: string, name: string, ETF: boolean): void => {
+    navigate(`/trade/area/${id}`, { state: { stockName: name, username, isvip, ETF } }); // Navigate to Trade Area with selected stock ID as URL parameter
   };
 
   const handleAddToFavorites = (stockId: string, stock_name: string) => {
@@ -129,14 +129,14 @@ const SelectTarget: React.FC = () => {
                       {filteredStocks.map((stock: Stock) => (
                         <tr key={stock.Code} className="cursor-pointer my-1 py-1 hover:bg-slate-800">
                           <td
-                            onClick={() => handleStockSelect(stock.Code, stock.Name)}
+                            onClick={() => handleStockSelect(stock.Code, stock.Name, stock.ETF)}
                             className="px-1 py-2 text-left text-[20px] font-semibold w-2/3"
                           >
                             {stock.Name} <br />
                             <span className="font-mono text-[14px]">{stock.Code}</span>
                           </td>
                           <td
-                            onClick={() => handleStockSelect(stock.Code, stock.Name)}
+                            onClick={() => handleStockSelect(stock.Code, stock.Name, stock.ETF)}
                             className="px-8 py-2 text-right text-[22px] font-semibold"
                           >
                             {stock.Trading}
