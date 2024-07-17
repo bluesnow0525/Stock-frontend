@@ -278,7 +278,7 @@ const TradeArea: React.FC = () => {
                           <p className='text-[14px] font-bold text-slate-200'>準確率: {info.準確率}</p>
                         </div>
                         <div className='text-white text-center px-2 w-1/3 mt-5'>
-                          {info.合理價 !== '' && <p className='text-[17px] font-extrabold text-slate-200'>合理價: {info.低合理價} ~ {info.高合理價}<br /><span className='text-[15px]'>中間值:{info.合理價}</span></p>}
+                          {info.合理價 !== '' && <p className='text-[17px] font-extrabold text-slate-200'>合理價: {info.低合理價} ~ <span className='text-[15px]'>{info.合理價}</span> ~ {info.高合理價}</p>}
                           {info.長期評價 !== '' && <p className='text-[16px] font-extrabold text-slate-200 my-1 whitespace-pre-line'>長期評價: {info.長期評價}</p>}
                           {info.預期年化報酬率 !== '' && <p className='text-[14px] font-extrabold text-slate-200'>預期年化報酬率: {info.預期年化報酬率}</p>}
                         </div>
