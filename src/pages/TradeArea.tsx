@@ -13,6 +13,7 @@ import { RootState, AppDispatch } from '../store';
 import { fetchStart, fetchSuccess, fetchFailure } from '../slice/aiSlice';
 import { fetchAiData } from '../service/aireviewAPI';
 import { fetchAssets, buyStock, sellStock } from '../slice'
+import Thermometer from '../components/Thermometer';
 
 export interface StockData {
   time: string;
@@ -21,6 +22,11 @@ export interface StockData {
   low: string;
   close: string;
   volume: string;
+}
+
+interface Evaluation {
+  low: number;
+  high: number;
 }
 
 const TradeArea: React.FC = () => {
@@ -55,10 +61,29 @@ const TradeArea: React.FC = () => {
   const [quantity, setQuantity] = useState<number>(0);
   const [isWithinTime, setIsWithinTime] = useState(false);
 
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded_image, setIsExpanded_image] = useState(false);
+  const [isExpanded_eval, setIsExpanded_eval] = useState(false);
+
+  const evaluations = [
+    { label: 'pb法估價', value: info.pb法估價 },
+    { label: 'pe法估價', value: info.pe法估價 },
+    { label: 'ddm法估價', value: info.ddm法估價 },
+    { label: 'de法估價', value: info.de法估價 },
+    { label: 'dcf法估價', value: info.dcf法估價 },
+    { label: 'peg法估價', value: info.peg法估價 },
+  ];
 
   const toggleImage = () => {
-    setIsExpanded(!isExpanded);
+    setIsExpanded_image(!isExpanded_image);
+  };
+
+  const toggleEval = () => {
+    setIsExpanded_eval(!isExpanded_eval);
+  };
+
+  const parseEvaluation = (evalStr: string): Evaluation => {
+    const [low, high] = evalStr.split('~').map((v) => parseInt(v, 10));
+    return { low, high };
   };
 
   useEffect(() => {
@@ -70,7 +95,7 @@ const TradeArea: React.FC = () => {
       const totalMinutes = hours * 60 + minutes;
 
       // 9:00 AM 的总分钟数是 540, 1:30 PM 的总分钟数是 810
-      if (dayOfWeek >= 0 && dayOfWeek <= 6 && totalMinutes >= 540 && totalMinutes <= 810) {
+      if (dayOfWeek < 6 && totalMinutes >= 540 && totalMinutes <= 870) {
         setIsWithinTime(true);
       } else {
         setIsWithinTime(false);
@@ -243,12 +268,12 @@ const TradeArea: React.FC = () => {
             </button>
             {ETF !== true && (
               <button
-              className={`3xl:text-[20px] link-hover-gradient rounded mr-4 ${newsMatch ? 'border-red-300' : ''}`}
-              onClick={() => handleNavigate(`/trade/news/${id}`)}
-            >
-              財報區
-            </button>
-            )}           
+                className={`3xl:text-[20px] link-hover-gradient rounded mr-4 ${newsMatch ? 'border-red-300' : ''}`}
+                onClick={() => handleNavigate(`/trade/news/${id}`)}
+              >
+                財報區
+              </button>
+            )}
           </div>
           <div className="breathing-divider"></div>
           <div className="grid grid-rows-2 sm:grid-cols-[5fr,4fr] 3xl:h-[2000px]">
@@ -278,27 +303,39 @@ const TradeArea: React.FC = () => {
                           <p className='text-[14px] font-bold text-slate-200'>準確率: {info.準確率}</p>
                         </div>
                         <div className='text-white text-center px-2 w-1/3 mt-5'>
-                          {info.合理價 !== '' && <p className='text-[17px] font-extrabold text-slate-200'>合理價: {info.低合理價} ~ <span className='text-[15px]'>{info.合理價}</span> ~ {info.高合理價}</p>}
+                          {info.合理價 !== '' && <p className='text-[17px] font-extrabold text-slate-200'>合理價:<br /> {info.低合理價} ~ <span className='text-[15px]'>{info.合理價}</span> ~ {info.高合理價}</p>}
                           {info.長期評價 !== '' && <p className='text-[16px] font-extrabold text-slate-200 my-1 whitespace-pre-line'>長期評價: {info.長期評價}</p>}
-                          {info.預期年化報酬率 !== '' && <p className='text-[14px] font-extrabold text-slate-200'>預期年化報酬率: {info.預期年化報酬率}</p>}
+                          {info.預期年化報酬率 !== '' && <p className='text-[16px] font-extrabold text-slate-200'>預期年化報酬率: {info.預期年化報酬率}</p>}
+                          {info.預估eps !== '' && <p className='text-[16px] text-slate-200 my-1'>預估eps: {info.預估eps}</p>}
+                          {info.淨值 !== '' && <p className='text-[16px] text-slate-200'>淨值: {info.淨值}</p>}
+                          {info.殖利率 !== '' && <p className='text-[16px] text-slate-200 my-1'>殖利率: {info.殖利率}</p>}
                         </div>
                         <div className='text-white text-center px-2 w-1/3 mt-5'>
-                          {info.淨值 !== '' && <p className='text-[14px] text-slate-200'>淨值: {info.淨值}</p>}
-                          {info.殖利率 !== '' && <p className='text-[14px] text-slate-200'>殖利率: {info.殖利率}</p>}
-                          {info.pb法估價 !== '' && <p className='text-[14px] text-slate-200'>pb法估價: {info.pb法估價}</p>}
-                          {info.pe法估價 !== '' && <p className='text-[14px] text-slate-200'>pe法估價: {info.pe法估價}</p>}
-                          {info.ddm法估價 !== '' && <p className='text-[14px] text-slate-200'>ddm法估價: {info.ddm法估價}</p>}
-                          {info.de法估價 !== '' && <p className='text-[14px] text-slate-200'>de法估價: {info.de法估價}</p>}
-                          {info.dcf法估價 !== '' && <p className='text-[14px] text-slate-200'>dcf法估價: {info.dcf法估價}</p>}
-                          {info.peg法估價 !== '' && <p className='text-[14px] text-slate-200'>peg法估價: {info.peg法估價}</p>}
+                          <button onClick={toggleEval} className="text-white rounded w-full border border-slate-500 h-[30px] link-hover-gradient">
+                            {isExpanded_eval ? '收起' : '展開估值'}
+                          </button>
+                          <div className={`transition-all duration-500 ${isExpanded_eval ? 'max-h-[400px] h-[400px]' : 'max-h-0 h-0'} overflow-hidden`}>
+                            <div className="space-y-6 mt-2">
+                              {evaluations.map((evalItem, index) =>
+                                evalItem.value ? (
+                                  <Thermometer
+                                    key={index}
+                                    label={evalItem.label}
+                                    evaluation={parseEvaluation(evalItem.value)}
+                                    recentPrice={info.現價}
+                                  />
+                                ) : null
+                              )}
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
                     <div>
                       <button onClick={toggleImage} className="text-white rounded w-full border border-slate-500 h-[30px] link-hover-gradient">
-                        {isExpanded ? '收起' : '顯示AI結果圖'}
+                        {isExpanded_image ? '收起' : '顯示AI結果圖'}
                       </button>
-                      <div className={`transition-all duration-500 ${isExpanded ? 'max-h-[300px] h-[300px]' : 'max-h-0 h-0'} overflow-hidden`}>
+                      <div className={`transition-all duration-500 ${isExpanded_image ? 'max-h-[300px] h-[300px]' : 'max-h-0 h-0'} overflow-hidden`}>
                         <img src={`data:image/jpeg;base64,${imageUrl}`} alt="Description" className='w-full h-[300px]' />
                       </div>
                     </div>
@@ -310,6 +347,7 @@ const TradeArea: React.FC = () => {
               </div>
               <div className="text-white">
                 {/* 右下区块 */}
+
                 {username && isWithinTime ? (
                   <div className='py-2'>
                     <h1 className='w-full mb-4 text-center bg-slate-800 border border-slate-400 p-1 rounded-md shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-20 relative' style={{ boxShadow: '0 0 10px 5px rgba(255, 0, 0, 0.5)' }}>

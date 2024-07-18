@@ -10,6 +10,7 @@ interface ImageInfo {
   合理價: string;
   低合理價: string;
   長期評價: string;
+  預估eps: string;
   淨值: string;
   殖利率: string;
   pb法估價: string;
@@ -39,6 +40,7 @@ const initialState: ImageState = {
     合理價: '',
     低合理價: '',
     長期評價: '',
+    預估eps: '',
     淨值: '',
     殖利率: '',
     pb法估價: '',

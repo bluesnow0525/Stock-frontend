@@ -12,6 +12,7 @@ interface SheetData {
     income_statement: FinancialData[];
     cash_flow: FinancialData[];
     dividend: FinancialData[];
+    revenue: FinancialData[];
 }
 
 interface SheetDataState {
