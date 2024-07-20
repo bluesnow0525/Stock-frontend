@@ -13,6 +13,8 @@ export type Stock = {
 type StocksData = {
   all_stocks: Stock[];
   user_favorites: Stock[];
+  ai_ranks: Stock[];
+  value_ranks: Stock[];
 };
 
 interface StocksState {
@@ -25,7 +27,9 @@ interface StocksState {
 const initialState: StocksState = {
   data: {
     all_stocks: [], // 初始化为空数组
-    user_favorites: [] // 初始化为空数组
+    user_favorites: [], // 初始化为空数组
+    ai_ranks: [],
+    value_ranks: [],
   },
   prices: [],
   status: "idle",

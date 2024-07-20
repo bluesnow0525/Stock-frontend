@@ -33,8 +33,8 @@ const SelectTarget: React.FC = () => {
   const allstocksData = useSelector((state: RootState) => state.stocks.data);
   const stocksData = allstocksData.all_stocks;
   const favstocksData = allstocksData.user_favorites;
-  const top10longData: Stock[] = []
-  const top10shortData: Stock[] = []
+  const top10longData = allstocksData.value_ranks;
+  const top10shortData = allstocksData.ai_ranks;
 
   const filteredStocks = viewMode === 'fav'
     ? favstocksData.filter((stock: Stock) =>
@@ -105,13 +105,13 @@ const SelectTarget: React.FC = () => {
                       onClick={() => setViewMode('toplong')}
                       className={`border border-b-0 border-l-0 border-red-300 rounded px-2 py-1 ${viewMode === 'toplong' ? 'text-red-500' : 'text-white'}`}
                     >
-                      AI長
+                      價值排行
                     </button>
                     <button
                       onClick={() => setViewMode('topshort')}
                       className={`border border-b-0 border-l-0 border-red-300 rounded px-2 py-1 ${viewMode === 'topshort' ? 'text-red-500' : 'text-white'}`}
                     >
-                      AI短
+                      AI排行
                     </button>
                   </div>
                   <input
@@ -142,7 +142,7 @@ const SelectTarget: React.FC = () => {
                             {stock.Trading}
                             <span className="font-mono text-[14px]">{stock.ETF ? ' ETF' : ''}</span>
                           </td>
-                          {viewMode === 'all' && username && (
+                          {viewMode === ('all' || 'toplong' || 'topshort') && username && (
                             <td className="text-right pr-4">
                               <button
                                 onClick={() => handleAddToFavorites(stock.Code, stock.Name)}

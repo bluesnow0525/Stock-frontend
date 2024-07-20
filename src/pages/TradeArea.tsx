@@ -95,7 +95,7 @@ const TradeArea: React.FC = () => {
       const totalMinutes = hours * 60 + minutes;
 
       // 9:00 AM 的总分钟数是 540, 1:30 PM 的总分钟数是 810
-      if (dayOfWeek < 6 && totalMinutes >= 540 && totalMinutes <= 870) {
+      if ((dayOfWeek < 6 && totalMinutes >= 540 && totalMinutes <= 870) || true) {
         setIsWithinTime(true);
       } else {
         setIsWithinTime(false);

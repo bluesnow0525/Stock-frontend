@@ -68,7 +68,7 @@ const Thermometer: React.FC<{ label: string; evaluation: Evaluation; recentPrice
         <div className="relative top-4 w-full h-3">
           <div className="absolute inset-y-0 left-0 w-full bg-gray-300 rounded-full"></div>
           <div
-            className="absolute inset-y-0 left-0 h-full bg-yellow-400 rounded-full z-10"
+            className="absolute inset-y-0 left-0 h-full bg-yellow-400 rounded-full opacity-30"
             style={{
               left: `${calculateWidth(evaluation.low)}%`,
               width: `${calculateWidth(evaluation.high) - calculateWidth(evaluation.low)}%`,
