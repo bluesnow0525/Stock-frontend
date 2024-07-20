@@ -46,7 +46,7 @@ const Home: React.FC = () => {
         <div className="mt-8 ml-10 3xl:ml-96">
           <AnimatedComponent x={0} opacity={0} duration={1.3} delay={1.5}>
             <Button px="px-3">
-              <button onClick={() => navigate('/trade', { replace: true, state: { username, isvip } })} className='text-[11px] font-mono lg:text-[14px]'>start trade</button>
+              <button onClick={() => navigate('/pdfview', { replace: true, state: { username, isvip } })} className='text-[11px] font-mono lg:text-[14px]'>前往教學</button>
             </Button>
           </AnimatedComponent>
         </div>

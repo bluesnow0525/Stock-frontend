@@ -5,6 +5,7 @@ import TradeArea from './pages/TradeArea';
 import TradeNews from './pages/TradeNews';
 import Login from './pages/Login';
 import Asset from './pages/Asset';
+import PdfViewer from './pages/Pdf';
 
 const App: React.FC = () => {
   const routes = useRoutes([
@@ -14,7 +15,7 @@ const App: React.FC = () => {
     { path: 'asset', element: <Asset /> },
     { path: 'trade/area/:id', element: <TradeArea /> },
     { path: 'trade/news/:id', element: <TradeNews /> },
-
+    { path: 'pdfview', element: <PdfViewer /> },
   ]);
 
   return routes;
