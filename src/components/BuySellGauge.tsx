@@ -22,11 +22,11 @@ const BuySellGauge: React.FC<BuySellGaugeProps> = ({ score }) => {
             </defs>
             <path id="arc" d="M 7 95 A 55 55 0 0 1 120 95" stroke="url(#grad1)" strokeWidth="10" fill="none" />
             <text fontSize="12" fill="white">
-              <textPath href="#arc" startOffset="0%">大空</textPath>
-              <textPath href="#arc" startOffset="25%">空</textPath>
+              <textPath href="#arc" startOffset="0%">超鳥</textPath>
+              <textPath href="#arc" startOffset="25%">弱</textPath>
               <textPath href="#arc" startOffset="50%" textAnchor="middle">持平</textPath>
-              <textPath href="#arc" startOffset="75%" textAnchor="end">多</textPath>
-              <textPath href="#arc" startOffset="100%" textAnchor="end">大多</textPath>
+              <textPath href="#arc" startOffset="75%" textAnchor="end">強</textPath>
+              <textPath href="#arc" startOffset="100%" textAnchor="end">超屌</textPath>
             </text>
           </svg>
         </div>

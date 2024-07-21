@@ -36,8 +36,10 @@ const initialState: StocksState = {
   pricesStatus: "idle",
 };
 
-export const fetchStocks = createAsyncThunk("stocks/fetchStocks", async (username?: string) => {
-  return await fetchStocksData(username);
+export const fetchStocks = createAsyncThunk(
+  "stocks/fetchStocks", 
+  async (username?: string) => {
+    return await fetchStocksData(username);
 });
 
 export const fetchStocksPrice = createAsyncThunk(

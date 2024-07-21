@@ -32,7 +32,13 @@ export const fetchUserData = createAsyncThunk(
   'userData/fetchUserData',
   async (username: string, { rejectWithValue }) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/userdata?username=${username}`);
+      const response = await fetch(`${API_BASE_URL}/api/userdata`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username }),
+      });
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }

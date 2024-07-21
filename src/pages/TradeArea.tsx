@@ -294,15 +294,15 @@ const TradeArea: React.FC = () => {
                   <>
                     <div className="bg-gray-800 text-white py-2 w-full text-center">AI評分與個股估值</div>
 
-                    <div className='flex justify-center px-2 my-1 bg-slate-800 border border-slate-400 p-1 rounded-md shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-20 relative' style={{ boxShadow: '0 0 10px 5px rgba(255, 0, 0, 0.4)' }}>
-                      <div className='flex w-full'>
-                        <div className='text-white flex flex-col justify-center items-center w-1/3 sm:w-1/3'>
+                    <div className='flex flex-wrap justify-center px-2 my-1 bg-slate-800 border border-slate-400 p-1 rounded-md shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-20 relative' style={{ boxShadow: '0 0 10px 5px rgba(255, 0, 0, 0.4)' }}>
+                      <div className='flex flex-wrap w-full'>
+                        <div className='text-white flex flex-col justify-center items-center w-full lg:w-1/3 sm:w-1/3'>
                           <BuySellGauge score={info.評價分數} />
                           <p className='text-[18px] text-center font-extrabold'>{info.評價分數}</p>
                           <p className='text-[14px] font-bold text-slate-200'>AI信心分數:{info.評價分數}</p>
                           <p className='text-[14px] font-bold text-slate-200'>準確率: {info.準確率}</p>
                         </div>
-                        <div className='text-white text-center px-2 w-1/3 mt-5'>
+                        <div className='text-white text-center px-2 w-full lg:w-1/3 mt-5 lg:mt-0'>
                           {info.合理價 !== '' && <p className='text-[17px] font-extrabold text-slate-200'>合理價:<br /> {info.低合理價} ~ <span className='text-[15px]'>{info.合理價}</span> ~ {info.高合理價}</p>}
                           {info.長期評價 !== '' && <p className='text-[16px] font-extrabold text-slate-200 my-1 whitespace-pre-line'>長期評價: {info.長期評價}</p>}
                           {info.預期年化報酬率 !== '' && <p className='text-[16px] font-extrabold text-slate-200'>預期年化報酬率: {info.預期年化報酬率}</p>}
@@ -310,12 +310,26 @@ const TradeArea: React.FC = () => {
                           {info.淨值 !== '' && <p className='text-[16px] text-slate-200'>淨值: {info.淨值}</p>}
                           {info.殖利率 !== '' && <p className='text-[16px] text-slate-200 my-1'>殖利率: {info.殖利率}</p>}
                         </div>
-                        <div className='text-white text-center px-2 w-1/3 mt-5'>
+                        <div className='text-white text-center px-2 w-full lg:w-1/3 mt-5 lg:mt-0'>
+                          <div className="flex space-x-1 items-center">
+                            <div className="flex items-center">
+                              <div className="w-2 h-4 bg-yellow-300 rounded"></div>
+                              <span className="text-xs">合理區間</span>
+                            </div>
+                            <div className="flex items-center">
+                              <div className="w-2 h-4 bg-green-500 rounded"></div>
+                              <span className="text-xs">價格便宜</span>
+                            </div>
+                            <div className="flex items-center">
+                              <div className="w-2 h-4 bg-red-500 rounded"></div>
+                              <span className="text-xs">價格過高</span>
+                            </div>
+                          </div>
                           <button onClick={toggleEval} className="text-white rounded w-full border border-slate-500 h-[30px] link-hover-gradient">
                             {isExpanded_eval ? '收起' : '展開估值'}
                           </button>
                           <div className={`transition-all duration-500 ${isExpanded_eval ? 'max-h-[400px] h-[400px]' : 'max-h-0 h-0'} overflow-hidden`}>
-                            <div className="space-y-6 mt-2">
+                            <div className="space-y-3 mt-1">
                               {evaluations.map((evalItem, index) =>
                                 evalItem.value ? (
                                   <Thermometer

@@ -21,9 +21,9 @@ const Home: React.FC = () => {
       <AnimatedComponent y={-100} opacity={0} duration={0.8}>
         <Header username={username} isvip={isvip} onUpdateUserInfo={updateUserInfo}></Header>
       </AnimatedComponent>
-      <div className=" text-white container  3xl:scale-[1.5]">
+      <div className="scale-[0.8] lg:scale-[1] text-white container  3xl:scale-[1.5]">
         <AnimatedComponent x={-100} opacity={0} duration={0.8} delay={0.8}>
-          <div className='relative w-[20rem] md:w-[27rem] mx-auto text-left mt-[70px] sm:mt-[120px] ml-10 transition-transform duration-[1200ms] ease-in-out hover:-translate-y-1 3xl:ml-96 3xl:mt-72'>
+          <div className='relative w-[20rem] md:w-[27rem] mx-auto text-left lg:mt-[70px] sm:mt-[120px] lg:ml-10 transition-transform duration-[1200ms] ease-in-out hover:-translate-y-1 3xl:ml-96 3xl:mt-72'>
             <h1 className='text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-red-400 to-red-200 cursor-default mb-1 font-semibold text-[2.5rem] leading-[3.25rem] md:text-[2.65rem] md:leading-[3.65rem] lg:text-[3.25rem] lg:leading-[4.0625rem] xl:text-[3rem] xl:leading-[4rem]'>
               DR.Stock財富引擎
             </h1>
@@ -43,7 +43,7 @@ const Home: React.FC = () => {
             </p>
           </div>
         </AnimatedComponent>
-        <div className="mt-8 ml-10 3xl:ml-96">
+        <div className="mt-8 lg:ml-10 3xl:ml-96">
           <AnimatedComponent x={0} opacity={0} duration={1.3} delay={1.5}>
             <Button px="px-3">
               <button onClick={() => navigate('/pdfview', { replace: true, state: { username, isvip } })} className='text-[11px] font-mono lg:text-[14px]'>前往教學</button>

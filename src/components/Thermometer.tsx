@@ -24,7 +24,7 @@ const Thermometer: React.FC<{ label: string; evaluation: Evaluation; recentPrice
     } else if (recentPrice > evaluation.high) {
       return 'bg-red-400';
     } else {
-      return 'bg-slate-400';
+      return 'bg-green-400';
     }
   };
 
@@ -37,7 +37,7 @@ const Thermometer: React.FC<{ label: string; evaluation: Evaluation; recentPrice
   };
 
   return (
-    <div className="h-full">
+    <div className="">
       <div className="relative w-[70%] mx-auto">
         {/* 数字显示 */}
         <div
@@ -68,7 +68,7 @@ const Thermometer: React.FC<{ label: string; evaluation: Evaluation; recentPrice
         <div className="relative top-4 w-full h-3">
           <div className="absolute inset-y-0 left-0 w-full bg-gray-300 rounded-full"></div>
           <div
-            className="absolute inset-y-0 left-0 h-full bg-yellow-400 rounded-full opacity-30"
+            className="absolute inset-y-0 left-0 h-full border-b-4 border-b-yellow-300 opacity-100 z-5"
             style={{
               left: `${calculateWidth(evaluation.low)}%`,
               width: `${calculateWidth(evaluation.high) - calculateWidth(evaluation.low)}%`,
