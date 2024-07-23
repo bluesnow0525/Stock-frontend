@@ -33,10 +33,10 @@ const Home: React.FC = () => {
               height={10}
             />
             <h2 className='cursor-default font-mono text-[1.75rem] leading-[2.5rem] md:text-[1.75rem] md:leading-[2rem] lg:text-[2rem] lg:leading-[2rem] xl:text-[2.3rem] xl:leading-tight'>
-              幫你診斷個股、預測股市
+              診斷個股價值、預測股市
             </h2>
             <p className="cursor-default max-w-3xl mt-2 text-n-2 text-[1.1rem] lg:mb-8 lg:text-[1.4rem]">
-              找出TOP 10潛力股、預測20天後價格走勢
+              找出報酬率潛力股、AI評分短線強弱
             </p>
             <p className="cursor-default max-w-3xl mt-2 text-n-3 lg:mb-8 lg:text-[1.1rem]">
               提供虛擬金系統，讓你更好管理分析資產
@@ -46,7 +46,7 @@ const Home: React.FC = () => {
         <div className="mt-8 lg:ml-10 3xl:ml-96">
           <AnimatedComponent x={0} opacity={0} duration={1.3} delay={1.5}>
             <Button px="px-3">
-              <button onClick={() => navigate('/pdfview', { replace: true, state: { username, isvip } })} className='text-[11px] font-mono lg:text-[14px]'>前往教學</button>
+              <button onClick={() => navigate('/pdfview', { replace: true, state: { username, isvip } })} className='text-[11px] font-mono lg:text-[14px]'>前往使用教學</button>
             </Button>
           </AnimatedComponent>
         </div>

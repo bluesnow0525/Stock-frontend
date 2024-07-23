@@ -44,7 +44,6 @@ const Thermometer: React.FC<{ label: string; evaluation: Evaluation; recentPrice
           className={`absolute top-0 left-0 transform -translate-y-5 text-xs text-red-500`}
           style={{ left: `${calculateWidth(0)}%`, transform: 'translateX(-50%)' }}
         >
-          0
         </div>
         <div
           className={`absolute top-0 transform -translate-y-5 text-xs text-red-500 ${getOffsetClass(evaluation.low, recentPrice)}`}
@@ -52,12 +51,7 @@ const Thermometer: React.FC<{ label: string; evaluation: Evaluation; recentPrice
         >
           {evaluation.low}
         </div>
-        <div
-          className={`absolute top-0 transform -translate-y-5 text-xs text-green-500 ${getOffsetClass(recentPrice, evaluation.low)} ${getOffsetClass(recentPrice, evaluation.high)}`}
-          style={{ left: `${calculateWidth(recentPrice)}%`, transform: 'translateX(-50%)' }}
-        >
-          {recentPrice}
-        </div>
+        
         <div
           className={`absolute top-0 right-0 transform -translate-y-5 text-xs text-red-500 ${getOffsetClass(evaluation.high, recentPrice)}`}
           style={{ left: `${calculateWidth(evaluation.high)}%`, transform: 'translateX(-50%)' }}
@@ -79,8 +73,14 @@ const Thermometer: React.FC<{ label: string; evaluation: Evaluation; recentPrice
             style={{ width: `${calculateWidth(recentPrice)}%` }}
           ></div>
         </div>
+        <div
+          className={`absolute top-7 transform text-xs text-green-500 ${getOffsetClass(recentPrice, evaluation.low)} ${getOffsetClass(recentPrice, evaluation.high)}`}
+          style={{ left: `${calculateWidth(recentPrice)}%`, transform: 'translateX(-50%)' }}
+        >
+          {recentPrice}
+        </div>
       </div>
-      <p className="text-xs text-slate-200 mt-6 text-center">{label}</p>
+      <p className="text-xs text-slate-200 mt-7 text-center">{label}</p>
     </div>
   );
 };
