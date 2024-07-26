@@ -63,6 +63,7 @@ const TradeArea: React.FC = () => {
 
   const [isExpanded_image, setIsExpanded_image] = useState(false);
   const [isExpanded_eval, setIsExpanded_eval] = useState(false);
+  const [isExpanded_evalfix, setIsExpanded_evalfix] = useState(false);
 
   const evaluations = [
     { label: 'pb法估價', value: info.pb法估價 },
@@ -79,6 +80,10 @@ const TradeArea: React.FC = () => {
 
   const toggleEval = () => {
     setIsExpanded_eval(!isExpanded_eval);
+  };
+
+  const toggleEvalfix = () => {
+    setIsExpanded_evalfix(!isExpanded_evalfix);
   };
 
   const parseEvaluation = (evalStr: string): Evaluation => {
@@ -343,6 +348,14 @@ const TradeArea: React.FC = () => {
                             </div>
                           </div>
                         </div>
+                      </div>
+                    </div>
+                    <div>
+                      <button onClick={toggleEvalfix} className="text-white rounded w-full border border-slate-500 h-[30px] link-hover-gradient">
+                        {isExpanded_evalfix ? '收起' : '精修估值模型'}
+                      </button>
+                      <div className={`flex transition-all duration-500 ${isExpanded_evalfix ? 'max-h-[200px] h-[200px]' : 'max-h-0 h-0'} overflow-hidden`}>
+                        <input type="number" className='bg-black p-1 w-[60px] ml-1' />
                       </div>
                     </div>
                     <div>
