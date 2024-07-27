@@ -351,14 +351,6 @@ const TradeArea: React.FC = () => {
                       </div>
                     </div>
                     <div>
-                      <button onClick={toggleEvalfix} className="text-white rounded w-full border border-slate-500 h-[30px] link-hover-gradient">
-                        {isExpanded_evalfix ? '收起' : '精修估值模型'}
-                      </button>
-                      <div className={`flex transition-all duration-500 ${isExpanded_evalfix ? 'max-h-[200px] h-[200px]' : 'max-h-0 h-0'} overflow-hidden`}>
-                        <input type="number" className='bg-black p-1 w-[60px] ml-1' />
-                      </div>
-                    </div>
-                    <div>
                       <button onClick={toggleImage} className="text-white rounded w-full border border-slate-500 h-[30px] link-hover-gradient">
                         {isExpanded_image ? '收起' : '顯示AI結果圖'}
                       </button>
