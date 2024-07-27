@@ -18,7 +18,10 @@
     "strict": false,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+
+    /* Include type definitions */
+    "types": ["node", "react", "react-dom", "react-bootstrap"]
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
