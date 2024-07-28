@@ -12,6 +12,7 @@ import { fetchStocksPrice } from '../slice/selectstockSlice';
 import { RootState, AppDispatch } from '../store';
 import { fetchStart, fetchSuccess, fetchFailure } from '../slice/aiSlice';
 import { fetchAiData } from '../service/aireviewAPI';
+import { fetchValueData } from '../slice/valueSlice';
 import { fetchAssets, buyStock, sellStock } from '../slice'
 import Thermometer from '../components/Thermometer';
 
@@ -50,9 +51,12 @@ const TradeArea: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const dispatchai = useDispatch<AppDispatch>();
   const dispatchasset = useDispatch<AppDispatch>();
+
   const stockPrices = useSelector((state: RootState) => state.stocks.prices);
   const pricesStatus = useSelector((state: RootState) => state.stocks.pricesStatus);
   const assets = useSelector((state: RootState) => state.assets.assets);
+  const { v_status, v_error, v_info } = useSelector((state: RootState) => state.valueData);
+
   const { imageUrl, info, status, error } = useSelector((state: RootState) => state.ai);
   const chartContainerRef = useRef<HTMLDivElement>(null);
   let chart: IChartApi | null = null;
@@ -65,6 +69,11 @@ const TradeArea: React.FC = () => {
   const [isExpanded_eval, setIsExpanded_eval] = useState(false);
   const [isExpanded_evalfix, setIsExpanded_evalfix] = useState(false);
 
+  const [option, setOption] = useState('a');
+  const [years, setYears] = useState(3);
+  const [growthRates, setGrowthRates] = useState(Array(3).fill(20.0));
+  const [wacc, setWacc] = useState(0.0);
+
   const evaluations = [
     { label: 'pb法估價', value: info.pb法估價 },
     { label: 'pe法估價', value: info.pe法估價 },
@@ -73,6 +82,30 @@ const TradeArea: React.FC = () => {
     { label: 'dcf法估價', value: info.dcf法估價 },
     { label: 'peg法估價', value: info.peg法估價 },
   ];
+
+  const handleYearsChange = (value: number) => {
+    const newYears = Math.max(1, value);
+    setYears(newYears);
+    setGrowthRates(Array(newYears).fill(20.0));
+  };
+
+  const handleGrowthRateChange = (index: number, value: string) => {
+    const newGrowthRates = [...growthRates];
+    newGrowthRates[index] = parseFloat(value);
+    setGrowthRates(newGrowthRates);
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const data = {
+      option,
+      years,
+      growthRates,
+      wacc: parseFloat(wacc.toString()),
+      stockid: id,
+    };
+    dispatch(fetchValueData(data));
+  };
 
   const toggleImage = () => {
     setIsExpanded_image(!isExpanded_image);
@@ -307,47 +340,105 @@ const TradeArea: React.FC = () => {
                           <p className='text-[14px] font-bold text-slate-200'>AI信心分數:{info.評價分數}</p>
                           <p className='text-[14px] font-bold text-slate-200'>準確率: {info.準確率}</p>
                         </div>
-                        <div className='text-white text-center px-2 w-full lg:w-1/3 mt-5 lg:mt-0'>
-                          {info.合理價 !== '' && <p className='text-[17px] font-extrabold text-slate-200'>合理價:<br /> {info.低合理價} ~ <span className='text-[15px]'>{info.合理價}</span> ~ {info.高合理價}</p>}
-                          {info.長期評價 !== '' && <p className='text-[16px] font-extrabold text-slate-200 my-1 whitespace-pre-line'>長期評價: {info.長期評價}</p>}
-                          {info.預期年化報酬率 !== '' && <p className='text-[16px] font-extrabold text-slate-200'>預期年化報酬率: {info.預期年化報酬率}</p>}
-                          {info.預估eps !== '' && <p className='text-[16px] text-slate-200 my-1'>預估eps: {info.預估eps}</p>}
-                          {info.淨值 !== '' && <p className='text-[16px] text-slate-200'>淨值: {info.淨值}</p>}
-                          {info.殖利率 !== '' && <p className='text-[16px] text-slate-200 my-1'>殖利率: {info.殖利率}</p>}
-                        </div>
-                        <div className='text-white text-center px-2 w-full lg:w-1/3 mt-5 lg:mt-0'>
-                          <div className="flex space-x-1 items-center">
-                            <div className="flex items-center">
-                              <div className="w-2 h-4 bg-yellow-300 rounded"></div>
-                              <span className="text-xs">合理區間</span>
+                        <>
+                          <div className='text-white text-center px-2 w-full lg:w-1/3 mt-5 lg:mt-0'>
+                            {info.合理價 !== '' && <p className='text-[17px] font-extrabold text-slate-200'>合理價:<br /> {info.低合理價} ~ <span className='text-[15px]'>{info.合理價}</span> ~ {info.高合理價}</p>}
+                            {info.長期評價 !== '' && <p className='text-[16px] font-extrabold text-slate-200 my-1 whitespace-pre-line'>長期評價: {info.長期評價}</p>}
+                            {info.預期年化報酬率 !== '' && <p className='text-[16px] font-extrabold text-slate-200'>預期年化報酬率: {info.預期年化報酬率}</p>}
+                            {info.預估eps !== '' && <p className='text-[16px] text-slate-200 my-1'>預估eps: {info.預估eps}</p>}
+                            {info.淨值 !== '' && <p className='text-[16px] text-slate-200'>淨值: {info.淨值}</p>}
+                            {info.殖利率 !== '' && <p className='text-[16px] text-slate-200 my-1'>殖利率: {info.殖利率}</p>}
+                          </div>
+                          <div className='text-white text-center px-2 w-full lg:w-1/3 mt-5 lg:mt-0'>
+                            <div className="flex space-x-1 items-center">
+                              <div className="flex items-center">
+                                <div className="w-2 h-4 bg-yellow-300 rounded"></div>
+                                <span className="text-xs">合理區間</span>
+                              </div>
+                              <div className="flex items-center">
+                                <div className="w-2 h-4 bg-green-500 rounded"></div>
+                                <span className="text-xs">價格便宜</span>
+                              </div>
+                              <div className="flex items-center">
+                                <div className="w-2 h-4 bg-red-500 rounded"></div>
+                                <span className="text-xs">價格過高</span>
+                              </div>
                             </div>
-                            <div className="flex items-center">
-                              <div className="w-2 h-4 bg-green-500 rounded"></div>
-                              <span className="text-xs">價格便宜</span>
-                            </div>
-                            <div className="flex items-center">
-                              <div className="w-2 h-4 bg-red-500 rounded"></div>
-                              <span className="text-xs">價格過高</span>
+
+                            <button onClick={toggleEval} className="text-white rounded w-full border border-slate-500 h-[30px] link-hover-gradient">
+                              {isExpanded_eval ? '收起' : '展開估值溫度計'}
+                            </button>
+                            <div className={`transition-all duration-500 ${isExpanded_eval ? 'max-h-[400px] h-[400px]' : 'max-h-0 h-0'} overflow-hidden`}>
+                              <div className="space-y-3 mt-1">
+                                {evaluations.map((evalItem, index) =>
+                                  evalItem.value ? (
+                                    <Thermometer
+                                      key={index}
+                                      label={evalItem.label}
+                                      evaluation={parseEvaluation(evalItem.value)}
+                                      recentPrice={info.現價}
+                                    />
+                                  ) : null
+                                )}
+                              </div>
                             </div>
                           </div>
-                          <button onClick={toggleEval} className="text-white rounded w-full border border-slate-500 h-[30px] link-hover-gradient">
-                            {isExpanded_eval ? '收起' : '展開估值'}
-                          </button>
-                          <div className={`transition-all duration-500 ${isExpanded_eval ? 'max-h-[400px] h-[400px]' : 'max-h-0 h-0'} overflow-hidden`}>
-                            <div className="space-y-3 mt-1">
-                              {evaluations.map((evalItem, index) =>
-                                evalItem.value ? (
-                                  <Thermometer
-                                    key={index}
-                                    label={evalItem.label}
-                                    evaluation={parseEvaluation(evalItem.value)}
-                                    recentPrice={info.現價}
-                                  />
-                                ) : null
-                              )}
+                        </>
+                      </div>
+                    </div>
+                    <div>
+                      <button onClick={toggleEvalfix} className="text-white rounded w-full border border-slate-500 h-[30px] link-hover-gradient">
+                        {isExpanded_evalfix ? '收起' : '展開開啟估價'}
+                      </button>
+                      <div className={`transition-all duration-500 ${isExpanded_evalfix ? 'max-h-[250px] h-[250px]' : 'max-h-0 h-0'} overflow-hidden`}>
+                        <form onSubmit={handleSubmit} className="p-4 rounded shadow-md text-white">
+                          <div className="flex">
+                            <div className="mb-1 flex h-[50px]">
+                              <label className="block m-1">選擇選項:</label>
+                              <select value={option} onChange={(e) => setOption(e.target.value)} className="p-2 border rounded bg-gray-900 bg-opacity-20 h-[35px] text-[13px]">
+                                <option value="a">A62625155</option>
+                                <option value="b">B</option>
+                                <option value="c">C</option>
+                              </select>
+                            </div>
+                            <div className="mb-1 flex h-[50px]">
+                              <label className="block m-1">預計成長年數:</label>
+                              <div className="flex items-center h-[30px]">
+                                <button type="button" onClick={() => handleYearsChange(years - 1)} className="px-2 py-0.5 rounded-l bg-gray-800 bg-opacity-80">-</button>
+                                <input type="number" value={years} readOnly className="w-12 text-center border bg-gray-900 bg-opacity-20" />
+                                <button type="button" onClick={() => handleYearsChange(years + 1)} className="px-2 py-0.5 rounded-r bg-gray-800 bg-opacity-80">+</button>
+                              </div>
                             </div>
                           </div>
-                        </div>
+                          <div className="flex">
+                            {Array.from({ length: years }).map((_, index) => (
+                              <div className="mb-4" key={index}>
+                                <label className="block mb-2 text-[14px]">第{index + 1}年的成長率:</label>
+                                <input
+                                  type="number"
+                                  value={growthRates[index]}
+                                  onChange={(e) => handleGrowthRateChange(index, e.target.value)}
+                                  step="1"
+                                  className="p-2 border rounded w-[80%] bg-gray-900 bg-opacity-20"
+                                />
+                              </div>
+                            ))}
+                            <div className="mb-4">
+                              <label className="block mb-2">WACC:</label>
+                              <input
+                                type="number"
+                                value={wacc}
+                                onChange={(e) => setWacc(parseFloat(e.target.value))}
+                                step="0.01"
+                                className="p-2 border rounded w-full bg-gray-900 bg-opacity-20"
+                              />
+                            </div>
+                          </div>
+                          <button type="submit" className="btn text-[17px] w-[80px] rounded-full bg-white text-emerald-800 hover:bg-emerald-600 hover:text-white py-2 transition-colors duration-300" disabled={v_status === 'loading'}>Submit</button>
+                          {v_status === 'loading' && <p>Loading...</p>}
+                          {v_status === 'failed' && <p className="text-red-500">Error: {v_error}</p>}
+                          {v_status === 'succeeded' && <p>Success: {v_info.dcf法估價}</p>}
+                        </form>
                       </div>
                     </div>
                     <div>
