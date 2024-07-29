@@ -12,7 +12,7 @@ dist
 dist-ssr
 *.local
 
-./src/assets/apiurl.tsx
+src/assets/apiurl.tsx
 
 # Editor directories and files
 .vscode/*
