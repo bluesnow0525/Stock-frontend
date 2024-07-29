@@ -85,31 +85,31 @@ const SelectTarget: React.FC = () => {
         </AnimatedComponent>
         <AnimatedComponent y={0} opacity={0} duration={1.3} delay={0.8}>
           <div className="p-4 flex justify-center mt-2 3xl:mt-24">
-            <div className="w-[500px] xl:w-[750px] 3xl:w-[750px] 3xl:scale-[1.3]">
+            <div className="w-[300px] lg:w-[500px] xl:w-[750px] 3xl:scale-[1.2]">
               <div className="h-[500px]">
-                <div className="sticky top-0 text-white flex justify-between">
+                <div className="sticky top-0 text-white flex justify-between text-[12px] lg:text-[16px]">
                   <div>
                     <button
                       onClick={() => setViewMode('all')}
-                      className={`border border-b-0 border-red-300 rounded px-2 py-1 ${viewMode === 'all' ? 'text-red-500' : 'text-white'}`}
+                      className={`border border-b-0 border-red-300 rounded px-0.5 lg:px-2 py-1 ${viewMode === 'all' ? 'text-red-500' : 'text-white'}`}
                     >
                       全部
                     </button>
                     <button
                       onClick={() => setViewMode('fav')}
-                      className={`border border-b-0 border-l-0 border-red-300 rounded px-2 py-1 ${viewMode === 'fav' ? 'text-red-500' : 'text-white'}`}
+                      className={`border border-b-0 border-l-0 border-red-300 rounded px-0.5 lg:px-2 py-1 ${viewMode === 'fav' ? 'text-red-500' : 'text-white'}`}
                     >
                       自選
                     </button>
                     <button
                       onClick={() => setViewMode('toplong')}
-                      className={`border border-b-0 border-l-0 border-red-300 rounded px-2 py-1 ${viewMode === 'toplong' ? 'text-red-500' : 'text-white'}`}
+                      className={`border border-b-0 border-l-0 border-red-300 rounded px-0.5 lg:px-2 py-1 ${viewMode === 'toplong' ? 'text-red-500' : 'text-white'}`}
                     >
                       價值排行
                     </button>
                     <button
                       onClick={() => setViewMode('topshort')}
-                      className={`border border-b-0 border-l-0 border-red-300 rounded px-2 py-1 ${viewMode === 'topshort' ? 'text-red-500' : 'text-white'}`}
+                      className={`border border-b-0 border-l-0 border-red-300 rounded px-0.5 lg:px-2 py-1 ${viewMode === 'topshort' ? 'text-red-500' : 'text-white'}`}
                     >
                       AI排行
                     </button>
@@ -119,7 +119,7 @@ const SelectTarget: React.FC = () => {
                     placeholder="搜索股票..."
                     value={searchTerm}
                     onChange={handleSearchChange}
-                    className="search-input bg-[#1e1515] w-1/3 h-10 outline-none text-[17px]"
+                    className="search-input bg-[#1e1515] w-1/3 h-10 outline-none text-[13px] lg:text-[17px]"
                   />
                 </div>
                 <div className="breathing-divider"></div>
@@ -142,7 +142,7 @@ const SelectTarget: React.FC = () => {
                             {stock.Trading}
                             <span className="font-mono text-[14px]">{stock.ETF ? ' ETF' : ''}</span>
                           </td>
-                          {viewMode === ('all' || 'toplong' || 'topshort') && username && (
+                          {(viewMode === 'all' || viewMode === 'toplong' || viewMode === 'topshort') && username && (
                             <td className="text-right pr-4">
                               <button
                                 onClick={() => handleAddToFavorites(stock.Code, stock.Name)}

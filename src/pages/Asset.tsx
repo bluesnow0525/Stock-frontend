@@ -6,7 +6,6 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchUserData } from '../slice/userdataSlice';
 import { RootState, AppDispatch } from '../store';
-import { motion } from 'framer-motion';
 
 const Asset: React.FC = () => {
     const location = useLocation();
@@ -66,12 +65,6 @@ const Asset: React.FC = () => {
                     {userDataStatus === 'succeeded' && userData ? (
                         <>
                             <div className="grid grid-rows-3 sm:grid-cols-[6fr,4fr] sm:grid-rows-none gap-4 3xl:ml-96 3xl:mt-36">
-                                <motion.div
-                                    className="sticky"
-                                    initial={{ y: -70 }}
-                                    animate={{ y: 0 }}
-                                    transition={{ type: "spring", stiffness: 200, delay: 0.8 }}
-                                >
                                     <div className="flex flex-col items-center sm:items-start sm:flex-row sm:mx-5 space-y-4">
                                         <div className="relative w-20 h-20">
                                             <svg className="w-full h-full transform -rotate-90">
@@ -90,7 +83,6 @@ const Asset: React.FC = () => {
                                             <div className='sm:text-[21px] sm:text-left ml-8'>可用現金: <br />${userData.assets.toFixed(2)}</div>
                                         </div>
                                     </div>
-                                </motion.div>
 
                                 <div className="h-[200px] sm:h-[500px] overflow-y-auto sm:row-span-2">
                                     <h1 className='mb-2 mx-7 font-semibold text-[16px] sm:text-[20px] sticky top-0'>持倉中:</h1>

@@ -78,7 +78,7 @@ const TradeNews: React.FC = () => {
                 setCurrentData(sheetData.balance_sheet);
                 const periods = sheetData.balance_sheet.map(data => data["年度-季度"]?.[0] as string).filter(Boolean);
                 setTimePeriods(sortTimePeriods(periods));
-                setLabels(sortTimePeriods(periods).reverse());
+                setLabels(periods.reverse());
                 setEquityData(sheetData.balance_sheet.map(data => {
                     const value = data["股東權益（淨值）"]?.[0];
                     return typeof value === 'number' ? value / 1000 : 0;
