@@ -10,6 +10,7 @@ import AnimatedComponent from '../components/AnimatedComponent';
 type Stock = {
   Code: string;
   Name: string;
+  Category: string;
   Trading: string;
   ETF: boolean;
 };
@@ -130,10 +131,16 @@ const SelectTarget: React.FC = () => {
                         <tr key={stock.Code} className="cursor-pointer my-1 py-1 hover:bg-slate-800">
                           <td
                             onClick={() => handleStockSelect(stock.Code, stock.Name, stock.ETF)}
-                            className="px-1 py-2 text-left text-[20px] font-semibold w-2/3"
+                            className="px-1 py-2 text-left text-[20px] font-semibold w-1/3"
                           >
                             {stock.Name} <br />
                             <span className="font-mono text-[14px]">{stock.Code}</span>
+                          </td>
+                          <td
+                            onClick={() => handleStockSelect(stock.Code, stock.Name, stock.ETF)}
+                            className="px-4 py-2 text-[16px] font-semibold w-1/3"
+                          >
+                            {stock.Category}
                           </td>
                           <td
                             onClick={() => handleStockSelect(stock.Code, stock.Name, stock.ETF)}

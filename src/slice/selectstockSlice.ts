@@ -6,6 +6,7 @@ import { fetchStocksPrice as fetchStocksPriceAPI } from "../service/stockpriceAP
 export type Stock = {
   Code: string;
   Name: string;
+  Category: string;
   Trading: string;
   ETF: boolean;
 };
