@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { fetchStocks } from "../slice/selectStockSlice";
 import { addToFavorites, deleteFavorites } from "../slice/favoritesSlice";
 import { RootState, AppDispatch } from "../store";
+import Loading from "../components/Loading";
 
 type Stock = {
   Code: string;
@@ -40,6 +41,7 @@ const SelectTarget: React.FC = () => {
   );
   // 获取股票数据
   const allstocksData = useSelector((state: RootState) => state.stocks.data);
+  const Status = useSelector((state: RootState) => state.stocks.status);
   const stocksData = allstocksData.all_stocks || [];
 
   const filteredStocks = stocksData.filter(
@@ -129,52 +131,76 @@ const SelectTarget: React.FC = () => {
             </div>
             <div className="breathing-divider"></div>
             <div className="mt-1 h-[600px] overflow-y-auto">
-              <table className="text-gray-300 py-1 table-fixed w-full sticky">
-                <tbody>
-                  {filteredStocks.map((stock: Stock) => (
-                    <tr
-                      key={stock.Code}
-                      className="cursor-pointer my-1 py-1 hover:bg-slate-800"
-                    >
-                      <td
-                        onClick={() =>
-                          handleStockSelect(stock.Code, stock.Name, stock.ETF)
-                        }
-                        className="px-1 py-2 text-left text-[20px] font-semibold w-1/3"
+              {Status === "succeeded" && (
+                <table className="text-gray-300 py-1 table-fixed w-full sticky">
+                  <tbody>
+                    {filteredStocks.map((stock: Stock) => (
+                      <tr
+                        key={stock.Code}
+                        className="cursor-pointer my-1 py-1 hover:bg-slate-800"
                       >
-                        {stock.Name} <br />
-                        <span className="font-mono text-[14px]">
-                          {stock.Code}
-                        </span>
-                      </td>
-                      <td
-                        onClick={() =>
-                          handleStockSelect(stock.Code, stock.Name, stock.ETF)
-                        }
-                        className="px-4 py-2 text-[16px] font-semibold w-1/3"
-                      >
-                        {stock.Category}
-                      </td>
-                      <td
-                        onClick={() =>
-                          handleStockSelect(stock.Code, stock.Name, stock.ETF)
-                        }
-                        className="px-8 py-2 text-right text-[22px] font-semibold"
-                      >
-                        {stock.Trading}
-                        <span className="font-mono text-[14px]">
-                          {stock.ETF ? " ETF" : ""}
-                        </span>
-                      </td>
-                      {(viewMode === "all" ||
-                        viewMode === "toplong" ||
-                        viewMode === "topshort") &&
-                        username && (
+                        <td
+                          onClick={() =>
+                            handleStockSelect(stock.Code, stock.Name, stock.ETF)
+                          }
+                          className="px-1 py-2 text-left text-[20px] font-semibold w-1/3"
+                        >
+                          {stock.Name} <br />
+                          <span className="font-mono text-[14px]">
+                            {stock.Code}
+                          </span>
+                        </td>
+                        <td
+                          onClick={() =>
+                            handleStockSelect(stock.Code, stock.Name, stock.ETF)
+                          }
+                          className="px-4 py-2 text-[16px] font-semibold w-1/3"
+                        >
+                          {stock.Category}
+                        </td>
+                        <td
+                          onClick={() =>
+                            handleStockSelect(stock.Code, stock.Name, stock.ETF)
+                          }
+                          className="px-8 py-2 text-right text-[22px] font-semibold"
+                        >
+                          {stock.Trading}
+                          <span className="font-mono text-[14px]">
+                            {stock.ETF ? " ETF" : ""}
+                          </span>
+                        </td>
+                        {(viewMode === "all" ||
+                          viewMode === "toplong" ||
+                          viewMode === "topshort") &&
+                          username && (
+                            <td className="text-right pr-4">
+                              <button
+                                onClick={() =>
+                                  handleAddToFavorites(stock.Code, stock.Name)
+                                }
+                                className="bg-white text-red-500 hover:text-white hover:bg-red-500 rounded-full p-2 ml-4"
+                              >
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  className="h-5 w-5"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke="currentColor"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="M12 4v16m8-8H4"
+                                  />
+                                </svg>
+                              </button>
+                            </td>
+                          )}
+                        {viewMode === "fav" && (
                           <td className="text-right pr-4">
                             <button
-                              onClick={() =>
-                                handleAddToFavorites(stock.Code, stock.Name)
-                              }
+                              onClick={() => handleDeleteFavorites(stock.Code)}
                               className="bg-white text-red-500 hover:text-white hover:bg-red-500 rounded-full p-2 ml-4"
                             >
                               <svg
@@ -188,39 +214,22 @@ const SelectTarget: React.FC = () => {
                                   strokeLinecap="round"
                                   strokeLinejoin="round"
                                   strokeWidth="2"
-                                  d="M12 4v16m8-8H4"
+                                  d="M6 18L18 18M6 6L18 6M9 6L9 3L15 3L15 6M10 6L10 18M14 6L14 18"
                                 />
                               </svg>
                             </button>
                           </td>
                         )}
-                      {viewMode === "fav" && (
-                        <td className="text-right pr-4">
-                          <button
-                            onClick={() => handleDeleteFavorites(stock.Code)}
-                            className="bg-white text-red-500 hover:text-white hover:bg-red-500 rounded-full p-2 ml-4"
-                          >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="h-5 w-5"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth="2"
-                                d="M6 18L18 18M6 6L18 6M9 6L9 3L15 3L15 6M10 6L10 18M14 6L14 18"
-                              />
-                            </svg>
-                          </button>
-                        </td>
-                      )}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+              {Status === "loading" && (
+                <div className="flex justify-center items-center mt-56">
+                  <Loading></Loading>
+                </div>
+              )}
             </div>
           </div>
         </div>

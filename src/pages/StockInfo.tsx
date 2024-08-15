@@ -154,40 +154,53 @@ const StockInfo: React.FC = () => {
                   </p>
                 </div>
               </div>
-              <div className="w-1/2">
-                {info.合理價 !== "" && (
-                  <p className="text-[17px] font-extrabold text-slate-200 mt-3">
-                    合理價:
-                    <br /> {info.低合理價} ~{" "}
-                    <span className="text-[15px]">{info.合理價}</span> ~{" "}
-                    {info.高合理價}
-                  </p>
-                )}
-                {info.長期評價 !== "" && (
-                  <p className="text-[15px] font-extrabold text-slate-200 my-0.5 whitespace-pre-line">
-                    長期評價: {info.長期評價}
-                  </p>
-                )}
-                {info.預期年化報酬率 !== "" && (
-                  <p className="text-[15px] font-extrabold text-slate-200">
-                    預期年化報酬率: {info.預期年化報酬率}
-                  </p>
-                )}
-                {info.預估eps !== "" && (
-                  <p className="text-[15px] text-slate-200 my-0.5">
-                    今年預估eps: {info.預估eps}
-                  </p>
-                )}
-                {info.淨值 !== "" && (
-                  <p className="text-[15px] text-slate-200">
-                    淨值: {info.淨值}
-                  </p>
-                )}
-                {info.殖利率 !== "" && (
-                  <p className="text-[15px] text-slate-200 my-0.5">
-                    殖利率: {info.殖利率}
-                  </p>
-                )}
+              <div className="w-1/2 overflow-y-auto">
+                <div className="">
+                  {info.合理價 !== "" && (
+                    <p className="text-[17px] font-extrabold text-slate-200 mt-3">
+                      合理價:
+                      <br /> {info.低合理價} ~{" "}
+                      <span className="text-[15px]">
+                        {info.合理價}
+                      </span>{" "}
+                      ~ {info.高合理價}
+                    </p>
+                  )}
+                  {info.長期評價 !== "" && (
+                    <p className="text-[15px] font-extrabold text-slate-200 my-0.5 whitespace-pre-line">
+                      長期評價:
+                      <br />{" "}
+                      <span className="">{info.長期評價}</span>
+                    </p>
+                  )}
+                  {info.預期年化報酬率 !== "" && (
+                    <p className="text-[15px] text-slate-200 font-extrabold">
+                      預期年化報酬率: {info.預期年化報酬率}
+                    </p>
+                  )}
+                  {info.現價 !== 0 && (
+                    <p className="text-[15px] text-slate-200 my-0.5 font-extrabold">
+                      現價: {info.現價}
+                    </p>
+                  )}
+                </div>
+                <div className="mt-5">
+                  {info.預估eps !== "" && (
+                    <p className="text-[15px] text-slate-200 my-0.5">
+                      今年預估eps: {info.預估eps}
+                    </p>
+                  )}
+                  {info.淨值 !== "" && (
+                    <p className="text-[15px] text-slate-200">
+                      淨值: {info.淨值}
+                    </p>
+                  )}
+                  {info.殖利率 !== "" && (
+                    <p className="text-[15px] text-slate-200 my-0.5">
+                      殖利率: {info.殖利率}
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
             <div>
@@ -209,8 +222,8 @@ const StockInfo: React.FC = () => {
                 />
               </div>
             </div>
-            <div className="w-full h-[55%] flex">
-              <div className="w-[65%] text-color-5">
+            <div className="w-[80%] h-[55%] flex">
+              <div className="w-full text-color-5">
                 <div className="flex space-x-1 items-center justify-center mt-3">
                   <div className="flex items-center">
                     <div className="w-2 h-4 bg-yellow-300 rounded"></div>
@@ -229,12 +242,15 @@ const StockInfo: React.FC = () => {
                   <div className="space-y-3 mt-1">
                     {evaluations.map((evalItem, index) =>
                       evalItem.value ? (
-                        <Thermometer
-                          key={index}
-                          label={evalItem.label}
-                          evaluation={parseEvaluation(evalItem.value)}
-                          recentPrice={info.現價}
-                        />
+                        <div className="border-b border-b-color-3 my-1">
+                          <Thermometer
+                            key={index}
+                            label={evalItem.label}
+                            evaluation={parseEvaluation(evalItem.value)}
+                            recentPrice={info.現價}
+                          />
+                          <div></div>
+                        </div>
                       ) : null
                     )}
                   </div>
