@@ -1,17 +1,19 @@
 import { configureStore } from '@reduxjs/toolkit';
-import stocksReducer from './slice/selectstockSlice'; // 确保路径正确
+import stocksReducer from './slice/selectStockSlice'; 
+import stocksPriceReducer from "./slice/stockPriceSlice";
 import aiReducer from './slice/aiSlice'
 import userDataReducer from './slice/userdataSlice'
 import assetsReducer from './slice/assetsSlice'
 import stockOperationsReducer from './slice/stockOperationsSlice'
-import favoritesReducer from './slice/favoritesSlice'
+import favoritesReducer from './slice/favoritesSlice';
 import sheetDataReducer from './slice/sheetSlice';
-import vipReducer from './slice/vipSlice'
-import valueDataReducer from './slice/valueSlice'
+import vipReducer from './slice/vipSlice';
+// import valueDataReducer from './slice/valueSlice'
 
 export const store = configureStore({
   reducer: {
-    stocks: stocksReducer, // 将 stocksReducer 添加到 store
+    stocks: stocksReducer, 
+    stocksPrice: stocksPriceReducer,
     ai: aiReducer,
     userData: userDataReducer,
     assets: assetsReducer,
@@ -19,7 +21,7 @@ export const store = configureStore({
     favorites: favoritesReducer,
     sheetData: sheetDataReducer,
     vip: vipReducer,
-    valueData: valueDataReducer,
+    // valueData: valueDataReducer,
   },
   // 如果需要添加 Redux DevTools 配置或中间件，可以在这里添加
 });

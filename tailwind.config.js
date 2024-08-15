@@ -1,9 +1,10 @@
+/** @type {import('tailwindcss').Config} */
 import { fontFamily } from 'tailwindcss/defaultTheme';
 
 export default {
   content: [
     "./index.html",
-    "./src/**/*.{js,jsx,ts,tsx}",
+    "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     extend: {
@@ -17,11 +18,11 @@ export default {
       },
       colors: {
         color: {
-          1: "#AC6AFF",
-          2: "#FFC876",
-          3: "#FF776F",
-          4: "#7ADB78",
-          5: "#858DFF",
+          1: "#21283E",
+          2: "#4F628C",
+          3: "#A6D6E2",
+          4: "#D3CDCA",
+          5: "#F6F2E9",
           6: "#FF98E2",
         },
         stroke: {
@@ -93,3 +94,4 @@ export default {
   },
   plugins: [],
 }
+

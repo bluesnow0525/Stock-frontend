@@ -63,7 +63,7 @@ body {
   }
   .link-hover-gradient:hover {
       @apply text-transparent bg-clip-text;
-      @apply bg-gradient-to-r from-red-300 via-red-400 to-red-500;
+      @apply bg-gradient-to-r from-blue-300 via-blue-400 to-blue-500;
       @apply duration-500 ease-out;
   }
 }
@@ -71,17 +71,17 @@ body {
 @keyframes breathing-light {
   0%, 100% {
       opacity: 0.5;
-      box-shadow: 0 0 10px red, 0 0 20px red, 0 0 40px red;
+      box-shadow: 0 0 10px seashell, 0 0 20px seashell, 0 0 40px seashell;
   }
   50% {
       opacity: 1;
-      box-shadow: 0 0 20px red, 0 0 30px red, 0 0 60px red;
+      box-shadow: 0 0 20px seashell, 0 0 30px seashell, 0 0 60px seashell;
   }
 }
 
 .breathing-divider {
   height: 2px;
-  background-color: rgb(206, 0, 0);
+  background-color: rgb(182, 208, 242);
   animation: breathing-light 4s ease-in-out infinite;
 }
 

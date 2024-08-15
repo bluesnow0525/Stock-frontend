@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { API_BASE_URL } from '../assets/apiurl';
 
 interface UserInfo {
