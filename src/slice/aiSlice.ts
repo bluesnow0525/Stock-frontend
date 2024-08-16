@@ -5,6 +5,7 @@ interface ImageInfo {
   評價分數: number;
   現價: number;
   準確率: string;
+  回測報酬: number,
   預期年化報酬率: string;
   高合理價: string;
   合理價: string;
@@ -35,6 +36,7 @@ const initialState: ImageState = {
     評價分數: 0,
     現價: 0,
     準確率: '',
+    回測報酬: 0,
     預期年化報酬率: '',
     高合理價: '',
     合理價: '',
