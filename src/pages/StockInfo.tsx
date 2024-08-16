@@ -160,17 +160,14 @@ const StockInfo: React.FC = () => {
                     <p className="text-[17px] font-extrabold text-slate-200 mt-3">
                       合理價:
                       <br /> {info.低合理價} ~{" "}
-                      <span className="text-[15px]">
-                        {info.合理價}
-                      </span>{" "}
-                      ~ {info.高合理價}
+                      <span className="text-[15px]">{info.合理價}</span> ~{" "}
+                      {info.高合理價}
                     </p>
                   )}
                   {info.長期評價 !== "" && (
                     <p className="text-[15px] font-extrabold text-slate-200 my-0.5 whitespace-pre-line">
                       長期評價:
-                      <br />{" "}
-                      <span className="">{info.長期評價}</span>
+                      <br /> <span className="">{info.長期評價}</span>
                     </p>
                   )}
                   {info.預期年化報酬率 !== "" && (
@@ -218,13 +215,13 @@ const StockInfo: React.FC = () => {
                 <img
                   src={`data:image/jpeg;base64,${imageUrl}`}
                   alt="Description"
-                  className="w-full h-[300px] sticky"
+                  className="w-full h-[300px] sticky z-5"
                 />
               </div>
             </div>
-            <div className="w-[80%] h-[55%] flex">
-              <div className="w-full text-color-5">
-                <div className="flex space-x-1 items-center justify-center mt-3">
+            <div className="w-full h-[55%] flex overflow-y-auto">
+              <div className="w-[70%] text-color-5">
+                <div className="flex space-x-1 items-center justify-center mt-3 h-[3vh]">
                   <div className="flex items-center">
                     <div className="w-2 h-4 bg-yellow-300 rounded"></div>
                     <span className="text-xs">合理區間</span>
@@ -238,23 +235,54 @@ const StockInfo: React.FC = () => {
                     <span className="text-xs">價格過高</span>
                   </div>
                 </div>
-                <div className={`transition-all duration-500  overflow-hidden`}>
+                <div
+                  className={`transition-all duration-500  overflow-hidden `}
+                >
                   <div className="space-y-3 mt-1">
                     {evaluations.map((evalItem, index) =>
                       evalItem.value ? (
-                        <div className="border-b border-b-color-3 my-1">
-                          <Thermometer
-                            key={index}
-                            label={evalItem.label}
-                            evaluation={parseEvaluation(evalItem.value)}
-                            recentPrice={info.現價}
-                          />
-                          <div></div>
+                        <div key={index} className="my-1 ">
+                          <div className="h-[8vh]">
+                            <Thermometer
+                              key={index}
+                              label={evalItem.label}
+                              evaluation={parseEvaluation(evalItem.value)}
+                              recentPrice={info.現價}
+                            />
+                          </div>
                         </div>
                       ) : null
                     )}
                   </div>
                 </div>
+              </div>
+              <div className="w-[30%]">
+                <div className="w-[90%] h-[10vh] mt-5 flex items-center justify-center">
+                  <p className="text-[13px] text-color-5 mr-0.5">預估bps:</p>
+                  <input
+                    type="number"
+                    className="text-[12px] text-color-5 border border-gray-300 rounded p-1 w-16"
+                    placeholder="輸入bps"
+                  />
+                </div>
+                <div className="w-[90%] h-[10vh] flex items-center justify-center">
+                  <p className="text-[13px] text-color-5 mr-0.5">預估eps:</p>
+                  <input
+                    type="number"
+                    className="text-[12px] text-color-5 border border-gray-300 rounded p-1 w-16"
+                    placeholder="輸入eps"
+                  />
+                </div>
+                <div className="w-[90%] h-[10vh] flex items-center justify-center">
+                  <p className="text-[13px] text-color-5 mr-1">股息:</p>
+                  <input
+                    type="number"
+                    className="text-[12px] text-color-5 border border-gray-300 rounded p-1 w-16"
+                    placeholder="輸入dividend"
+                  />
+                </div>
+                <div className="w-full h-[10vh] flex items-center justify-center"></div>
+                <div className="w-full h-[10vh] flex items-center justify-center"></div>
               </div>
             </div>
           </>

@@ -184,7 +184,7 @@ const StockPrice: React.FC = () => {
             stockName={stockName}
           />
         </div>
-        <div className="h-1/5 w-[90%] text-color-5">
+        <div className="h-[20vh] w-[90%] text-color-5">
           {username && isWithinTime ? (
             <div className="py-2">
               <h1

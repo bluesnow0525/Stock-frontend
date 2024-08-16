@@ -34,7 +34,7 @@ const CandlestickChart: React.FC<CandlestickChartProps> = ({
         // Tailwind 的 3xl 断点是 1536px
         return 800;
       }
-      return 500;
+      return 370;
     };
 
     if (
