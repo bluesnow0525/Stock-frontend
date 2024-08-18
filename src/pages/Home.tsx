@@ -44,7 +44,7 @@ const Home: React.FC = () => {
           onClick={() =>
             navigate("/pdfview", { replace: true, state: { username, isvip } })
           }
-          className="text-[15px] font-mono mt-8 ml-14 border border-color-4 text-color-3 p-2 sticky"
+          className="text-[15px] font-mono mt-5 ml-10 border border-color-4 text-color-3 p-2 sticky"
         >
           前往使用教學
         </button>
@@ -53,8 +53,8 @@ const Home: React.FC = () => {
       <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank">
           <img
             src="botimg2.png"
-            className="top-0 opacity-80 hover:opacity-90 hover:transform hover:scale-[1.1] transition-transform duration-500 rounded-t-full"
-            height="200"
+            className="ml-10 bottom-0 opacity-80 hover:opacity-90 hover:transform hover:scale-[1.1] transition-transform duration-500 rounded-t-full"
+            height="150"
             alt="Bot Image"
           />
         </a>

@@ -46,7 +46,7 @@ body {
 ::-webkit-scrollbar-thumb {
   background: #878686;
   border-radius: 6px; /* 滑块圆角，设置一半的宽度实现椭圆效果 */
-  min-height: 30px;
+  min-height: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {

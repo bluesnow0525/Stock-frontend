@@ -139,20 +139,20 @@ const StockInfo: React.FC = () => {
         </div>
         {status === "succeeded" && imageUrl && username && (
           <>
-            <div className="h-[25%] flex w-full">
+            <div className="h-[30%] flex w-full">
               <div className="w-1/2">
                 <div className="text-white flex flex-col justify-center items-center w-full">
                   <BuySellGauge score={info.評價分數} />
                   <p className="text-[18px] text-center font-extrabold">
                     {info.評價分數}
                   </p>
-                  <p className="text-[15px] font-bold text-slate-200 mt-3">
+                  <p className="text-[15px] font-bold text-slate-200 mt-2">
                     AI信心分數:{info.評價分數}
                   </p>
                   <p className="text-[15px] font-bold text-slate-200">
                     準確率: {info.準確率}
                   </p>
-                  <p className="text-[15px] font-bold text-slate-200">
+                  <p className="text-[13px] font-bold text-slate-200">
                     回測報酬: {info.回測報酬.toFixed(2)}%
                   </p>
                 </div>
@@ -222,7 +222,7 @@ const StockInfo: React.FC = () => {
                 />
               </div>
             </div>
-            <div className="w-full h-[55%] flex overflow-y-auto">
+            <div className="w-full h-[50vh] flex overflow-y-auto">
               <div className="w-[70%] text-color-5">
                 <div className="flex space-x-1 items-center justify-center mt-3 h-[3vh]">
                   <div className="flex items-center">
