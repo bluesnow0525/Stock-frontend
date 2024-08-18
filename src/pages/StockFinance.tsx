@@ -6,12 +6,7 @@ import CashFlowSheet from "../components/Cashflowsheet";
 import DividendBar from "../components/Dividendsheet";
 import RevenueChart from "../components/Revenuesheet";
 import Loading from "../components/Loading";
-import {
-  useParams,
-  useLocation,
-  useNavigate,
-  useMatch,
-} from "react-router-dom";
+import { useParams, useLocation, useNavigate, useMatch } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchSheetData } from "../slice/sheetSlice";
 import { RootState, AppDispatch } from "../store";
@@ -24,15 +19,10 @@ const StockFinance: React.FC = () => {
   const priceMatch = useMatch(`/trade/price/${id}`);
   const infoMatch = useMatch(`/trade/info/${id}`);
   const financeMatch = useMatch(`/trade/finance/${id}`);
-  const { stockName, ETF } = location.state as {
-    stockName: string;
-    ETF: boolean;
-  };
+  const { stockName, ETF } = location.state as { stockName: string; ETF: boolean };
 
   const [username, setusername] = useState(
-    location.state
-      ? (location.state as { username: string }).username
-      : undefined
+    location.state ? (location.state as { username: string }).username : undefined
   );
   const [isvip, setisvip] = useState(
     location.state ? (location.state as { isvip: Boolean }).isvip : undefined
@@ -45,9 +35,7 @@ const StockFinance: React.FC = () => {
 
   const dispatch = useDispatch<AppDispatch>();
   const sheetData = useSelector((state: RootState) => state.sheetData.data);
-  const sheetDataStatus = useSelector(
-    (state: RootState) => state.sheetData.status
-  );
+  const sheetDataStatus = useSelector((state: RootState) => state.sheetData.status);
 
   useEffect(() => {
     if (id) {
@@ -66,25 +54,23 @@ const StockFinance: React.FC = () => {
     });
   };
 
-  const sortYears = (years: string[]) => {
-    return years.sort((a, b) => Number(b) - Number(a));
-  };
+  // const sortYears = (years: string[]) => {
+  //   return years.sort((a, b) => Number(b) - Number(a));
+  // };
 
-  const sortYearMonths = (periods: string[]) => {
-    return periods.sort((a, b) => {
-      const [yearA, monthA] = a.split("M").map(Number);
-      const [yearB, monthB] = b.split("M").map(Number);
-      if (yearA !== yearB) {
-        return yearB - yearA;
-      }
-      return monthB - monthA;
-    });
-  };
+  // const sortYearMonths = (periods: string[]) => {
+  //   return periods.sort((a, b) => {
+  //     const [yearA, monthA] = a.split("M").map(Number);
+  //     const [yearB, monthB] = b.split("M").map(Number);
+  //     if (yearA !== yearB) {
+  //       return yearB - yearA;
+  //     }
+  //     return monthB - monthA;
+  //   });
+  // };
 
   const [viewMode, setViewMode] = useState<string>("balance");
-  const [currentData, setCurrentData] = useState<FinancialData[] | undefined>(
-    undefined
-  );
+  const [currentData, setCurrentData] = useState<FinancialData[] | undefined>(undefined);
   const [timePeriods, setTimePeriods] = useState<string[]>([]);
   const [labels, setLabels] = useState<string[]>([]);
   const [equityData, setEquityData] = useState<number[]>([]);
@@ -92,13 +78,12 @@ const StockFinance: React.FC = () => {
 
   useEffect(() => {
     if (sheetData) {
-      if (viewMode === "balance") {
+      let periods: string[] = [];
+      if (viewMode === "balance" && sheetData.balance_sheet) {
         setCurrentData(sheetData.balance_sheet);
-        const periods = sheetData.balance_sheet
+        periods = sheetData.balance_sheet
           .map((data) => data["年度-季度"]?.[0] as string)
           .filter(Boolean);
-        setTimePeriods(sortTimePeriods(periods));
-        setLabels(periods);
         setEquityData(
           sheetData.balance_sheet.map((data) => {
             const value = data["股東權益（淨值）"]?.[0];
@@ -111,31 +96,29 @@ const StockFinance: React.FC = () => {
             return typeof value === "number" ? value / 1000 : 0;
           })
         );
-      } else if (viewMode === "income") {
-        setCurrentData(sheetData?.income_statement);
-        const periods = sheetData.income_statement
+      } else if (viewMode === "income" && sheetData.income_statement) {
+        setCurrentData(sheetData.income_statement);
+        periods = sheetData.income_statement
           .map((data) => data["年度-季度"]?.[0] as string)
           .filter(Boolean);
-        setTimePeriods(sortTimePeriods(periods));
-      } else if (viewMode === "cash-flow") {
-        setCurrentData(sheetData?.cash_flow);
-        const periods = sheetData.cash_flow
+      } else if (viewMode === "cash-flow" && sheetData.cash_flow) {
+        setCurrentData(sheetData.cash_flow);
+        periods = sheetData.cash_flow
           .map((data) => data["年度-季度"]?.[0] as string)
           .filter(Boolean);
-        setTimePeriods(sortTimePeriods(periods));
-      } else if (viewMode === "dividend") {
-        setCurrentData(sheetData?.dividend);
-        const periods = sheetData.dividend
+      } else if (viewMode === "dividend" && sheetData.dividend) {
+        setCurrentData(sheetData.dividend);
+        periods = sheetData.dividend
           .map((data) => data["年度"]?.[0] as string)
           .filter(Boolean);
-        setTimePeriods(sortYears(periods));
-      } else if (viewMode === "revenue") {
-        setCurrentData(sheetData?.revenue);
-        const periods = sheetData.revenue
+      } else if (viewMode === "revenue" && sheetData.revenue) {
+        setCurrentData(sheetData.revenue);
+        periods = sheetData.revenue
           .map((data) => data["年度-月份"]?.[0] as string)
           .filter(Boolean);
-        setTimePeriods(sortYearMonths(periods));
       }
+      setTimePeriods(sortTimePeriods(periods));
+      setLabels(periods);
     }
   }, [viewMode, sheetData]);
 
@@ -186,7 +169,7 @@ const StockFinance: React.FC = () => {
         </div>
         <div className="breathing-divider "></div>
       </div>
-      {sheetDataStatus === "succeeded" && currentData && (
+      {sheetDataStatus === "succeeded" && currentData && username && (
         <>
           <div className="flex">
             <div className="flex flex-col w-[15%] ">
@@ -311,9 +294,7 @@ const StockFinance: React.FC = () => {
                               return (
                                 <React.Fragment key={period}>
                                   <td className="px-1 py-1 text-left text-[12px] sm:text-[15px]">
-                                    {value &&
-                                    Array.isArray(value) &&
-                                    value[0] !== null
+                                    {value && Array.isArray(value) && value[0] !== null
                                       ? Number(value[0]).toFixed(2)
                                       : "N/A"}
                                   </td>

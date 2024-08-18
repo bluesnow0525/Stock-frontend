@@ -260,7 +260,7 @@ const StockInfo: React.FC = () => {
                 </div>
               </div>
               <div className="w-[30%]">
-                <div className="w-[90%] h-[10vh] mt-5 flex items-center justify-center">
+                {/* <div className="w-[90%] h-[10vh] mt-5 flex items-center justify-center">
                   <p className="text-[13px] text-color-5 mr-0.5">預估bps:</p>
                   <input
                     type="number"
@@ -285,7 +285,7 @@ const StockInfo: React.FC = () => {
                   />
                 </div>
                 <div className="w-full h-[10vh] flex items-center justify-center"></div>
-                <div className="w-full h-[10vh] flex items-center justify-center"></div>
+                <div className="w-full h-[10vh] flex items-center justify-center"></div> */}
               </div>
             </div>
           </>
