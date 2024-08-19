@@ -13,14 +13,14 @@ const initialState: StocksPriceState = {
 
 export const fetchStocksPrice = createAsyncThunk(
   "stocksPrice/fetchStocksPrice",
-  async (stockId: string) => {
+  async ({ username, id }: { username?: string; id: string }) => {
     const url = `${API_BASE_URL}/api/stockprice`;
     const options = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ id: stockId })
+      body: JSON.stringify({ username: username, id: id })
     };
 
     const response = await fetch(url, options);

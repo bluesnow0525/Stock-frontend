@@ -129,7 +129,7 @@ const StockPrice: React.FC = () => {
 
   useEffect(() => {
     if (id) {
-      dispatch(fetchStocksPrice(id));
+      dispatch(fetchStocksPrice({ username, id }));
     }
   }, [dispatch, id]);
 
