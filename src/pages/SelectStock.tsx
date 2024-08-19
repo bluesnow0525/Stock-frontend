@@ -2,7 +2,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import Header from "../components/Header";
 import React, { useState, ChangeEvent, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchStocks } from "../slice/selectStockSlice";
+import { fetchStocks } from "../slice/selectstockSlice";
 import { addToFavorites, deleteFavorites } from "../slice/favoritesSlice";
 import { RootState, AppDispatch } from "../store";
 import Loading from "../components/Loading";

@@ -11,6 +11,7 @@
 body {
   background-color: var(--bg-color, #1e1515); /* 默认白色背景，除非在 HTML 标签中指定其他颜色 */
   overflow-x: hidden; /* 总是显示垂直滚动条 */
+  overflow-x: auto;
 }
 .bg-container {
   position: relative;
@@ -33,6 +34,10 @@ body {
   pointer-events: none;
 }
 
+.pdf-viewer {
+  height: 80vh; /* 或者根据需要调整 */
+  overflow-y: auto; /* 确保内容可以滚动 */
+}
 
 /* 自定义滚动条样式 */
 ::-webkit-scrollbar {

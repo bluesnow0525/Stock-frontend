@@ -1,5 +1,3 @@
-// src/pdf.tsx
-
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import {
@@ -12,10 +10,14 @@ import "@react-pdf-viewer/core/lib/styles/index.css";
 import { Button } from "react-bootstrap";
 import Header from "../components/Header";
 
-// 设置 PDF.js worker 路径
-const workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${
-  (await import("pdfjs-dist")).version
-}/pdf.worker.js`;
+let workerSrc: string;
+
+async function setWorkerSrc() {
+  const pdfjsLib = await import("pdfjs-dist");
+  workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.js`;
+}
+
+setWorkerSrc(); // 组件挂载前调用
 
 const PdfViewer = () => {
   const location = useLocation();
@@ -69,16 +71,18 @@ const PdfViewer = () => {
             下一頁
           </Button>
         </div>
-        <Worker workerUrl={workerSrc}>
-          <div className="pdf-viewer">
-            <Viewer
-              fileUrl="/sample.pdf"
-              onDocumentLoad={onDocumentLoadSuccess}
-              defaultScale={SpecialZoomLevel.PageWidth}
-              initialPage={pageNumber - 1}
-            />
-          </div>
-        </Worker>
+        {workerSrc && (
+          <Worker workerUrl={workerSrc}>
+            <div className="pdf-viewer">
+              <Viewer
+                fileUrl="/teach.pdf"
+                onDocumentLoad={onDocumentLoadSuccess}
+                defaultScale={SpecialZoomLevel.PageWidth}
+                initialPage={pageNumber - 1}
+              />
+            </div>
+          </Worker>
+        )}
         <div className="page-info">
           Page {pageNumber} of {numPages}
         </div>

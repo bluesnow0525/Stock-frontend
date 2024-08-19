@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import stocksReducer from './slice/selectStockSlice'; 
+import stocksReducer from './slice/selectstockSlice'; 
 import stocksPriceReducer from "./slice/stockPriceSlice";
 import aiReducer from './slice/aiSlice'
 import userDataReducer from './slice/userdataSlice'
