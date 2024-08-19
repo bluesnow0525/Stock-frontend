@@ -1,5 +1,6 @@
 import { API_BASE_URL } from '../assets/apiurl';
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import CryptoJS from "crypto-js";
 
 export type Stock = {
   Code: string;
@@ -28,12 +29,26 @@ const initialState: StocksState = {
 export const fetchStocks = createAsyncThunk(
   "stocks/fetchStocks", 
   async ({ username, type }: { username?: string; type: string }) => {
+    const currentDate = new Date();
+      let secretKey = currentDate.toISOString().slice(0, 13);
+
+      // 确保密钥长度为16字节
+      secretKey = secretKey.padEnd(16, '0');  // 用 '0' 填充到16字节
+
+      const nonce = '1234567890123456';  // 固定 nonce
+
+      // 使用 CBC 模式和固定 IV 加密用户名
+      const encryptedUsername = CryptoJS.AES.encrypt(
+        username,
+        CryptoJS.enc.Utf8.parse(secretKey),
+        { iv: CryptoJS.enc.Utf8.parse(nonce), mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7 }
+      ).toString();
     const response = await fetch(`${API_BASE_URL}/api/stocks`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ username, type })
+        body: JSON.stringify({ username: encryptedUsername, nonce, type })
     });
     if (!response.ok) {
         throw new Error('Failed to fetch stocks data');

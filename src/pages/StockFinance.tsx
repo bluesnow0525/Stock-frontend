@@ -39,7 +39,7 @@ const StockFinance: React.FC = () => {
 
   useEffect(() => {
     if (id) {
-      dispatch(fetchSheetData(id));
+      dispatch(fetchSheetData({username, id}));
     }
   }, [id, dispatch]);
 

@@ -78,7 +78,7 @@ const StockInfo: React.FC = () => {
   useEffect(() => {
     if (username) {
       dispatch(fetchStart());
-      const params = { query: { id } }; // 设置你想发送给后端的参数
+      const params = { query: { id, username } }; // 设置你想发送给后端的参数
       fetchAiData(params)
         .then((data) => {
           dispatch(
@@ -152,9 +152,11 @@ const StockInfo: React.FC = () => {
                   <p className="text-[15px] font-bold text-slate-200">
                     準確率: {info.準確率}
                   </p>
-                  <p className="text-[13px] font-bold text-slate-200">
-                    回測報酬: {info.回測報酬.toFixed(2)}%
-                  </p>
+                  {info.回測報酬 !== 0 && (
+                    <p className="text-[13px] font-bold text-slate-200">
+                      回測報酬: {info.回測報酬.toFixed(2)}%
+                    </p>
+                  )}
                 </div>
               </div>
               <div className="w-1/2 overflow-y-auto">
