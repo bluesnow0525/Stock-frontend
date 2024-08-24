@@ -6,7 +6,12 @@ import CashFlowSheet from "../components/Cashflowsheet";
 import DividendBar from "../components/Dividendsheet";
 import RevenueChart from "../components/Revenuesheet";
 import Loading from "../components/Loading";
-import { useParams, useLocation, useNavigate, useMatch } from "react-router-dom";
+import {
+  useParams,
+  useLocation,
+  useNavigate,
+  useMatch,
+} from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchSheetData } from "../slice/sheetSlice";
 import { RootState, AppDispatch } from "../store";
@@ -19,10 +24,15 @@ const StockFinance: React.FC = () => {
   const priceMatch = useMatch(`/trade/price/${id}`);
   const infoMatch = useMatch(`/trade/info/${id}`);
   const financeMatch = useMatch(`/trade/finance/${id}`);
-  const { stockName, ETF } = location.state as { stockName: string; ETF: boolean };
+  const { stockName, ETF } = location.state as {
+    stockName: string;
+    ETF: boolean;
+  };
 
   const [username, setusername] = useState(
-    location.state ? (location.state as { username: string }).username : undefined
+    location.state
+      ? (location.state as { username: string }).username
+      : undefined
   );
   const [isvip, setisvip] = useState(
     location.state ? (location.state as { isvip: Boolean }).isvip : undefined
@@ -35,11 +45,13 @@ const StockFinance: React.FC = () => {
 
   const dispatch = useDispatch<AppDispatch>();
   const sheetData = useSelector((state: RootState) => state.sheetData.data);
-  const sheetDataStatus = useSelector((state: RootState) => state.sheetData.status);
+  const sheetDataStatus = useSelector(
+    (state: RootState) => state.sheetData.status
+  );
 
   useEffect(() => {
     if (id) {
-      dispatch(fetchSheetData({username, id}));
+      dispatch(fetchSheetData({ username, id }));
     }
   }, [id, dispatch]);
 
@@ -69,8 +81,10 @@ const StockFinance: React.FC = () => {
   //   });
   // };
 
-  const [viewMode, setViewMode] = useState<string>("balance");
-  const [currentData, setCurrentData] = useState<FinancialData[] | undefined>(undefined);
+  const [viewMode, setViewMode] = useState<string>("revenue");
+  const [currentData, setCurrentData] = useState<FinancialData[] | undefined>(
+    undefined
+  );
   const [timePeriods, setTimePeriods] = useState<string[]>([]);
   const [labels, setLabels] = useState<string[]>([]);
   const [equityData, setEquityData] = useState<number[]>([]);
@@ -148,14 +162,6 @@ const StockFinance: React.FC = () => {
           >
             價格
           </button>
-          <button
-            className={`3xl:text-[20px] link-hover-gradient px-1 py-1 rounded mr-4 ${
-              infoMatch ? "border-color-3" : ""
-            }`}
-            onClick={() => handleNavigate(`/trade/info/${id}`)}
-          >
-            分析
-          </button>
           {ETF !== true && (
             <button
               className={`3xl:text-[20px] link-hover-gradient px-4 py-1 border rounded mr-4 ${
@@ -166,6 +172,14 @@ const StockFinance: React.FC = () => {
               財報
             </button>
           )}
+          <button
+            className={`3xl:text-[20px] link-hover-gradient px-1 py-1 rounded mr-4 ${
+              infoMatch ? "border-color-3" : ""
+            }`}
+            onClick={() => handleNavigate(`/trade/info/${id}`)}
+          >
+            分析
+          </button>
         </div>
         <div className="breathing-divider "></div>
       </div>
@@ -173,7 +187,7 @@ const StockFinance: React.FC = () => {
         <>
           <div className="flex">
             <div className="flex flex-col w-[15%] ">
-              <div className="h-[80%] text-white mt-3">
+              <div className="h-[70%] text-white mt-3">
                 <div className="flex flex-col p-2 space-y-2">
                   <button
                     onClick={() => setViewMode("revenue")}
@@ -293,8 +307,10 @@ const StockFinance: React.FC = () => {
                               const value = data ? data[key] : null;
                               return (
                                 <React.Fragment key={period}>
-                                  <td className="px-1 py-1 text-left text-[12px] sm:text-[15px]">
-                                    {value && Array.isArray(value) && value[0] !== null
+                                  <td className="px-1 py-1 text-right text-[12px] sm:text-[15px]">
+                                    {value &&
+                                    Array.isArray(value) &&
+                                    value[0] !== null
                                       ? Number(value[0]).toFixed(2)
                                       : "N/A"}
                                   </td>

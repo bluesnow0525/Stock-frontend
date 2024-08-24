@@ -214,6 +214,7 @@ const Asset: React.FC = () => {
                         </td>
                         <td className="border border-x-0 border-gray-300 px-4 py-2 text-center">
                           {(tx.profit_loss * 1000).toFixed(0)}
+                          <p>({((tx.profit_loss)*100/(tx.price_per_unit * tx.quantity)).toFixed(1)}%)</p>
                         </td>
                         <td className="border border-x-0 border-gray-300 px-4 py-2 text-center">
                           {tx.timestamp.split(' ')[0]}

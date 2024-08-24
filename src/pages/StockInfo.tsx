@@ -116,14 +116,6 @@ const StockInfo: React.FC = () => {
             >
               價格
             </button>
-            <button
-              className={`3xl:text-[20px] link-hover-gradient px-4 py-1 border rounded mr-4 ${
-                infoMatch ? "border-color-3" : ""
-              }`}
-              onClick={() => handleNavigate(`/trade/info/${id}`)}
-            >
-              分析
-            </button>
             {ETF !== true && (
               <button
                 className={`3xl:text-[20px] link-hover-gradient px-1 py-1 rounded mr-4 ${
@@ -134,6 +126,14 @@ const StockInfo: React.FC = () => {
                 財報
               </button>
             )}
+            <button
+              className={`3xl:text-[20px] link-hover-gradient px-4 py-1 border rounded mr-4 ${
+                infoMatch ? "border-color-3" : ""
+              }`}
+              onClick={() => handleNavigate(`/trade/info/${id}`)}
+            >
+              分析
+            </button>
           </div>
           <div className="breathing-divider "></div>
         </div>
@@ -225,7 +225,7 @@ const StockInfo: React.FC = () => {
               </div>
             </div>
             <div className="w-full h-[50vh] flex overflow-y-auto">
-              <div className="w-[70%] text-color-5">
+              <div className="w-[80%] text-color-5">
                 <div className="flex space-x-1 items-center justify-center mt-3 h-[3vh]">
                   <div className="flex items-center">
                     <div className="w-2 h-4 bg-yellow-300 rounded"></div>
@@ -243,7 +243,7 @@ const StockInfo: React.FC = () => {
                 <div
                   className={`transition-all duration-500  overflow-hidden `}
                 >
-                  <div className="space-y-3 mt-1">
+                  <div className="space-y-3 mb-1">
                     {evaluations.map((evalItem, index) =>
                       evalItem.value ? (
                         <div key={index} className="my-1 ">
@@ -260,34 +260,7 @@ const StockInfo: React.FC = () => {
                     )}
                   </div>
                 </div>
-              </div>
-              <div className="w-[30%]">
-                {/* <div className="w-[90%] h-[10vh] mt-5 flex items-center justify-center">
-                  <p className="text-[13px] text-color-5 mr-0.5">預估bps:</p>
-                  <input
-                    type="number"
-                    className="text-[12px] text-color-5 border border-gray-300 rounded p-1 w-16"
-                    placeholder="輸入bps"
-                  />
-                </div>
-                <div className="w-[90%] h-[10vh] flex items-center justify-center">
-                  <p className="text-[13px] text-color-5 mr-0.5">預估eps:</p>
-                  <input
-                    type="number"
-                    className="text-[12px] text-color-5 border border-gray-300 rounded p-1 w-16"
-                    placeholder="輸入eps"
-                  />
-                </div>
-                <div className="w-[90%] h-[10vh] flex items-center justify-center">
-                  <p className="text-[13px] text-color-5 mr-1">股息:</p>
-                  <input
-                    type="number"
-                    className="text-[12px] text-color-5 border border-gray-300 rounded p-1 w-16"
-                    placeholder="輸入dividend"
-                  />
-                </div>
-                <div className="w-full h-[10vh] flex items-center justify-center"></div>
-                <div className="w-full h-[10vh] flex items-center justify-center"></div> */}
+                <div className="h-[20px]"></div>
               </div>
             </div>
           </>

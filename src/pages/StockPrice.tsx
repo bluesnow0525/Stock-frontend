@@ -155,14 +155,6 @@ const StockPrice: React.FC = () => {
             >
               價格
             </button>
-            <button
-              className={`3xl:text-[20px] link-hover-gradient px-1 py-1 rounded mr-4 ${
-                infoMatch ? "border-color-3" : ""
-              }`}
-              onClick={() => handleNavigate(`/trade/info/${id}`)}
-            >
-              分析
-            </button>
             {ETF !== true && (
               <button
                 className={`3xl:text-[20px] link-hover-gradient px-1 py-1 rounded mr-4 ${
@@ -173,6 +165,14 @@ const StockPrice: React.FC = () => {
                 財報
               </button>
             )}
+            <button
+              className={`3xl:text-[20px] link-hover-gradient px-1 py-1 rounded mr-4 ${
+                infoMatch ? "border-color-3" : ""
+              }`}
+              onClick={() => handleNavigate(`/trade/info/${id}`)}
+            >
+              分析
+            </button>
           </div>
           <div className="breathing-divider "></div>
         </div>
