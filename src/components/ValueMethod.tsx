@@ -33,7 +33,6 @@ type Parameters = {
 
 interface v_infoProp {
   v_info: {
-    現價: number;
     預期年化報酬率: string;
     高合理價: string;
     合理價: string;
@@ -49,9 +48,10 @@ interface v_infoProp {
     dcf法估價: string;
     peg法估價: string;
   };
+  recentPrice: number;
 }
 
-const ValueMethod: React.FC<v_infoProp> = ({ v_info }) => {
+const ValueMethod: React.FC<v_infoProp> = ({ v_info, recentPrice }) => {
   const evaluations = [
     { label: "pb法估價", value: v_info.pb法估價 },
     { label: "pe法估價", value: v_info.pe法估價 },
@@ -156,7 +156,7 @@ const ValueMethod: React.FC<v_infoProp> = ({ v_info }) => {
   };
 
   return (
-    <div className="w-[80%] text-color-5">
+    <div className="w-full text-color-5 h-full">
       <div className="flex space-x-1 items-center justify-center mt-3 h-[3vh]">
         <div className="flex items-center">
           <div className="w-2 h-4 bg-yellow-300 rounded"></div>
@@ -180,13 +180,13 @@ const ValueMethod: React.FC<v_infoProp> = ({ v_info }) => {
                   key={index}
                   label={evalItem.label}
                   evaluation={parseEvaluation(evalItem.value)}
-                  recentPrice={v_info.現價}
+                  recentPrice={recentPrice}
                 />
                 <button onClick={() => toggleExpansion(index)}>
                   {expandedIndex === index ? "收起" : "展開"}
                 </button>
                 {expandedIndex === index && (
-                  <div className="mt-3">
+                  <div className="mt-3 z-50">
                     {evalItem.label === "pb法估價" && (
                       <>
                         <input

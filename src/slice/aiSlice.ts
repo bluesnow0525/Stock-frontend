@@ -3,7 +3,6 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 interface ImageInfo {
   評價: string;
   評價分數: number;
-  現價: number;
   準確率: string;
   回測報酬: number,
 }
@@ -20,7 +19,6 @@ const initialState: ImageState = {
   info: {
     評價: '',
     評價分數: 0,
-    現價: 0,
     準確率: '',
     回測報酬: 0,
   },

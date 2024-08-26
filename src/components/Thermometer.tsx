@@ -27,7 +27,8 @@ const Thermometer: React.FC<{
   };
 
   return (
-    <div className="">
+    <div className="h-full w-full">
+      <p className="text-xs text-slate-200 mt-8 text-center">{label}</p>
       <div className="relative w-[70%] mx-auto">
         {/* 数字显示 */}
         <div
@@ -116,7 +117,6 @@ const Thermometer: React.FC<{
           {recentPrice}
         </div>
       </div>
-      <p className="text-xs text-slate-200 mt-8 text-center">{label}</p>
     </div>
   );
 };

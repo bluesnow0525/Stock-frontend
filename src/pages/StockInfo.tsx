@@ -22,9 +22,10 @@ const StockInfo: React.FC = () => {
   const priceMatch = useMatch(`/trade/price/${id}`);
   const infoMatch = useMatch(`/trade/info/${id}`);
   const financeMatch = useMatch(`/trade/finance/${id}`);
-  const { stockName, ETF } = location.state as {
+  const { stockName, ETF, recentPrice } = location.state as {
     stockName: string;
     ETF: boolean;
+    recentPrice: number;
   };
 
   const [username, setusername] = useState(
@@ -59,7 +60,15 @@ const StockInfo: React.FC = () => {
   };
 
   const handleNavigate = (path: string) => {
-    navigate(path, { state: { stockName: stockName, username, isvip, ETF } });
+    navigate(path, {
+      state: {
+        stockName: stockName,
+        username: username,
+        isvip: isvip,
+        ETF: ETF,
+        recentPrice: recentPrice,
+      },
+    });
   };
 
   useEffect(() => {
@@ -174,9 +183,9 @@ const StockInfo: React.FC = () => {
                         預期年化報酬率: {v_info.預期年化報酬率}
                       </p>
                     )}
-                    {v_info.現價 !== 0 && (
+                    {recentPrice !== 0 && (
                       <p className="text-[15px] text-slate-200 my-0.5 font-extrabold">
-                        現價: {v_info.現價}
+                        現價: {recentPrice}
                       </p>
                     )}
                   </div>
@@ -219,9 +228,9 @@ const StockInfo: React.FC = () => {
                 />
               </div>
             </div>
-            <div className="w-full h-[50vh] flex overflow-y-auto items-center">
+            <div className="w-full h-[50vh] flex overflow-y-auto items-center container">
               {v_infoStatus === "succeeded" && v_info && (
-                <ValueMethod v_info={v_info} />
+                <ValueMethod v_info={v_info} recentPrice={recentPrice} />
               )}
               {v_infoStatus === "loading" && <Loading />}
             </div>

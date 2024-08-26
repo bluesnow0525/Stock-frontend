@@ -52,6 +52,8 @@ const StockPrice: React.FC = () => {
     (state: RootState) => state.stocksPrice.pricesStatus
   );
   const assets = useSelector((state: RootState) => state.assets.assets);
+  const recentPrice =
+    stockPrices.length > 0 ? stockPrices[stockPrices.length - 1].close : "N/A";
 
   useEffect(() => {
     const checkTime = () => {
@@ -62,9 +64,7 @@ const StockPrice: React.FC = () => {
       const totalMinutes = hours * 60 + minutes;
 
       // 9:00 AM 的总分钟数是 540, 1:30 PM 的总分钟数是 810
-      if (
-        (dayOfWeek < 6 && totalMinutes >= 540 && totalMinutes <= 870)
-      ) {
+      if (dayOfWeek < 6 && totalMinutes >= 540 && totalMinutes <= 870) {
         setIsWithinTime(true);
       } else {
         setIsWithinTime(false);
@@ -82,7 +82,15 @@ const StockPrice: React.FC = () => {
   }, []);
 
   const handleNavigate = (path: string) => {
-    navigate(path, { state: { stockName: stockName, username, isvip, ETF } });
+    navigate(path, {
+      state: {
+        stockName: stockName,
+        username: username,
+        isvip: isvip,
+        ETF: ETF,
+        recentPrice: recentPrice,
+      },
+    });
   };
 
   const handleBuy = async () => {
@@ -92,7 +100,7 @@ const StockPrice: React.FC = () => {
           buyStock({ quantity, stockname: stockName, username, stockId: id })
         ).unwrap();
         alert(result.message); // 显示从服务器返回的消息
-        setasset_change(!asset_change)
+        setasset_change(!asset_change);
       } catch (err) {
         if (err && typeof err === "object" && "message" in err) {
           alert("餘額不足"); // 显示服务器错误消息
@@ -110,7 +118,7 @@ const StockPrice: React.FC = () => {
           sellStock({ quantity, username, stockId: id })
         ).unwrap();
         alert(result.message); // 显示从服务器返回的消息
-        setasset_change(!asset_change)
+        setasset_change(!asset_change);
       } catch (err) {
         if (err && typeof err === "object" && "message" in err) {
           alert("庫存不足"); // 显示服务器错误消息
@@ -192,7 +200,10 @@ const StockPrice: React.FC = () => {
                 style={{ boxShadow: "0 0 10px 5px rgba(255, 0, 0, 0.5)" }}
               >
                 可用資產：{assets}{" "}
-                <span className="ml-8">現價:{stockPrices.length > 0 ? stockPrices[stockPrices.length - 1].close : 'N/A'}</span>
+                <span className="ml-8">
+                  現價:
+                  {recentPrice}
+                </span>
               </h1>
               <span>下單數量</span>
               <input

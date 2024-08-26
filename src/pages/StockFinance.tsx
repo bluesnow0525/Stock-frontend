@@ -24,9 +24,10 @@ const StockFinance: React.FC = () => {
   const priceMatch = useMatch(`/trade/price/${id}`);
   const infoMatch = useMatch(`/trade/info/${id}`);
   const financeMatch = useMatch(`/trade/finance/${id}`);
-  const { stockName, ETF } = location.state as {
+  const { stockName, ETF, recentPrice } = location.state as {
     stockName: string;
     ETF: boolean;
+    recentPrice: number;
   };
 
   const [username, setusername] = useState(
@@ -137,7 +138,15 @@ const StockFinance: React.FC = () => {
   }, [viewMode, sheetData]);
 
   const handleNavigate = (path: string) => {
-    navigate(path, { state: { stockName: stockName, username, isvip, ETF } });
+    navigate(path, {
+      state: {
+        stockName: stockName,
+        username: username,
+        isvip: isvip,
+        ETF: ETF,
+        recentPrice: recentPrice,
+      },
+    });
   };
 
   return (

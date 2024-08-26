@@ -3,7 +3,6 @@ import { API_BASE_URL } from "../assets/apiurl";
 import CryptoJS from "crypto-js";
 
 type v_info = {
-    現價: number;
     預期年化報酬率: string;
     高合理價: string;
     合理價: string;
