@@ -8,6 +8,7 @@ import StockFinance from './pages/StockFinance';
 import PdfViewer from './pages/Pdf';
 import StockInfo from './pages/StockInfo';
 import Useradmin from './pages/Useradmin';
+import QuestionnaireForm from './pages/Question';
 
 const App: React.FC = () => {
   const routes = useRoutes([
@@ -20,6 +21,7 @@ const App: React.FC = () => {
     { path: 'trade/finance/:id', element: <StockFinance /> },
     { path: 'useradmin', element: <Useradmin /> },
     { path: 'pdfview', element: <PdfViewer />},
+    { path: 'question', element: <QuestionnaireForm />},
   ]);
 
   return routes;

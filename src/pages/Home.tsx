@@ -48,6 +48,14 @@ const Home: React.FC = () => {
         >
           前往使用教學
         </button>
+        <button
+          onClick={() =>
+            navigate("/question", { replace: true, state: { username, isvip } })
+          }
+          className="text-[15px] font-mono mt-5 ml-10 border border-color-4 text-color-3 p-2 sticky"
+        >
+          投資屬性評測
+        </button>
       </div>
       <div className="text-white">
       <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank">

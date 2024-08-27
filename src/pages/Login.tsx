@@ -88,7 +88,7 @@ const Login: React.FC = () => {
         <Header />
         <div className="breathing-divider"></div>
       </div>
-      <div className="text-white flex justify-center items-center h-[70%]">
+      <div className="text-white flex flex-col justify-center items-center h-[70%]">
         <div
           className="bg-slate-800 border border-slate-400 rounded-md p-8 shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-20 relative"
           style={{ boxShadow: "0 0 10px 5px rgba(65, 105, 230, 0.6)" }}
@@ -187,6 +187,13 @@ const Login: React.FC = () => {
             )}
           </div>
         </div>
+        <a href="https://lin.ee/Q7qCfcN">
+          <img
+            src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png"
+            alt="加入好友"
+            className="mt-8 h-14 w-36"
+          />
+        </a>
       </div>
     </div>
   );

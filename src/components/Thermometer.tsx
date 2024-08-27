@@ -27,9 +27,9 @@ const Thermometer: React.FC<{
   };
 
   return (
-    <div className="h-full w-full">
-      <p className="text-xs text-slate-200 mt-8 text-center">{label}</p>
-      <div className="relative w-[70%] mx-auto">
+    <div className="w-full">
+      <p className="text-[15px] text-slate-200 my-1 text-center">{label}</p>
+      <div className="relative w-[90%] mx-auto">
         {/* 数字显示 */}
         <div
           className={`absolute top-0 transform -translate-y-5 text-xs text-red-500 ${getOffsetClass(

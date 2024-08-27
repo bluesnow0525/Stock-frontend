@@ -67,20 +67,20 @@ const StockFinance: React.FC = () => {
     });
   };
 
-  // const sortYears = (years: string[]) => {
-  //   return years.sort((a, b) => Number(b) - Number(a));
-  // };
+  const sortYears = (years: string[]) => {
+    return years.sort((a, b) => Number(b) - Number(a));
+  };
 
-  // const sortYearMonths = (periods: string[]) => {
-  //   return periods.sort((a, b) => {
-  //     const [yearA, monthA] = a.split("M").map(Number);
-  //     const [yearB, monthB] = b.split("M").map(Number);
-  //     if (yearA !== yearB) {
-  //       return yearB - yearA;
-  //     }
-  //     return monthB - monthA;
-  //   });
-  // };
+  const sortYearMonths = (periods: string[]) => {
+    return periods.sort((a, b) => {
+      const [yearA, monthA] = a.split("M").map(Number);
+      const [yearB, monthB] = b.split("M").map(Number);
+      if (yearA !== yearB) {
+        return yearB - yearA;
+      }
+      return monthB - monthA;
+    });
+  };
 
   const [viewMode, setViewMode] = useState<string>("revenue");
   const [currentData, setCurrentData] = useState<FinancialData[] | undefined>(
@@ -111,29 +111,37 @@ const StockFinance: React.FC = () => {
             return typeof value === "number" ? value / 1000 : 0;
           })
         );
+        setTimePeriods(sortTimePeriods(periods));
+        setLabels(periods);
       } else if (viewMode === "income" && sheetData.income_statement) {
         setCurrentData(sheetData.income_statement);
         periods = sheetData.income_statement
           .map((data) => data["年度-季度"]?.[0] as string)
           .filter(Boolean);
+        setTimePeriods(sortTimePeriods(periods));
+        setLabels(periods);
       } else if (viewMode === "cash-flow" && sheetData.cash_flow) {
         setCurrentData(sheetData.cash_flow);
         periods = sheetData.cash_flow
           .map((data) => data["年度-季度"]?.[0] as string)
           .filter(Boolean);
+        setTimePeriods(sortTimePeriods(periods));
+        setLabels(periods);
       } else if (viewMode === "dividend" && sheetData.dividend) {
         setCurrentData(sheetData.dividend);
         periods = sheetData.dividend
           .map((data) => data["年度"]?.[0] as string)
           .filter(Boolean);
+        setTimePeriods(sortYears(periods));
+        setLabels(periods);
       } else if (viewMode === "revenue" && sheetData.revenue) {
         setCurrentData(sheetData.revenue);
         periods = sheetData.revenue
           .map((data) => data["年度-月份"]?.[0] as string)
           .filter(Boolean);
+        setTimePeriods(sortYearMonths(periods));
+        setLabels(periods);
       }
-      setTimePeriods(sortTimePeriods(periods));
-      setLabels(periods);
     }
   }, [viewMode, sheetData]);
 
@@ -194,13 +202,13 @@ const StockFinance: React.FC = () => {
       </div>
       {sheetDataStatus === "succeeded" && currentData && username && (
         <>
-          <div className="flex">
-            <div className="flex flex-col w-[15%] ">
-              <div className="h-[70%] text-white mt-3">
-                <div className="flex flex-col p-2 space-y-2">
+          <div className="flex h-[60%]">
+            <div className="flex flex-col w-[15%]">
+              <div className="text-white mt-3">
+                <div className="flex flex-col p-1 space-y-1">
                   <button
                     onClick={() => setViewMode("revenue")}
-                    className={`px-4 py-3 rounded ${
+                    className={`px-3 py-2 rounded ${
                       viewMode === "revenue"
                         ? "bg-red-500"
                         : "bg-gray-700 hover:bg-gray-600"
@@ -210,7 +218,7 @@ const StockFinance: React.FC = () => {
                   </button>
                   <button
                     onClick={() => setViewMode("income")}
-                    className={`px-4 py-3 rounded ${
+                    className={`px-3 py-2 rounded ${
                       viewMode === "income"
                         ? "bg-red-500"
                         : "bg-gray-700 hover:bg-gray-600"
@@ -220,7 +228,7 @@ const StockFinance: React.FC = () => {
                   </button>
                   <button
                     onClick={() => setViewMode("balance")}
-                    className={`px-4 py-3 rounded ${
+                    className={`px-3 py-2 rounded ${
                       viewMode === "balance"
                         ? "bg-red-500"
                         : "bg-gray-700 hover:bg-gray-600"
@@ -230,7 +238,7 @@ const StockFinance: React.FC = () => {
                   </button>
                   <button
                     onClick={() => setViewMode("cash-flow")}
-                    className={`px-4 py-3 rounded ${
+                    className={`px-3 py-2 rounded ${
                       viewMode === "cash-flow"
                         ? "bg-red-500"
                         : "bg-gray-700 hover:bg-gray-600"
@@ -240,7 +248,7 @@ const StockFinance: React.FC = () => {
                   </button>
                   <button
                     onClick={() => setViewMode("dividend")}
-                    className={`px-4 py-3 rounded ${
+                    className={`px-3 py-2 rounded ${
                       viewMode === "dividend"
                         ? "bg-red-500"
                         : "bg-gray-700 hover:bg-gray-600"

@@ -11,24 +11,24 @@ type Parameters = {
   pe: { eps: string; ratio: string };
   ddm: {
     dividend: string;
-    growthRate: string;
-    growthYears: string;
+    growthRate: number[];
+    growthYears: number[];
     terminalGrowth: string;
   };
   de: {
     eps: string;
     discountRate: string;
-    growthRate: string;
-    growthYears: string;
+    growthRate: number[];
+    growthYears: number[];
     terminalGrowth: string;
   };
   dcf: {
-    growthRate: string;
-    growthYears: string;
+    growthRate: number[];
+    growthYears: number[];
     terminalGrowth: string;
     discountRate: string;
   };
-  peg: { growthRate: string; growthYears: string; pegRatio: string };
+  peg: { growthRate: number[]; growthYears: number[]; pegRatio: string };
 };
 
 interface v_infoProp {
@@ -69,21 +69,21 @@ const ValueMethod: React.FC<v_infoProp> = ({ v_info, recentPrice }) => {
   const [parameters, setParameters] = useState<Parameters>({
     pb: { netValue: "", ratio: "" },
     pe: { eps: "", ratio: "" },
-    ddm: { dividend: "", growthRate: "", growthYears: "", terminalGrowth: "" },
+    ddm: { dividend: "", growthRate: [], growthYears: [], terminalGrowth: "" },
     de: {
       eps: "",
       discountRate: "",
-      growthRate: "",
-      growthYears: "",
+      growthRate: [],
+      growthYears: [],
       terminalGrowth: "",
     },
     dcf: {
-      growthRate: "",
-      growthYears: "",
+      growthRate: [],
+      growthYears: [],
       terminalGrowth: "",
       discountRate: "",
     },
-    peg: { growthRate: "", growthYears: "", pegRatio: "" },
+    peg: { growthRate: [], growthYears: [], pegRatio: "" },
   });
 
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
@@ -92,27 +92,38 @@ const ValueMethod: React.FC<v_infoProp> = ({ v_info, recentPrice }) => {
     setExpandedIndex(expandedIndex === index ? null : index);
   };
 
-  const handleChange = (method: string, field: string, value: string) => {
-    setParameters((prevParams) => ({
-      ...prevParams,
-      [method]: {
-        ...prevParams[method],
-        [field]: value,
-      },
-    }));
+  const handleChange = (
+    method: keyof Parameters,
+    field: string,
+    value: string
+  ) => {
+    setParameters((prevParams) => {
+      const newValue =
+        field === "growthRate" || field === "growthYears"
+          ? value.split(",").map(Number) // 將輸入轉換為 number[]
+          : value; // 對於其他字段，保留為字符串
+
+      return {
+        ...prevParams,
+        [method]: {
+          ...prevParams[method],
+          [field]: newValue,
+        },
+      };
+    });
   };
 
   const validateInput = (method: keyof Parameters): boolean => {
     const param = parameters[method];
 
-    // 僅當 method 具有 growthRate 和 growthYears 屬性時，才執行該檢查
+    // 使用 'in' 操作符來確定 growthRate 是否存在於該對象中
     if ("growthRate" in param && "growthYears" in param) {
-      const growthRateList = param.growthRate
-        .split(",")
-        .map((v: string) => parseFloat(v));
-      const growthYearsList = param.growthYears
-        .split(",")
-        .map((v: string) => parseInt(v, 10));
+      const growthRateList = (
+        param as { growthRate: number[]; growthYears: number[] }
+      ).growthRate;
+      const growthYearsList = (
+        param as { growthRate: number[]; growthYears: number[] }
+      ).growthYears;
 
       if (growthRateList.length !== growthYearsList.length) {
         alert("成長率與成長年必須是長度一致的列表！");
@@ -128,7 +139,6 @@ const ValueMethod: React.FC<v_infoProp> = ({ v_info, recentPrice }) => {
       }
     }
 
-    // 檢查其他參數是否為浮點數
     const floatFields = [
       "netValue",
       "ratio",
@@ -150,10 +160,16 @@ const ValueMethod: React.FC<v_infoProp> = ({ v_info, recentPrice }) => {
 
   const handleSubmit = (method: keyof Parameters) => {
     if (validateInput(method)) {
-      alert(`${method} 參數已成功提交！`);
+      // 取得該 method 對應的參數
+      const param = parameters[method];
+  
+      // 顯示 method 名稱及其對應的參數
+      alert(`Method: ${method}\nType: ${typeof param}\nContent: ${JSON.stringify(param, null, 2)}`);
+  
       // 在這裡處理提交邏輯
+      console.log(`${method} 參數已成功提交！`, param);
     }
-  };
+  };  
 
   return (
     <div className="w-full text-color-5 h-full">
@@ -175,18 +191,23 @@ const ValueMethod: React.FC<v_infoProp> = ({ v_info, recentPrice }) => {
         {evaluations.map((evalItem, index) =>
           evalItem.value ? (
             <div key={index} className="my-1 ">
-              <div className="h-[8vh]">
-                <Thermometer
-                  key={index}
-                  label={evalItem.label}
-                  evaluation={parseEvaluation(evalItem.value)}
-                  recentPrice={recentPrice}
-                />
-                <button onClick={() => toggleExpansion(index)}>
-                  {expandedIndex === index ? "收起" : "展開"}
-                </button>
+              <div className="mb-10 border-t border-color-3">
+                <div className="flex">
+                  <button
+                    className="w-[10%] mt-7 ml-5 text-center font-bold text-[15px]"
+                    onClick={() => toggleExpansion(index)}
+                  >
+                    {expandedIndex === index ? "收起" : "調整"}
+                  </button>
+                  <Thermometer
+                    key={index}
+                    label={evalItem.label}
+                    evaluation={parseEvaluation(evalItem.value)}
+                    recentPrice={recentPrice}
+                  />
+                </div>
                 {expandedIndex === index && (
-                  <div className="mt-3 z-50">
+                  <div className="mt-8 z-50 text-black">
                     {evalItem.label === "pb法估價" && (
                       <>
                         <input
@@ -199,13 +220,16 @@ const ValueMethod: React.FC<v_infoProp> = ({ v_info, recentPrice }) => {
                         />
                         <input
                           type="text"
-                          placeholder="比竟比"
+                          placeholder="本淨比"
                           value={parameters.pb.ratio}
                           onChange={(e) =>
                             handleChange("pb", "ratio", e.target.value)
                           }
                         />
-                        <button onClick={() => handleSubmit("pb")}>
+                        <button
+                          className="bg-slate-50 "
+                          onClick={() => handleSubmit("pb")}
+                        >
                           提交PB
                         </button>
                       </>
@@ -245,20 +269,21 @@ const ValueMethod: React.FC<v_infoProp> = ({ v_info, recentPrice }) => {
                         />
                         <input
                           type="text"
-                          placeholder="成長率 (如: [6%, 3%])"
-                          value={parameters.ddm.growthRate}
+                          placeholder="成長率 (如: 6%, 3%)"
+                          value={parameters.ddm.growthRate.join(",")}
                           onChange={(e) =>
                             handleChange("ddm", "growthRate", e.target.value)
                           }
                         />
                         <input
                           type="text"
-                          placeholder="成長年 (如: [3, 2])"
-                          value={parameters.ddm.growthYears}
+                          placeholder="成長年 (如: 3, 2)"
+                          value={parameters.ddm.growthYears.join(",")}
                           onChange={(e) =>
                             handleChange("ddm", "growthYears", e.target.value)
                           }
                         />
+
                         <input
                           type="text"
                           placeholder="終端成長"
@@ -296,20 +321,21 @@ const ValueMethod: React.FC<v_infoProp> = ({ v_info, recentPrice }) => {
                         />
                         <input
                           type="text"
-                          placeholder="成長率 (如: [6%, 3%])"
-                          value={parameters.de.growthRate}
+                          placeholder="成長率 (如: 6%, 3%)"
+                          value={parameters.de.growthRate.join(",")}
                           onChange={(e) =>
                             handleChange("de", "growthRate", e.target.value)
                           }
                         />
                         <input
                           type="text"
-                          placeholder="成長年 (如: [3, 2])"
-                          value={parameters.de.growthYears}
+                          placeholder="成長年 (如: 3, 2)"
+                          value={parameters.de.growthYears.join(",")}
                           onChange={(e) =>
                             handleChange("de", "growthYears", e.target.value)
                           }
                         />
+
                         <input
                           type="text"
                           placeholder="終端成長"
@@ -327,20 +353,21 @@ const ValueMethod: React.FC<v_infoProp> = ({ v_info, recentPrice }) => {
                       <>
                         <input
                           type="text"
-                          placeholder="成長率 (如: [6%, 3%])"
-                          value={parameters.dcf.growthRate}
+                          placeholder="成長率 (如: 6%, 3%)"
+                          value={parameters.dcf.growthRate.join(",")}
                           onChange={(e) =>
                             handleChange("dcf", "growthRate", e.target.value)
                           }
                         />
                         <input
                           type="text"
-                          placeholder="成長年 (如: [3, 2])"
-                          value={parameters.dcf.growthYears}
+                          placeholder="成長年 (如: 3, 2)"
+                          value={parameters.dcf.growthYears.join(",")}
                           onChange={(e) =>
                             handleChange("dcf", "growthYears", e.target.value)
                           }
                         />
+
                         <input
                           type="text"
                           placeholder="終端成長"
@@ -370,16 +397,16 @@ const ValueMethod: React.FC<v_infoProp> = ({ v_info, recentPrice }) => {
                       <>
                         <input
                           type="text"
-                          placeholder="成長率 (如: [6%, 3%])"
-                          value={parameters.peg.growthRate}
+                          placeholder="成長率 (如: 6%, 3%)"
+                          value={parameters.peg.growthRate.join(",")}
                           onChange={(e) =>
                             handleChange("peg", "growthRate", e.target.value)
                           }
                         />
                         <input
                           type="text"
-                          placeholder="成長年 (如: [3, 2])"
-                          value={parameters.peg.growthYears}
+                          placeholder="成長年 (如: 3, 2)"
+                          value={parameters.peg.growthYears.join(",")}
                           onChange={(e) =>
                             handleChange("peg", "growthYears", e.target.value)
                           }
