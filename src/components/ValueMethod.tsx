@@ -1,5 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Thermometer from "./Thermometer";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchEvaluationRange, setDefaultEvaluations } from "../slice/valuechangeSlice"; // 引入 actions 和 thunk
+import { RootState, AppDispatch } from "../store";
 
 interface Evaluation {
   low: number;
@@ -7,29 +10,14 @@ interface Evaluation {
 }
 
 type Parameters = {
-  pb: { netValue: string; ratio: string };
-  pe: { eps: string; ratio: string };
-  ddm: {
-    dividend: string;
-    growthRate: number[];
-    growthYears: number[];
-    terminalGrowth: string;
-  };
-  de: {
-    eps: string;
-    discountRate: string;
-    growthRate: number[];
-    growthYears: number[];
-    terminalGrowth: string;
-  };
-  dcf: {
-    growthRate: number[];
-    growthYears: number[];
-    terminalGrowth: string;
-    discountRate: string;
-  };
-  peg: { growthRate: number[]; growthYears: number[]; pegRatio: string };
+  pb: { netValue: number | string; ratio: number | string };
+  pe: { eps: number | string; ratio: number | string };
+  ddm: { dividend: number | string; growthRate: (number | string)[]; growthYears: (number | string)[]; terminalGrowth: number | string };
+  de: { eps: number | string; discountRate: number | string; growthRate: (number | string)[]; growthYears: (number | string)[]; terminalGrowth: number | string };
+  dcf: { growthRate: (number | string)[]; growthYears: (number | string)[]; terminalGrowth: number | string; discountRate: number | string };
+  peg: { growthRate: (number | string)[]; growthYears: (number | string)[]; pegRatio: number | string };
 };
+
 
 interface v_infoProp {
   v_info: {
@@ -52,14 +40,23 @@ interface v_infoProp {
 }
 
 const ValueMethod: React.FC<v_infoProp> = ({ v_info, recentPrice }) => {
-  const evaluations = [
-    { label: "pb法估價", value: v_info.pb法估價 },
-    { label: "pe法估價", value: v_info.pe法估價 },
-    { label: "ddm法估價", value: v_info.ddm法估價 },
-    { label: "de法估價", value: v_info.de法估價 },
-    { label: "dcf法估價", value: v_info.dcf法估價 },
-    { label: "peg法估價", value: v_info.peg法估價 },
-  ];
+  const dispatch = useDispatch<AppDispatch>();
+  const evaluations = useSelector((state: RootState) => state.valuation.evaluations);
+  const initialized = useRef(false);
+
+  useEffect(() => {
+    if (!initialized.current) {
+      dispatch(setDefaultEvaluations({
+        pb法估價: v_info.pb法估價,
+        pe法估價: v_info.pe法估價,
+        ddm法估價: v_info.ddm法估價,
+        de法估價: v_info.de法估價,
+        dcf法估價: v_info.dcf法估價,
+        peg法估價: v_info.peg法估價,
+      }));
+      initialized.current = true; // 标记为已初始化
+    }
+  }, [dispatch, v_info]);
 
   const parseEvaluation = (evalStr: string): Evaluation => {
     const [low, high] = evalStr.split("~").map((v) => parseInt(v, 10));
@@ -67,24 +64,14 @@ const ValueMethod: React.FC<v_infoProp> = ({ v_info, recentPrice }) => {
   };
 
   const [parameters, setParameters] = useState<Parameters>({
-    pb: { netValue: "", ratio: "" },
-    pe: { eps: "", ratio: "" },
-    ddm: { dividend: "", growthRate: [], growthYears: [], terminalGrowth: "" },
-    de: {
-      eps: "",
-      discountRate: "",
-      growthRate: [],
-      growthYears: [],
-      terminalGrowth: "",
-    },
-    dcf: {
-      growthRate: [],
-      growthYears: [],
-      terminalGrowth: "",
-      discountRate: "",
-    },
-    peg: { growthRate: [], growthYears: [], pegRatio: "" },
+    pb: { netValue: 0, ratio: 0 },
+    pe: { eps: 0, ratio: 0 },
+    ddm: { dividend: 0, growthRate: [], growthYears: [], terminalGrowth: 0 },
+    de: { eps: 0, discountRate: 0, growthRate: [], growthYears: [], terminalGrowth: 0 },
+    dcf: { growthRate: [], growthYears: [], terminalGrowth: 0, discountRate: 0 },
+    peg: { growthRate: [], growthYears: [], pegRatio: 0 },
   });
+  
 
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
 
@@ -92,17 +79,20 @@ const ValueMethod: React.FC<v_infoProp> = ({ v_info, recentPrice }) => {
     setExpandedIndex(expandedIndex === index ? null : index);
   };
 
-  const handleChange = (
-    method: keyof Parameters,
-    field: string,
-    value: string
-  ) => {
+  const handleChange = (method: keyof Parameters, field: string, value: string) => {
     setParameters((prevParams) => {
-      const newValue =
-        field === "growthRate" || field === "growthYears"
-          ? value.split(",").map(Number) // 將輸入轉換為 number[]
-          : value; // 對於其他字段，保留為字符串
-
+      let newValue: number | string | (number | string)[] = value;
+  
+      // 处理 growthRate 和 growthYears 为数组的情况
+      if (field === "growthRate" || field === "growthYears") {
+        newValue = value
+          ? value.split(",").map((v) => v.trim())
+          : []; // 保留输入的原始字符串
+      } else {
+        // 对于其他字段，保留字符串直到它是有效的浮点数
+        newValue = value === "" || value === "." ? value : parseFloat(value);
+      }
+  
       return {
         ...prevParams,
         [method]: {
@@ -112,64 +102,75 @@ const ValueMethod: React.FC<v_infoProp> = ({ v_info, recentPrice }) => {
       };
     });
   };
-
+  
   const validateInput = (method: keyof Parameters): boolean => {
     const param = parameters[method];
-
-    // 使用 'in' 操作符來確定 growthRate 是否存在於該對象中
+  
     if ("growthRate" in param && "growthYears" in param) {
-      const growthRateList = (
-        param as { growthRate: number[]; growthYears: number[] }
-      ).growthRate;
-      const growthYearsList = (
-        param as { growthRate: number[]; growthYears: number[] }
-      ).growthYears;
-
+      const growthRateList = param.growthRate;
+      const growthYearsList = param.growthYears;
+  
       if (growthRateList.length !== growthYearsList.length) {
         alert("成長率與成長年必須是長度一致的列表！");
         return false;
       }
-
-      if (
-        !growthRateList.every((rate) => !isNaN(rate)) ||
-        !growthYearsList.every((year) => Number.isInteger(year) && year > 0)
-      ) {
+  
+      // 验证 growthRate 列表中的所有元素是否是有效的浮点数
+      const isValidGrowthRate = growthRateList.every((rate) =>
+        typeof rate === "number"
+          ? !isNaN(rate) // 确保 number 类型是有效的数值
+          : /^\d*\.?\d+$/.test(rate.trim()) // 确保字符串类型是有效的浮点数
+      );
+  
+      // 验证 growthYears 列表中的所有元素是否是有效的正整数
+      const isValidGrowthYears = growthYearsList.every((year) =>
+        typeof year === "number"
+          ? Number.isInteger(year) && year > 0 // 确保 number 类型是正整数
+          : /^\d+$/.test(year.trim()) // 确保字符串类型是正整数
+      );
+  
+      if (!isValidGrowthRate || !isValidGrowthYears) {
         alert("成長率必須是浮點數，成長年必須是正整數！");
         return false;
       }
     }
-
-    const floatFields = [
-      "netValue",
-      "ratio",
-      "eps",
-      "discountRate",
-      "dividend",
-      "terminalGrowth",
-      "pegRatio",
-    ] as const;
+  
+    // 检查其他参数是否为浮点数
+    const floatFields = ["netValue", "ratio", "eps", "discountRate", "dividend", "terminalGrowth", "pegRatio"] as const;
     for (const field of floatFields) {
-      if (field in param && param[field] && isNaN(parseFloat(param[field]!))) {
-        alert(`${field} 必須是浮點數！`);
-        return false;
+      if (field in param) {
+        const value = param[field];
+        if (typeof value === "string") {
+          // 验证字符串形式的浮点数
+          if (value === "" || value === ".") {
+            alert(`${field} 必须是浮点数！`);
+            return false;
+          } else if (isNaN(parseFloat(value))) {
+            alert(`${field} 必须是浮点数！`);
+            return false;
+          }
+        } else if (typeof value === "number" && isNaN(value)) {
+          // 验证数字形式的浮点数
+          alert(`${field} 必须是浮点数！`);
+          return false;
+        }
       }
     }
 
     return true;
-  };
+  };  
 
   const handleSubmit = (method: keyof Parameters) => {
-    if (validateInput(method)) {
-      // 取得該 method 對應的參數
-      const param = parameters[method];
-  
-      // 顯示 method 名稱及其對應的參數
-      alert(`Method: ${method}\nType: ${typeof param}\nContent: ${JSON.stringify(param, null, 2)}`);
-  
-      // 在這裡處理提交邏輯
-      console.log(`${method} 參數已成功提交！`, param);
+    if (!validateInput(method)) {
+      return;
     }
-  };  
+
+    const param = parameters[method];
+    const methodWithSuffix = `${method}法估價`;
+
+    // 派发 thunk 动作，仅更新指定 method 的值
+    dispatch(fetchEvaluationRange({ method: methodWithSuffix, parameters: param }));
+  };
 
   return (
     <div className="w-full text-color-5 h-full">
@@ -188,8 +189,7 @@ const ValueMethod: React.FC<v_infoProp> = ({ v_info, recentPrice }) => {
         </div>
       </div>
       <div className="space-y-3 mb-1">
-        {evaluations.map((evalItem, index) =>
-          evalItem.value ? (
+        {Object.entries(evaluations).map(([label, value], index) =>(
             <div key={index} className="my-1 ">
               <div className="mb-10 border-t border-color-3">
                 <div className="flex">
@@ -201,17 +201,17 @@ const ValueMethod: React.FC<v_infoProp> = ({ v_info, recentPrice }) => {
                   </button>
                   <Thermometer
                     key={index}
-                    label={evalItem.label}
-                    evaluation={parseEvaluation(evalItem.value)}
+                    label={label}
+                    evaluation={parseEvaluation(value || '0~0')}
                     recentPrice={recentPrice}
                   />
                 </div>
                 {expandedIndex === index && (
                   <div className="mt-8 z-50 text-black">
-                    {evalItem.label === "pb法估價" && (
+                    {label === "pb法估價" && (
                       <>
                         <input
-                          type="text"
+                          type="number"
                           placeholder="淨值"
                           value={parameters.pb.netValue}
                           onChange={(e) =>
@@ -219,7 +219,7 @@ const ValueMethod: React.FC<v_infoProp> = ({ v_info, recentPrice }) => {
                           }
                         />
                         <input
-                          type="text"
+                          type="number"
                           placeholder="本淨比"
                           value={parameters.pb.ratio}
                           onChange={(e) =>
@@ -227,17 +227,17 @@ const ValueMethod: React.FC<v_infoProp> = ({ v_info, recentPrice }) => {
                           }
                         />
                         <button
-                          className="bg-slate-50 "
+                          className="bg-slate-50"
                           onClick={() => handleSubmit("pb")}
                         >
                           提交PB
                         </button>
                       </>
                     )}
-                    {evalItem.label === "pe法估價" && (
+                    {label === "pe法估價" && (
                       <>
                         <input
-                          type="text"
+                          type="number"
                           placeholder="EPS"
                           value={parameters.pe.eps}
                           onChange={(e) =>
@@ -245,22 +245,25 @@ const ValueMethod: React.FC<v_infoProp> = ({ v_info, recentPrice }) => {
                           }
                         />
                         <input
-                          type="text"
+                          type="number"
                           placeholder="本益比"
                           value={parameters.pe.ratio}
                           onChange={(e) =>
                             handleChange("pe", "ratio", e.target.value)
                           }
                         />
-                        <button onClick={() => handleSubmit("pe")}>
+                        <button
+                          className="bg-white"
+                          onClick={() => handleSubmit("pe")}
+                        >
                           提交PE
                         </button>
                       </>
                     )}
-                    {evalItem.label === "ddm法估價" && (
+                    {label === "ddm法估價" && (
                       <>
                         <input
-                          type="text"
+                          type="number"
                           placeholder="現金股息"
                           value={parameters.ddm.dividend}
                           onChange={(e) =>
@@ -285,7 +288,7 @@ const ValueMethod: React.FC<v_infoProp> = ({ v_info, recentPrice }) => {
                         />
 
                         <input
-                          type="text"
+                          type="number"
                           placeholder="終端成長"
                           value={parameters.ddm.terminalGrowth}
                           onChange={(e) =>
@@ -296,15 +299,18 @@ const ValueMethod: React.FC<v_infoProp> = ({ v_info, recentPrice }) => {
                             )
                           }
                         />
-                        <button onClick={() => handleSubmit("ddm")}>
+                        <button
+                          className="bg-slate-50 "
+                          onClick={() => handleSubmit("ddm")}
+                        >
                           提交DDM
                         </button>
                       </>
                     )}
-                    {evalItem.label === "de法估價" && (
+                    {label === "de法估價" && (
                       <>
                         <input
-                          type="text"
+                          type="number"
                           placeholder="EPS"
                           value={parameters.de.eps}
                           onChange={(e) =>
@@ -312,7 +318,7 @@ const ValueMethod: React.FC<v_infoProp> = ({ v_info, recentPrice }) => {
                           }
                         />
                         <input
-                          type="text"
+                          type="number"
                           placeholder="折現率"
                           value={parameters.de.discountRate}
                           onChange={(e) =>
@@ -337,19 +343,22 @@ const ValueMethod: React.FC<v_infoProp> = ({ v_info, recentPrice }) => {
                         />
 
                         <input
-                          type="text"
+                          type="number"
                           placeholder="終端成長"
                           value={parameters.de.terminalGrowth}
                           onChange={(e) =>
                             handleChange("de", "terminalGrowth", e.target.value)
                           }
                         />
-                        <button onClick={() => handleSubmit("de")}>
+                        <button
+                          className="bg-slate-50 "
+                          onClick={() => handleSubmit("de")}
+                        >
                           提交DE
                         </button>
                       </>
                     )}
-                    {evalItem.label === "dcf法估價" && (
+                    {label === "dcf法估價" && (
                       <>
                         <input
                           type="text"
@@ -367,9 +376,8 @@ const ValueMethod: React.FC<v_infoProp> = ({ v_info, recentPrice }) => {
                             handleChange("dcf", "growthYears", e.target.value)
                           }
                         />
-
                         <input
-                          type="text"
+                          type="number"
                           placeholder="終端成長"
                           value={parameters.dcf.terminalGrowth}
                           onChange={(e) =>
@@ -381,19 +389,22 @@ const ValueMethod: React.FC<v_infoProp> = ({ v_info, recentPrice }) => {
                           }
                         />
                         <input
-                          type="text"
+                          type="number"
                           placeholder="折現率"
                           value={parameters.dcf.discountRate}
                           onChange={(e) =>
                             handleChange("dcf", "discountRate", e.target.value)
                           }
                         />
-                        <button onClick={() => handleSubmit("dcf")}>
+                        <button
+                          className="bg-slate-50 "
+                          onClick={() => handleSubmit("dcf")}
+                        >
                           提交DCF
                         </button>
                       </>
                     )}
-                    {evalItem.label === "peg法估價" && (
+                    {label === "peg法估價" && (
                       <>
                         <input
                           type="text"
@@ -412,14 +423,17 @@ const ValueMethod: React.FC<v_infoProp> = ({ v_info, recentPrice }) => {
                           }
                         />
                         <input
-                          type="text"
+                          type="number"
                           placeholder="PEG Ratio"
                           value={parameters.peg.pegRatio}
                           onChange={(e) =>
                             handleChange("peg", "pegRatio", e.target.value)
                           }
                         />
-                        <button onClick={() => handleSubmit("peg")}>
+                        <button
+                          className="bg-slate-50 "
+                          onClick={() => handleSubmit("peg")}
+                        >
                           提交PEG
                         </button>
                       </>
@@ -428,8 +442,7 @@ const ValueMethod: React.FC<v_infoProp> = ({ v_info, recentPrice }) => {
                 )}
               </div>
             </div>
-          ) : null
-        )}
+          ))}
       </div>
       <div className="h-[20px]"></div>
     </div>
