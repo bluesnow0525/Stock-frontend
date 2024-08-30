@@ -202,8 +202,8 @@ const StockFinance: React.FC = () => {
       </div>
       {sheetDataStatus === "succeeded" && currentData && username && (
         <>
-          <div className="flex h-[60%]">
-            <div className="flex flex-col w-[15%]">
+          <div className="flex">
+            <div className="flex flex-col w-[15%] h-[70vh]">
               <div className="text-white mt-3">
                 <div className="flex flex-col p-1 space-y-1">
                   <button
@@ -339,7 +339,7 @@ const StockFinance: React.FC = () => {
                   </tbody>
                 </table>
               </div>
-              <div className="h-[50%] w-[95%] flex justify-center items-center mt-2">
+              <div className="h-[35vh] w-[95%] flex justify-center items-center mt-2">
                 {viewMode === "balance" && (
                   <BalancesheetBar
                     labels={labels}
