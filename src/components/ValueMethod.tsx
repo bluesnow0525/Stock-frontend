@@ -64,12 +64,12 @@ const ValueMethod: React.FC<v_infoProp> = ({ v_info, recentPrice }) => {
   };
 
   const [parameters, setParameters] = useState<Parameters>({
-    pb: { netValue: 0, ratio: 0 },
-    pe: { eps: 0, ratio: 0 },
-    ddm: { dividend: 0, growthRate: [], growthYears: [], terminalGrowth: 0 },
-    de: { eps: 0, discountRate: 0, growthRate: [], growthYears: [], terminalGrowth: 0 },
-    dcf: { growthRate: [], growthYears: [], terminalGrowth: 0, discountRate: 0 },
-    peg: { growthRate: [], growthYears: [], pegRatio: 0 },
+    pb: { netValue: '', ratio: '' },
+    pe: { eps: '', ratio: '' },
+    ddm: { dividend: '', growthRate: [], growthYears: [], terminalGrowth: '' },
+    de: { eps: '', discountRate: '', growthRate: [], growthYears: [], terminalGrowth: '' },
+    dcf: { growthRate: [], growthYears: [], terminalGrowth: '', discountRate: '' },
+    peg: { growthRate: [], growthYears: [], pegRatio: '' },
   });
   
 

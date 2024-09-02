@@ -208,7 +208,7 @@ const StockFinance: React.FC = () => {
                 <div className="flex flex-col p-1 space-y-1">
                   <button
                     onClick={() => setViewMode("revenue")}
-                    className={`px-3 py-2 rounded ${
+                    className={`px-2 py-1 rounded ${
                       viewMode === "revenue"
                         ? "bg-red-500"
                         : "bg-gray-700 hover:bg-gray-600"
@@ -218,7 +218,7 @@ const StockFinance: React.FC = () => {
                   </button>
                   <button
                     onClick={() => setViewMode("income")}
-                    className={`px-3 py-2 rounded ${
+                    className={`px-2 py-1 rounded ${
                       viewMode === "income"
                         ? "bg-red-500"
                         : "bg-gray-700 hover:bg-gray-600"
@@ -228,7 +228,7 @@ const StockFinance: React.FC = () => {
                   </button>
                   <button
                     onClick={() => setViewMode("balance")}
-                    className={`px-3 py-2 rounded ${
+                    className={`px-2 py-1 rounded ${
                       viewMode === "balance"
                         ? "bg-red-500"
                         : "bg-gray-700 hover:bg-gray-600"
@@ -238,7 +238,7 @@ const StockFinance: React.FC = () => {
                   </button>
                   <button
                     onClick={() => setViewMode("cash-flow")}
-                    className={`px-3 py-2 rounded ${
+                    className={`px-2 py-1 rounded ${
                       viewMode === "cash-flow"
                         ? "bg-red-500"
                         : "bg-gray-700 hover:bg-gray-600"
@@ -248,7 +248,7 @@ const StockFinance: React.FC = () => {
                   </button>
                   <button
                     onClick={() => setViewMode("dividend")}
-                    className={`px-3 py-2 rounded ${
+                    className={`px-2 py-1 rounded ${
                       viewMode === "dividend"
                         ? "bg-red-500"
                         : "bg-gray-700 hover:bg-gray-600"
@@ -261,7 +261,7 @@ const StockFinance: React.FC = () => {
             </div>
             <div className="w-[85%]">
               <div
-                className="h-[38vh] mt-2 mx-3 text-gray-300 h- bg-slate-800 py-1 border-slate-400 p-1 rounded-md shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-20 relative"
+                className="h-[40vh] mt-2 mx-3 text-gray-300 h- bg-slate-800 py-1 border-slate-400 p-1 rounded-md shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-20 relative"
                 style={{
                   boxShadow: "0 0 10px 5px rgba(255, 0, 0, 0.5)",
                   overflowY: "auto",
@@ -352,7 +352,7 @@ const StockFinance: React.FC = () => {
                   <CashFlowSheet data={currentData} />
                 )}
                 {viewMode === "dividend" && <DividendBar data={currentData} />}
-                {viewMode === "revenue" && <RevenueChart data={currentData} />}
+                {viewMode === "revenue" && <RevenueChart data={currentData.slice(Math.floor(currentData.length * 5 / 12))} />}
               </div>
             </div>
           </div>
