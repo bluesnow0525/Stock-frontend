@@ -7,7 +7,7 @@ const Login: React.FC = () => {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [email, setEmail] = useState<string>("");
-  const [officialCode, setOfficialCode] = useState<string>("");
+  const [activationCode, setActivationCode] = useState<string>("");
   const [mode, setMode] = useState<"login" | "register" | "forgot">("login"); // 登入、註冊或忘記密碼模式
   const navigate = useNavigate();
 
@@ -48,7 +48,7 @@ const Login: React.FC = () => {
       mode === "login"
         ? { username, password }
         : mode === "register"
-        ? { username, password, email, officialCode }
+        ? { username, password, email, activationCode: activationCode }
         : { username };
 
     const response = await fetch(`${API_BASE_URL}/api/${endpoint}`, {
@@ -138,10 +138,10 @@ const Login: React.FC = () => {
                     <div className="relative my-4">
                       <input
                         type="text"
-                        placeholder="Official Code"
+                        placeholder="Activation Code"
                         required
-                        value={officialCode}
-                        onChange={(e) => setOfficialCode(e.target.value)}
+                        value={activationCode}
+                        onChange={(e) => setActivationCode(e.target.value)}
                         className="input block w-72 py-2 pw-0 test-white bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-red-600 peer"
                       />
                     </div>

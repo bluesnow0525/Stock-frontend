@@ -156,7 +156,7 @@ const StockInfo: React.FC = () => {
                   </p>
                   {info.回測報酬 !== 0 && (
                     <p className="text-[13px] font-bold text-slate-200">
-                      回測報酬: {info.回測報酬.toFixed(2)}%
+                      回測年報酬: {info.回測報酬.toFixed(2)}%
                     </p>
                   )}
                 </div>
