@@ -32,13 +32,13 @@ const initialState: ValuationState = {
 // 定義一個異步的 thunk，用來發送 POST 請求
 export const fetchEvaluationRange = createAsyncThunk(
   'valuation/fetchEvaluationRange',
-  async ({ method, parameters }: { method: string; parameters: object }) => {
+  async ({ stock_id, method, parameters }: { stock_id: string; method: string; parameters: object }) => {
     const response = await fetch(`${API_BASE_URL}/api/value_change`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ method, parameters }),
+      body: JSON.stringify({ stock_id, method, parameters }),
     });
 
     if (!response.ok) {

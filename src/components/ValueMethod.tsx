@@ -12,10 +12,10 @@ interface Evaluation {
 type Parameters = {
   pb: { netValue: number | string; ratio: number | string };
   pe: { eps: number | string; ratio: number | string };
-  ddm: { dividend: number | string; growthRate: (number | string)[]; growthYears: (number | string)[]; terminalGrowth: number | string };
+  ddm: { dividend: number | string; growthRate: (number | string)[]; growthYears: (number | string)[]; terminalGrowth: number | string; discountRate: number | string };
   de: { eps: number | string; discountRate: number | string; growthRate: (number | string)[]; growthYears: (number | string)[]; terminalGrowth: number | string };
-  dcf: { growthRate: (number | string)[]; growthYears: (number | string)[]; terminalGrowth: number | string; discountRate: number | string };
-  peg: { growthRate: (number | string)[]; growthYears: (number | string)[]; pegRatio: number | string };
+  dcf: { current_cashflow: number | string; growthRate: (number | string)[]; growthYears: (number | string)[]; terminalGrowth: number | string; discountRate: number | string };
+  peg: { growthRate: number | string };
 };
 
 
@@ -37,9 +37,10 @@ interface v_infoProp {
     peg法估價: string;
   };
   recentPrice: number;
+  stock_id: string;
 }
 
-const ValueMethod: React.FC<v_infoProp> = ({ v_info, recentPrice }) => {
+const ValueMethod: React.FC<v_infoProp> = ({ v_info, recentPrice, stock_id }) => {
   const dispatch = useDispatch<AppDispatch>();
   const evaluations = useSelector((state: RootState) => state.valuation.evaluations);
   const initialized = useRef(false);
@@ -66,12 +67,12 @@ const ValueMethod: React.FC<v_infoProp> = ({ v_info, recentPrice }) => {
   const [parameters, setParameters] = useState<Parameters>({
     pb: { netValue: '', ratio: '' },
     pe: { eps: '', ratio: '' },
-    ddm: { dividend: '', growthRate: [], growthYears: [], terminalGrowth: '' },
+    ddm: { dividend: '', growthRate: [], growthYears: [], terminalGrowth: '', discountRate: '' },
     de: { eps: '', discountRate: '', growthRate: [], growthYears: [], terminalGrowth: '' },
-    dcf: { growthRate: [], growthYears: [], terminalGrowth: '', discountRate: '' },
-    peg: { growthRate: [], growthYears: [], pegRatio: '' },
+    dcf: { current_cashflow: '', growthRate: [], growthYears: [], terminalGrowth: '', discountRate: '' },
+    peg: { growthRate: '' },
   });
-  
+
 
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
 
@@ -82,7 +83,7 @@ const ValueMethod: React.FC<v_infoProp> = ({ v_info, recentPrice }) => {
   const handleChange = (method: keyof Parameters, field: string, value: string) => {
     setParameters((prevParams) => {
       let newValue: number | string | (number | string)[] = value;
-  
+
       // 处理 growthRate 和 growthYears 为数组的情况
       if (field === "growthRate" || field === "growthYears") {
         newValue = value
@@ -92,7 +93,7 @@ const ValueMethod: React.FC<v_infoProp> = ({ v_info, recentPrice }) => {
         // 对于其他字段，保留字符串直到它是有效的浮点数
         newValue = value === "" || value === "." ? value : parseFloat(value);
       }
-  
+
       return {
         ...prevParams,
         [method]: {
@@ -102,39 +103,39 @@ const ValueMethod: React.FC<v_infoProp> = ({ v_info, recentPrice }) => {
       };
     });
   };
-  
+
   const validateInput = (method: keyof Parameters): boolean => {
     const param = parameters[method];
-  
+
     if ("growthRate" in param && "growthYears" in param) {
       const growthRateList = param.growthRate;
       const growthYearsList = param.growthYears;
-  
+
       if (growthRateList.length !== growthYearsList.length) {
         alert("成長率與成長年必須是長度一致的列表！");
         return false;
       }
-  
+
       // 验证 growthRate 列表中的所有元素是否是有效的浮点数
       const isValidGrowthRate = growthRateList.every((rate) =>
         typeof rate === "number"
           ? !isNaN(rate) // 确保 number 类型是有效的数值
           : /^\d*\.?\d+$/.test(rate.trim()) // 确保字符串类型是有效的浮点数
       );
-  
+
       // 验证 growthYears 列表中的所有元素是否是有效的正整数
       const isValidGrowthYears = growthYearsList.every((year) =>
         typeof year === "number"
           ? Number.isInteger(year) && year > 0 // 确保 number 类型是正整数
           : /^\d+$/.test(year.trim()) // 确保字符串类型是正整数
       );
-  
+
       if (!isValidGrowthRate || !isValidGrowthYears) {
         alert("成長率必須是浮點數，成長年必須是正整數！");
         return false;
       }
     }
-  
+
     // 检查其他参数是否为浮点数
     const floatFields = ["netValue", "ratio", "eps", "discountRate", "dividend", "terminalGrowth", "pegRatio"] as const;
     for (const field of floatFields) {
@@ -158,7 +159,7 @@ const ValueMethod: React.FC<v_infoProp> = ({ v_info, recentPrice }) => {
     }
 
     return true;
-  };  
+  };
 
   const handleSubmit = (method: keyof Parameters) => {
     if (!validateInput(method)) {
@@ -169,7 +170,7 @@ const ValueMethod: React.FC<v_infoProp> = ({ v_info, recentPrice }) => {
     const methodWithSuffix = `${method}法估價`;
 
     // 派发 thunk 动作，仅更新指定 method 的值
-    dispatch(fetchEvaluationRange({ method: methodWithSuffix, parameters: param }));
+    dispatch(fetchEvaluationRange({ stock_id: stock_id, method: methodWithSuffix, parameters: param }));
   };
 
   return (
@@ -189,260 +190,263 @@ const ValueMethod: React.FC<v_infoProp> = ({ v_info, recentPrice }) => {
         </div>
       </div>
       <div className="space-y-3 mb-1">
-        {Object.entries(evaluations).map(([label, value], index) =>(
-            <div key={index} className="my-1 ">
-              <div className="mb-10 border-t border-color-3">
-                <div className="flex">
-                  <button
-                    className="w-[10%] mt-7 ml-5 text-center font-bold text-[15px]"
-                    onClick={() => toggleExpansion(index)}
-                  >
-                    {expandedIndex === index ? "收起" : "調整"}
-                  </button>
-                  <Thermometer
-                    key={index}
-                    label={label}
-                    evaluation={parseEvaluation(value || '0~0')}
-                    recentPrice={recentPrice}
-                  />
-                </div>
-                {expandedIndex === index && (
-                  <div className="mt-8 z-50 text-black">
-                    {label === "pb法估價" && (
-                      <>
-                        <input
-                          type="number"
-                          placeholder="淨值"
-                          value={parameters.pb.netValue}
-                          onChange={(e) =>
-                            handleChange("pb", "netValue", e.target.value)
-                          }
-                        />
-                        <input
-                          type="number"
-                          placeholder="本淨比"
-                          value={parameters.pb.ratio}
-                          onChange={(e) =>
-                            handleChange("pb", "ratio", e.target.value)
-                          }
-                        />
-                        <button
-                          className="bg-slate-50"
-                          onClick={() => handleSubmit("pb")}
-                        >
-                          提交PB
-                        </button>
-                      </>
-                    )}
-                    {label === "pe法估價" && (
-                      <>
-                        <input
-                          type="number"
-                          placeholder="EPS"
-                          value={parameters.pe.eps}
-                          onChange={(e) =>
-                            handleChange("pe", "eps", e.target.value)
-                          }
-                        />
-                        <input
-                          type="number"
-                          placeholder="本益比"
-                          value={parameters.pe.ratio}
-                          onChange={(e) =>
-                            handleChange("pe", "ratio", e.target.value)
-                          }
-                        />
-                        <button
-                          className="bg-white"
-                          onClick={() => handleSubmit("pe")}
-                        >
-                          提交PE
-                        </button>
-                      </>
-                    )}
-                    {label === "ddm法估價" && (
-                      <>
-                        <input
-                          type="number"
-                          placeholder="現金股息"
-                          value={parameters.ddm.dividend}
-                          onChange={(e) =>
-                            handleChange("ddm", "dividend", e.target.value)
-                          }
-                        />
-                        <input
-                          type="text"
-                          placeholder="成長率 (如: 6%, 3%)"
-                          value={parameters.ddm.growthRate.join(",")}
-                          onChange={(e) =>
-                            handleChange("ddm", "growthRate", e.target.value)
-                          }
-                        />
-                        <input
-                          type="text"
-                          placeholder="成長年 (如: 3, 2)"
-                          value={parameters.ddm.growthYears.join(",")}
-                          onChange={(e) =>
-                            handleChange("ddm", "growthYears", e.target.value)
-                          }
-                        />
-
-                        <input
-                          type="number"
-                          placeholder="終端成長"
-                          value={parameters.ddm.terminalGrowth}
-                          onChange={(e) =>
-                            handleChange(
-                              "ddm",
-                              "terminalGrowth",
-                              e.target.value
-                            )
-                          }
-                        />
-                        <button
-                          className="bg-slate-50 "
-                          onClick={() => handleSubmit("ddm")}
-                        >
-                          提交DDM
-                        </button>
-                      </>
-                    )}
-                    {label === "de法估價" && (
-                      <>
-                        <input
-                          type="number"
-                          placeholder="EPS"
-                          value={parameters.de.eps}
-                          onChange={(e) =>
-                            handleChange("de", "eps", e.target.value)
-                          }
-                        />
-                        <input
-                          type="number"
-                          placeholder="折現率"
-                          value={parameters.de.discountRate}
-                          onChange={(e) =>
-                            handleChange("de", "discountRate", e.target.value)
-                          }
-                        />
-                        <input
-                          type="text"
-                          placeholder="成長率 (如: 6%, 3%)"
-                          value={parameters.de.growthRate.join(",")}
-                          onChange={(e) =>
-                            handleChange("de", "growthRate", e.target.value)
-                          }
-                        />
-                        <input
-                          type="text"
-                          placeholder="成長年 (如: 3, 2)"
-                          value={parameters.de.growthYears.join(",")}
-                          onChange={(e) =>
-                            handleChange("de", "growthYears", e.target.value)
-                          }
-                        />
-
-                        <input
-                          type="number"
-                          placeholder="終端成長"
-                          value={parameters.de.terminalGrowth}
-                          onChange={(e) =>
-                            handleChange("de", "terminalGrowth", e.target.value)
-                          }
-                        />
-                        <button
-                          className="bg-slate-50 "
-                          onClick={() => handleSubmit("de")}
-                        >
-                          提交DE
-                        </button>
-                      </>
-                    )}
-                    {label === "dcf法估價" && (
-                      <>
-                        <input
-                          type="text"
-                          placeholder="成長率 (如: 6%, 3%)"
-                          value={parameters.dcf.growthRate.join(",")}
-                          onChange={(e) =>
-                            handleChange("dcf", "growthRate", e.target.value)
-                          }
-                        />
-                        <input
-                          type="text"
-                          placeholder="成長年 (如: 3, 2)"
-                          value={parameters.dcf.growthYears.join(",")}
-                          onChange={(e) =>
-                            handleChange("dcf", "growthYears", e.target.value)
-                          }
-                        />
-                        <input
-                          type="number"
-                          placeholder="終端成長"
-                          value={parameters.dcf.terminalGrowth}
-                          onChange={(e) =>
-                            handleChange(
-                              "dcf",
-                              "terminalGrowth",
-                              e.target.value
-                            )
-                          }
-                        />
-                        <input
-                          type="number"
-                          placeholder="折現率"
-                          value={parameters.dcf.discountRate}
-                          onChange={(e) =>
-                            handleChange("dcf", "discountRate", e.target.value)
-                          }
-                        />
-                        <button
-                          className="bg-slate-50 "
-                          onClick={() => handleSubmit("dcf")}
-                        >
-                          提交DCF
-                        </button>
-                      </>
-                    )}
-                    {label === "peg法估價" && (
-                      <>
-                        <input
-                          type="text"
-                          placeholder="成長率 (如: 6%, 3%)"
-                          value={parameters.peg.growthRate.join(",")}
-                          onChange={(e) =>
-                            handleChange("peg", "growthRate", e.target.value)
-                          }
-                        />
-                        <input
-                          type="text"
-                          placeholder="成長年 (如: 3, 2)"
-                          value={parameters.peg.growthYears.join(",")}
-                          onChange={(e) =>
-                            handleChange("peg", "growthYears", e.target.value)
-                          }
-                        />
-                        <input
-                          type="number"
-                          placeholder="PEG Ratio"
-                          value={parameters.peg.pegRatio}
-                          onChange={(e) =>
-                            handleChange("peg", "pegRatio", e.target.value)
-                          }
-                        />
-                        <button
-                          className="bg-slate-50 "
-                          onClick={() => handleSubmit("peg")}
-                        >
-                          提交PEG
-                        </button>
-                      </>
-                    )}
-                  </div>
-                )}
+        {Object.entries(evaluations).map(([label, value], index) => (
+          <div key={index} className="my-1 ">
+            <div className="mb-10 border-t border-color-3">
+              <div className="flex">
+                <button
+                  className="w-[10%] mt-7 ml-5 text-center font-bold text-[15px]"
+                  onClick={() => toggleExpansion(index)}
+                >
+                  {expandedIndex === index ? "收起" : "調整"}
+                </button>
+                <Thermometer
+                  key={index}
+                  label={label}
+                  evaluation={parseEvaluation(value || '0~0')}
+                  recentPrice={recentPrice}
+                />
               </div>
+              {expandedIndex === index && (
+                <div className="mt-8 z-50 text-black">
+                  {label === "pb法估價" && (
+                    <>
+                      <input
+                        type="number"
+                        placeholder="淨值"
+                        value={parameters.pb.netValue}
+                        onChange={(e) =>
+                          handleChange("pb", "netValue", e.target.value)
+                        }
+                      />
+                      <input
+                        type="number"
+                        placeholder="本淨比"
+                        value={parameters.pb.ratio}
+                        onChange={(e) =>
+                          handleChange("pb", "ratio", e.target.value)
+                        }
+                      />
+                      <button
+                        className="bg-slate-50"
+                        onClick={() => handleSubmit("pb")}
+                      >
+                        提交PB
+                      </button>
+                    </>
+                  )}
+                  {label === "pe法估價" && (
+                    <>
+                      <input
+                        type="number"
+                        placeholder="EPS"
+                        value={parameters.pe.eps}
+                        onChange={(e) =>
+                          handleChange("pe", "eps", e.target.value)
+                        }
+                      />
+                      <input
+                        type="number"
+                        placeholder="本益比"
+                        value={parameters.pe.ratio}
+                        onChange={(e) =>
+                          handleChange("pe", "ratio", e.target.value)
+                        }
+                      />
+                      <button
+                        className="bg-white"
+                        onClick={() => handleSubmit("pe")}
+                      >
+                        提交PE
+                      </button>
+                    </>
+                  )}
+                  {label === "ddm法估價" && (
+                    <>
+                      <input
+                        type="number"
+                        placeholder="現金股息"
+                        value={parameters.ddm.dividend}
+                        onChange={(e) =>
+                          handleChange("ddm", "dividend", e.target.value)
+                        }
+                      />
+                      <input
+                        type="text"
+                        placeholder="成長率 (如: 0.06, 0.03)"
+                        value={parameters.ddm.growthRate.join(",")}
+                        onChange={(e) =>
+                          handleChange("ddm", "growthRate", e.target.value)
+                        }
+                      />
+                      <input
+                        type="text"
+                        placeholder="成長年 (如: 3, 2)"
+                        value={parameters.ddm.growthYears.join(",")}
+                        onChange={(e) =>
+                          handleChange("ddm", "growthYears", e.target.value)
+                        }
+                      />
+                      <input
+                        type="number"
+                        placeholder="終端成長"
+                        value={parameters.ddm.terminalGrowth}
+                        onChange={(e) =>
+                          handleChange(
+                            "ddm",
+                            "terminalGrowth",
+                            e.target.value
+                          )
+                        }
+                      />
+                      <input
+                        type="number"
+                        placeholder="折現率"
+                        value={parameters.ddm.discountRate}
+                        onChange={(e) =>
+                          handleChange(
+                            "ddm",
+                            "discountRate",
+                            e.target.value
+                          )
+                        }
+                      />
+                      <button
+                        className="bg-slate-50 "
+                        onClick={() => handleSubmit("ddm")}
+                      >
+                        提交DDM
+                      </button>
+                    </>
+                  )}
+                  {label === "de法估價" && (
+                    <>
+                      <input
+                        type="number"
+                        placeholder="EPS"
+                        value={parameters.de.eps}
+                        onChange={(e) =>
+                          handleChange("de", "eps", e.target.value)
+                        }
+                      />
+                      <input
+                        type="number"
+                        placeholder="折現率"
+                        value={parameters.de.discountRate}
+                        onChange={(e) =>
+                          handleChange("de", "discountRate", e.target.value)
+                        }
+                      />
+                      <input
+                        type="text"
+                        placeholder="成長率 (如: 0.06, 0.03)"
+                        value={parameters.de.growthRate.join(",")}
+                        onChange={(e) =>
+                          handleChange("de", "growthRate", e.target.value)
+                        }
+                      />
+                      <input
+                        type="text"
+                        placeholder="成長年 (如: 3, 2)"
+                        value={parameters.de.growthYears.join(",")}
+                        onChange={(e) =>
+                          handleChange("de", "growthYears", e.target.value)
+                        }
+                      />
+
+                      <input
+                        type="number"
+                        placeholder="終端成長"
+                        value={parameters.de.terminalGrowth}
+                        onChange={(e) =>
+                          handleChange("de", "terminalGrowth", e.target.value)
+                        }
+                      />
+                      <button
+                        className="bg-slate-50 "
+                        onClick={() => handleSubmit("de")}
+                      >
+                        提交DE
+                      </button>
+                    </>
+                  )}
+                  {label === "dcf法估價" && (
+                    <>
+                      <input
+                        type="number"
+                        placeholder="現金流"
+                        value={parameters.dcf.current_cashflow}
+                        onChange={(e) =>
+                          handleChange("dcf", "current_cashflow", e.target.value)
+                        }
+                      />
+                      <input
+                        type="text"
+                        placeholder="成長率 (如: 0.06, 0.03)"
+                        value={parameters.dcf.growthRate.join(",")}
+                        onChange={(e) =>
+                          handleChange("dcf", "growthRate", e.target.value)
+                        }
+                      />
+                      <input
+                        type="text"
+                        placeholder="成長年 (如: 3, 2)"
+                        value={parameters.dcf.growthYears.join(",")}
+                        onChange={(e) =>
+                          handleChange("dcf", "growthYears", e.target.value)
+                        }
+                      />
+                      <input
+                        type="number"
+                        placeholder="終端成長"
+                        value={parameters.dcf.terminalGrowth}
+                        onChange={(e) =>
+                          handleChange(
+                            "dcf",
+                            "terminalGrowth",
+                            e.target.value
+                          )
+                        }
+                      />
+                      <input
+                        type="number"
+                        placeholder="折現率"
+                        value={parameters.dcf.discountRate}
+                        onChange={(e) =>
+                          handleChange("dcf", "discountRate", e.target.value)
+                        }
+                      />
+                      <button
+                        className="bg-slate-50 "
+                        onClick={() => handleSubmit("dcf")}
+                      >
+                        提交DCF
+                      </button>
+                    </>
+                  )}
+                  {label === "peg法估價" && (
+                    <>
+                      <input
+                        type="number"
+                        placeholder="成長率"
+                        value={parameters.peg.growthRate}
+                        onChange={(e) =>
+                          handleChange("peg", "growthRate", e.target.value)
+                        }
+                      />
+                      <button
+                        className="bg-slate-50 "
+                        onClick={() => handleSubmit("peg")}
+                      >
+                        提交PEG
+                      </button>
+                    </>
+                  )}
+                </div>
+              )}
             </div>
-          ))}
+          </div>
+        ))}
       </div>
       <div className="h-[20px]"></div>
     </div>

@@ -230,7 +230,7 @@ const StockInfo: React.FC = () => {
             </div>
             <div className="w-full h-[50vh] flex overflow-y-auto items-center container">
               {v_infoStatus === "succeeded" && v_info && (
-                <ValueMethod v_info={v_info} recentPrice={recentPrice} />
+                <ValueMethod v_info={v_info} recentPrice={recentPrice} stock_id={id} />
               )}
               {v_infoStatus === "loading" && <Loading />}
             </div>
