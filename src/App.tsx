@@ -9,6 +9,7 @@ import PdfViewer from './pages/Pdf';
 import StockInfo from './pages/StockInfo';
 import Useradmin from './pages/Useradmin';
 import QuestionnaireForm from './pages/Question';
+import Asset_backtrade from './pages/Asset_backtrade';
 
 const App: React.FC = () => {
   const routes = useRoutes([
@@ -22,6 +23,7 @@ const App: React.FC = () => {
     { path: 'useradmin', element: <Useradmin /> },
     { path: 'pdfview', element: <PdfViewer />},
     { path: 'question', element: <QuestionnaireForm />},
+    {path: 'asset_backtrade', element: <Asset_backtrade />},
   ]);
 
   return routes;

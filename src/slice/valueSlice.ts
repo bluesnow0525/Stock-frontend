@@ -17,6 +17,7 @@ type v_info = {
     de法估價: string;
     dcf法估價: string;
     peg法估價: string;
+    成分股: string[];
 };
 
 export const fetchValueData = createAsyncThunk(

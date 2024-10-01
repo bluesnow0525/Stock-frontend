@@ -233,6 +233,7 @@ const StockInfo: React.FC = () => {
                 <ValueMethod v_info={v_info} recentPrice={recentPrice} stock_id={id} />
               )}
               {v_infoStatus === "loading" && <Loading />}
+              {/* 列印v_info.成分股 table */}
             </div>
           </>
         )}

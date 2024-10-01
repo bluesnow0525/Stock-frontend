@@ -84,6 +84,18 @@ const Header: React.FC<HeaderProp> = ({
         >
           虛擬金
         </button>
+        <button
+          onClick={() =>
+            navigate("/asset_backtrade", { replace: true, state: { username, isvip } })
+          }
+          className="px-4 py-4 font-mono text-white bg-[conic-gradient(from_var(--shimmer-angle),theme(colors.blue.900)_0%,theme(colors.blue.500)_10%,theme(colors.blue.900)_20%)] animate-[shimmer_2.5s_linear_infinite] rounded-[24px]
+                            relative hover:text-blue-300 duration-500 ease-out
+                            after:flex after:absolute after:bg-slate-950 after:inset-[2px] after:rounded-[22px] after:content-[attr(aria-label)] text-[10px] sm:text-[15px]
+                            after:items-center after:justify-center "
+          aria-label="虛擬金"
+        >
+          回測
+        </button>
       </div>
       <div className="w-[29%] flex items-center justify-center">
         <div className="w-2/3">
